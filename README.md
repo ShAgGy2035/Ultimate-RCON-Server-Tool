@@ -184,7 +184,7 @@ If Steam opens CS2 without connecting, enable the CS2 developer console, press `
 
 Controls include hostname, bots, server password, friendly fire, cheats, pause, cfg execution, teams, map changes, timed restart, and player kick/ban/slay/slap actions.
 
-Player Alive and Health values depend on the required server-side command. Slay and Slap use CounterStrikeSharp-compatible commands. PlayerPunishments 1.0.0 or newer can provide them when the installed administration package does not.
+Player Alive and Health values depend on the required server-side command. Slay and Slap use CounterStrikeSharp-compatible commands. PlayerPunishments 1.0.0 (https://github.com/ShAgGy2035/PlayerPunishments) or newer can provide them when the installed administration package does not.
 
 ### Fun Stuff
 
