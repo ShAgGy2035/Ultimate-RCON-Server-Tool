@@ -1,6 +1,6 @@
 # ShAgGy's Ultimate CS2 RCON/Server Tool
 
-Version: 1.0.0  
+Version: 1.0.1  
 Developer: ShAgGy
 
 A shared Avalonia desktop application for managing Counter-Strike 2 dedicated servers from Windows, Linux, and macOS. All releases use the same C# codebase and shared user interface.
@@ -39,11 +39,11 @@ Deleting a server requires confirmation. Optional app-state cleanup removes that
 
 ## Release Packages
 
-- `cs2-rcon-tool-universal-v1.0.0-windows-x64.zip`
-- `cs2-rcon-tool-universal-v1.0.0-linux-x64.zip`
-- `cs2-rcon-tool-universal-v1.0.0-macos-x64.zip`
-- `cs2-rcon-tool-universal-v1.0.0-macos-arm64.zip`
-- `cs2-rcon-tool-universal-v1.0.0-all-platforms.zip`
+- `cs2-rcon-tool-universal-v1.0.1-windows-x64.zip`
+- `cs2-rcon-tool-universal-v1.0.1-linux-x64.zip`
+- `cs2-rcon-tool-universal-v1.0.1-macos-x64.zip`
+- `cs2-rcon-tool-universal-v1.0.1-macos-arm64.zip`
+- `cs2-rcon-tool-universal-v1.0.1-all-platforms.zip`
 
 Each platform build has one self-contained, single-file native application. A separate .NET installation is not required. The GeoLite database and flag images remain external runtime assets by design.
 
@@ -131,21 +131,27 @@ On supported Linux systems, the app can check SteamCMD prerequisites and bootstr
 Configure:
 
 - SSH host, port, username, and password.
-- Start and stop commands, normally non-interactive service commands.
+- Startup mode: **Service commands** or **Direct process**.
+- Service mode Start, Stop, and Restart commands, normally non-interactive systemd commands.
+- Direct mode executable, working directory, startup map, game type, game mode, additional arguments, and Stop command.
 - Remote SteamCMD path and CS2 install directory for managed updates.
 - App ID `730` and Steam login, normally `anonymous`.
 
-Remote path fields include SFTP browsing. The remote account must run the configured commands and write to the installation directory. Default Linux service commands use `sudo -n`, which requires suitable non-interactive sudo permissions.
+Service mode expects CS2 arguments to be configured in the remote systemd unit. Direct mode builds a detached SSH launch command and ensures `-dedicated`, `-console`, profile port, hostname, and RCON settings are present. The structured startup fields generate authoritative `+map`, `+game_type`, and `+game_mode` arguments, replacing older copies in the additional arguments when necessary. Default additional arguments include `+ip 0.0.0.0` and `+exec server.cfg`. Remote path fields include SFTP browsing. The remote account must run the configured commands and write to the installation directory. Default Linux service commands use `sudo -n`, which requires suitable non-interactive sudo permissions.
 
 ### Remote Windows
 
 Configure:
 
 - SSH host, port, username, and password.
-- Windows start and stop commands.
+- Startup mode: **Service commands** or **Direct process**.
+- Service mode Start, Stop, and Restart commands.
+- Direct mode executable, working directory, startup map, game type, game mode, additional arguments, and Stop command.
 - Windows SteamCMD path, installation directory, App ID `730`, and login.
 
-The default SteamCMD path is `C:\steamcmd\steamcmd.exe`. Remote browsing and transfers use SFTP, and saved paths are normalized to drive-letter form where applicable.
+Service mode expects CS2 arguments to be configured in the Windows service wrapper. Direct mode launches the configured executable through PowerShell over SSH and applies the same required/default argument handling as Remote Linux. The default SteamCMD path is `C:\steamcmd\steamcmd.exe`. Remote browsing and transfers use SFTP, and saved paths are normalized to drive-letter form where applicable.
+
+Existing remote profiles remain in Service commands mode after upgrading. Remote Restart now uses the configured service Restart command instead of rebooting the remote operating system. In Direct process mode, Restart runs the configured Stop command, waits briefly, and launches the process again.
 
 ## Fresh Server Installation And Updates
 
@@ -184,7 +190,7 @@ If Steam opens CS2 without connecting, enable the CS2 developer console, press `
 
 Controls include hostname, bots, server password, friendly fire, cheats, pause, cfg execution, teams, map changes, timed restart, and player kick/ban/slay/slap actions.
 
-Player Alive and Health values depend on the required server-side command. Slay and Slap use CounterStrikeSharp-compatible commands. PlayerPunishments 1.0.0 (https://github.com/ShAgGy2035/PlayerPunishments) or newer can provide them when the installed administration package does not.
+Player Alive and Health values depend on the required server-side command. Slay and Slap use CounterStrikeSharp-compatible commands. PlayerPunishments 1.0.0 or newer can provide them when the installed administration package does not.
 
 ### Fun Stuff
 
@@ -213,7 +219,7 @@ The built-in scheduler is available everywhere and runs while the app is open an
 - Each server keeps a separate bounded console history.
 - Process, SteamCMD, SSH, and RCON output remains associated with its originating server.
 - Local Start and Restart show initial process output only through the startup check, then stop forwarding continuous CS2 runtime output. Explicit local-console fallback commands temporarily reopen output capture for their response.
-- Sensitive commands and debug output redact passwords, tokens, and authentication keys.
+- Console history, application logs, and debug output redact passwords, SSH/database credentials, ChatRelay tokens, Steam authentication keys, and game-server login tokens. Redaction remains active during Debug Mode, raw-console passthrough, and server restart output.
 
 ### Chat
 
@@ -221,6 +227,7 @@ The built-in scheduler is available everywhere and runs while the app is open an
 - Selects a local adapter, listen address, and port; the default is `9090`.
 - Uses the selected server's token from **Edit server > Integrations**.
 - Includes a local authenticated Test action and can send admin chat through RCON.
+- Automatically scrolls to each newly received, sent, or listener-status message.
 
 ### Application Log And Debug
 
@@ -228,6 +235,7 @@ The built-in scheduler is available everywhere and runs while the app is open an
 - **Debug** shows detailed diagnostics when Debug Mode is enabled.
 - Tracing covers windows, controls, lifecycle, RCON, scheduling, chat, SteamCMD, and add-on work.
 - Centralized debug messages redact passwords, tokens, API keys, and similar secrets.
+- When closing the application with Debug Mode still enabled, choose **Stop debugging** to disable it and return to the app or **Exit program** to close anyway.
 
 ## Metamod And CounterStrikeSharp
 
@@ -340,7 +348,7 @@ When importing across operating systems:
 ### A Linux server in a bridged VirtualBox VM is unreachable
 
 - Set the app's server host/IP to the Linux guest VM's bridged LAN address, such as `10.0.1.3`, not the Windows host's address or `127.0.0.1`.
-- Add `+ip 0.0.0.0` to the local Linux server launch arguments so CS2 listens on every network interface in the guest, then restart the server.
+- Add `+ip 0.0.0.0` to the local Linux or remote Direct process launch arguments so CS2 listens on every network interface in the guest, then restart the server. In remote Service commands mode, add it to the systemd unit's CS2 command instead.
 - Confirm the VirtualBox adapter is in Bridged Adapter mode and that guest and host firewalls permit the configured game and RCON ports.
 - On the Linux guest, verify the listening sockets with `ss -lntup | grep 27015`, replacing `27015` when the profile uses another port.
 
@@ -394,4 +402,4 @@ When importing across operating systems:
 
 ## About
 
-Open **Help > About** to view version `1.0.0`, developer information, and the detected application platform.
+Open **Help > About** to view version `1.0.1`, developer information, and the detected application platform.
