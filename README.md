@@ -1,11 +1,11 @@
-# ShAgGy's Ultimate CS2 RCON/Server Tool
+# Ultimate CS2 RCON and Server Management Tool
 
-Version: 1.0.1  
+Version: 1.0.2  
 Developer: ShAgGy
 
-A shared Avalonia desktop application for managing Counter-Strike 2 dedicated servers from Windows, Linux, and macOS. All releases use the same C# codebase and shared user interface.
+ShAgGy's Ultimate CS2 RCON and Server Management Tool is a cross-platform desktop application for administering Counter-Strike 2 dedicated servers. Use it to send CS2 RCON commands, manage local or remote CS2 servers, install updates and plugins, schedule maintenance, and monitor players from Windows, Linux, or macOS.
 
-## What This App Does
+## CS2 RCON And Server Management Features
 
 The application provides one place to:
 
@@ -14,6 +14,8 @@ The application provides one place to:
 - Start, stop, restart, install, update, and validate supported servers.
 - Manage maps, bots, teams, passwords, friendly fire, cheats, and gameplay settings.
 - Apply Fun Stuff presets such as AWP, Bhop, Surf, and Zeus Wars.
+- Configure a startup CFG and optional player connection password separately from the RCON password.
+- Control automatic server-list refresh and noisy console-output filtering.
 - Join a selected server through a Steam connection URI.
 - Install or upgrade Metamod and CounterStrikeSharp.
 - Install, upgrade, track, and safely uninstall supported optional plugins.
@@ -28,10 +30,10 @@ The application provides one place to:
 | --- | --- | --- | --- | --- |
 | Windows x64 | Yes, with `Local Windows` | Yes | Yes | Windows Task Scheduler |
 | Linux x64 | Yes, with `Local Linux` | Yes | Yes | systemd user timers |
-| macOS Intel | No | Yes | Yes | launchd user agents |
-| macOS Apple Silicon | No | Yes | Yes | launchd user agents |
+| macOS Intel (12.0+) | No | Yes | Yes | launchd user agents |
+| macOS Apple Silicon (12.0+) | No | Yes | Yes | launchd user agents |
 
-macOS supports RCON and remote administration, but Valve does not publish a native macOS CS2 dedicated-server runtime. Imported local profiles for another OS can be displayed, but local lifecycle and installation actions only work when the profile matches the current OS.
+macOS 12.0 or later is required. macOS supports RCON and remote administration, but Valve does not publish a native macOS CS2 dedicated-server runtime. Imported local profiles for another OS can be displayed, but local lifecycle and installation actions only work when the profile matches the current OS.
 
 Remote Linux and Remote Windows management use SSH/SFTP. Remote Windows does not require WinRM.
 
@@ -39,11 +41,11 @@ Deleting a server requires confirmation. Optional app-state cleanup removes that
 
 ## Release Packages
 
-- `cs2-rcon-tool-universal-v1.0.1-windows-x64.zip`
-- `cs2-rcon-tool-universal-v1.0.1-linux-x64.zip`
-- `cs2-rcon-tool-universal-v1.0.1-macos-x64.zip`
-- `cs2-rcon-tool-universal-v1.0.1-macos-arm64.zip`
-- `cs2-rcon-tool-universal-v1.0.1-all-platforms.zip`
+- `cs2-rcon-tool-universal-v1.0.2-windows-x64.zip`
+- `cs2-rcon-tool-universal-v1.0.2-linux-x64.zip`
+- `cs2-rcon-tool-universal-v1.0.2-macos-x64.zip`
+- `cs2-rcon-tool-universal-v1.0.2-macos-arm64.zip`
+- `cs2-rcon-tool-universal-v1.0.2-all-platforms.zip`
 
 Each platform build has one self-contained, single-file native application. A separate .NET installation is not required. The GeoLite database and flag images remain external runtime assets by design.
 
@@ -76,7 +78,7 @@ Use `./run.sh --foreground` to keep the process attached for troubleshooting. Th
 
 ### macOS Intel And Apple Silicon
 
-Choose the x64 package for Intel Macs or arm64 for Apple Silicon, extract it, and open `CS2 RCON Tool.app`.
+macOS 12.0 or later is required. Choose the x64 package for Intel Macs or arm64 for Apple Silicon, extract it, and open `CS2 RCON Tool.app`.
 
 The macOS packages are unsigned and not notarized. If Gatekeeper quarantines a test build, run:
 
@@ -86,7 +88,7 @@ chmod +x "CS2 RCON Tool.app/Contents/MacOS/cs2-rcon-tool"
 open "CS2 RCON Tool.app"
 ```
 
-## First-Time Setup
+## Connect To A CS2 Server With RCON
 
 1. Open **Servers > Manage servers**.
 2. Add a server and enter its name, host/IP, game/RCON port, RCON password, and location.
@@ -109,6 +111,7 @@ Use this profile only in the Windows application. Configure:
 - Game type, game mode, and maximum players.
 - SteamCMD path, install directory, App ID `730`, and Steam login.
 - Optional Steam API authentication key and game-server login token.
+- Startup CFG and optional player connection password.
 - Local map, Workshop collection, or single Workshop map startup mode.
 
 The app can download Windows SteamCMD as a ZIP when bootstrapping a local installation.
@@ -122,6 +125,7 @@ Use this profile only in the Linux application. Configure:
 - Game type, game mode, and maximum players.
 - SteamCMD path, install directory, App ID `730`, and Steam login.
 - Optional Steam API authentication key and game-server login token.
+- Startup CFG and optional player connection password.
 - Local map, Workshop collection, or single Workshop map startup mode.
 
 On supported Linux systems, the app can check SteamCMD prerequisites and bootstrap SteamCMD. Local profiles can enable startup maintenance, which warns players, stops the server, updates CS2 and supported add-ons, and restarts it.
@@ -131,19 +135,21 @@ On supported Linux systems, the app can check SteamCMD prerequisites and bootstr
 Configure:
 
 - SSH host, port, username, and password.
+- Optional separate SFTP address, username, password, and port. Blank values reuse the server host and SSH credentials; port `0` reuses the SSH port. Valid SFTP ports range through `65535`.
 - Startup mode: **Service commands** or **Direct process**.
 - Service mode Start, Stop, and Restart commands, normally non-interactive systemd commands.
 - Direct mode executable, working directory, startup map, game type, game mode, additional arguments, and Stop command.
 - Remote SteamCMD path and CS2 install directory for managed updates.
 - App ID `730` and Steam login, normally `anonymous`.
 
-Service mode expects CS2 arguments to be configured in the remote systemd unit. Direct mode builds a detached SSH launch command and ensures `-dedicated`, `-console`, profile port, hostname, and RCON settings are present. The structured startup fields generate authoritative `+map`, `+game_type`, and `+game_mode` arguments, replacing older copies in the additional arguments when necessary. Default additional arguments include `+ip 0.0.0.0` and `+exec server.cfg`. Remote path fields include SFTP browsing. The remote account must run the configured commands and write to the installation directory. Default Linux service commands use `sudo -n`, which requires suitable non-interactive sudo permissions.
+Service mode expects CS2 arguments to be configured in the remote systemd unit. Direct mode builds a detached SSH launch command and ensures `-dedicated`, `-console`, profile port, hostname, and RCON settings are present. The structured startup fields generate authoritative `+map`, `+game_type`, `+game_mode`, `+exec`, and optional `+sv_password` arguments, replacing older copies in the additional arguments when necessary. Default additional arguments include `+ip 0.0.0.0`. Remote path fields include SFTP browsing. The remote account must run the configured commands and write to the installation directory. Default Linux service commands use `sudo -n`, which requires suitable non-interactive sudo permissions.
 
 ### Remote Windows
 
 Configure:
 
 - SSH host, port, username, and password.
+- Optional separate SFTP address, username, password, and port. Blank values reuse the server host and SSH credentials; port `0` reuses the SSH port. Valid SFTP ports range through `65535`.
 - Startup mode: **Service commands** or **Direct process**.
 - Service mode Start, Stop, and Restart commands.
 - Direct mode executable, working directory, startup map, game type, game mode, additional arguments, and Stop command.
@@ -188,13 +194,17 @@ If Steam opens CS2 without connecting, enable the CS2 developer console, press `
 
 ### Server Actions
 
-Controls include hostname, bots, server password, friendly fire, cheats, pause, cfg execution, teams, map changes, timed restart, and player kick/ban/slay/slap actions.
+Controls include hostname, bots, human-team restrictions, friendly fire, cheats, pause, teams, map changes, timed restart, and player kick/ban/slay/slap actions. Configure the Startup CFG and player connection password in the server profile so they are applied consistently at launch; the player password is stored encrypted and is separate from the RCON password.
+
+Server Actions, Fun Stuff, and Console Commands send runtime commands only. The app never edits server CFG files. When a map load executes the active Startup CFG, values defined there can replace runtime changes made through the app.
 
 Player Alive and Health values depend on the required server-side command. Slay and Slap use CounterStrikeSharp-compatible commands. PlayerPunishments 1.0.0 or newer can provide them when the installed administration package does not.
 
 ### Fun Stuff
 
-Preset modes include AWP/Sniper Wars, Bhop, Deathmatch, Grenade Wars, Headshot Only, Knife Arena, Pistols Only, ScoutzKnives, Surf, and Zeus Wars. Choose **None (rollback)** to restore the cvars changed by a preset.
+Preset modes include AWP/Sniper Wars, Bhop, Deathmatch, Grenade Wars, Molotov/Incendiary Wars, Headshot Only, Knife Arena, Pistols Only, ScoutzKnives, Surf, and Zeus Wars. Presets apply runtime settings without executing a CFG. Before applying a mode, the app captures that server's current values for every persistent cvar the mode changes. When switching directly between modes, it first restores the active mode's captured values, then captures and applies the replacement mode so settings do not carry over between presets. Choose **None (rollback)** to restore the active mode's exact values. Rollback never executes or modifies a CFG and does not use hard-coded server defaults.
+
+If these commands are not covered by your Admin Plugin of choice you can use https://github.com/ShAgGy2035/RconCompanionTool
 
 ### Server Overview
 
@@ -218,6 +228,7 @@ The built-in scheduler is available everywhere and runs while the app is open an
 - Press Enter or click **Execute** to send a command.
 - Each server keeps a separate bounded console history.
 - Process, SteamCMD, SSH, and RCON output remains associated with its originating server.
+- **Settings > General** can enable 15-second automatic refresh of the top server list and can disable filtering of noisy startup/restart output.
 - Local Start and Restart show initial process output only through the startup check, then stop forwarding continuous CS2 runtime output. Explicit local-console fallback commands temporarily reopen output capture for their response.
 - Console history, application logs, and debug output redact passwords, SSH/database credentials, ChatRelay tokens, Steam authentication keys, and game-server login tokens. Redaction remains active during Debug Mode, raw-console passthrough, and server restart output.
 
@@ -226,6 +237,7 @@ The built-in scheduler is available everywhere and runs while the app is open an
 - Receives authenticated JSON chat messages from ChatRelay over UDP.
 - Selects a local adapter, listen address, and port; the default is `9090`.
 - Uses the selected server's token from **Edit server > Integrations**.
+- **Copy ChatRelay target JSON** creates the selected listener's `TargetIp`, `TargetPort`, and `SharedToken` entry for the plugin configuration.
 - Includes a local authenticated Test action and can send admin chat through RCON.
 - Automatically scrolls to each newly received, sent, or listener-status message.
 
@@ -282,11 +294,13 @@ ChatRelay is a separate CounterStrikeSharp server plugin and is not included in 
 Repository: <https://github.com/ShAgGy2035/ChatRelay>
 
 1. Install ChatRelay on the CS2 server.
-2. Set its destination IP to the machine running this app.
-3. Configure the same UDP port on both sides; the default is `9090`.
-4. Set the same token in ChatRelay and **Edit server > Integrations**.
-5. Select the correct local adapter and enable the listener.
-6. Use **Test** to verify the local authenticated listener.
+2. In this app, select the receiving network adapter and port; the default is `9090`.
+3. Set a unique token in **Edit server > Integrations**.
+4. Click **Copy ChatRelay target JSON** and add the copied object to ChatRelay's `Targets` array.
+5. Repeat for up to 10 target users, using each user's reachable IP, UDP port, and unique shared token.
+6. Enable the listener and use **Test** to verify the local authenticated listener.
+
+ChatRelay's `Targets` array is the source of truth for multi-user delivery. Each desktop app listens for one target entry associated with its selected server token. Keep `IgnoreCommands` and `OnlyShowCommands` at the plugin configuration level as required by the server.
 
 Allow the UDP port through the receiving computer's firewall. Remote networks may require routing or port forwarding.
 
@@ -402,4 +416,4 @@ When importing across operating systems:
 
 ## About
 
-Open **Help > About** to view version `1.0.1`, developer information, and the detected application platform.
+Open **Help > About** to view version `1.0.2`, developer information, and the detected application platform.
