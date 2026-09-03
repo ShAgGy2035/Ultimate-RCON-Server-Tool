@@ -198,7 +198,7 @@ Controls include hostname, bots, human-team restrictions, friendly fire, cheats,
 
 Server Actions, Fun Stuff, and Console Commands send runtime commands only. The app never edits server CFG files. When a map load executes the active Startup CFG, values defined there can replace runtime changes made through the app.
 
-Player Alive and Health values depend on the required server-side command. Slay and Slap use CounterStrikeSharp-compatible commands. PlayerPunishments 1.0.0 or newer can provide them when the installed administration package does not.
+Player Alive and Health values depend on the required server-side command. Slay and Slap use CounterStrikeSharp-compatible commands. PlayerPunishments (https://github.com/ShAgGy2035/PlayerPunishments) v1.0.0 or newer can provide them when the installed administration package does not.
 
 ### Fun Stuff
 
