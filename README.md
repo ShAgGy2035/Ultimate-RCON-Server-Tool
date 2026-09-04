@@ -427,12 +427,14 @@ When importing across operating systems:
 | Fun Stuff modes | Server overview |
 | --- | --- |
 | ![Fun Stuff mode selection](docs/images/fun-stuff-modes.png) | ![Server overview](docs/images/server-overview.png) |
-| Scheduled tasks | Console command suggestions |
-| ![Scheduled tasks](docs/images/scheduled-tasks.png) | ![Console command suggestions](docs/images/console-commands.png) |
-| Chat | Application log |
-| ![Chat](docs/images/chat-tab.png) | ![Application log](docs/images/application-log-tab.png) |
-| Debug output | General settings |
-| ![Debug output](docs/images/debug-tab.png) | ![General settings](docs/images/settings-general.png) |
+| Scheduled tasks | Add new scheduled task |
+| ![Scheduled tasks](docs/images/scheduled-tasks.png) | ![Add new scheduled task](docs/images/add-scheduled-task.png) |
+| Console command suggestions | Chat |
+| ![Console command suggestions](docs/images/console-commands.png) | ![Chat](docs/images/chat-tab.png) |
+| Application log | Debug output |
+| ![Application log](docs/images/application-log-tab.png) | ![Debug output](docs/images/debug-tab.png) |
+| General settings | |
+| ![General settings](docs/images/settings-general.png) | |
 
 ### Settings And Framework Controls
 
