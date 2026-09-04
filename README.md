@@ -230,7 +230,7 @@ The built-in scheduler is available everywhere and runs while the app is open an
 - Local Start and Restart show initial process output only through the startup check, then stop forwarding continuous CS2 runtime output. Explicit local-console fallback commands temporarily reopen output capture for their response.
 - Console history, application logs, and debug output redact passwords, SSH/database credentials, ChatRelay tokens, Steam authentication keys, and game-server login tokens. Redaction remains active during Debug Mode, raw-console passthrough, and server restart output.
 
-### Chat
+### Chat See: https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/tree/main#chatrelay)
 
 - Receives authenticated JSON chat messages from ChatRelay over UDP.
 - Selects a local adapter, listen address, and port; the default is `9090`.
