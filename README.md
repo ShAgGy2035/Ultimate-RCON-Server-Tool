@@ -419,6 +419,8 @@ When importing across operating systems:
 | ![Server actions](docs/images/server-actions.png) | ![Server context menu](docs/images/server-context-menu.png) |
 | Manage servers | Edit a Remote Linux server |
 | ![Manage servers](docs/images/manage-servers.png) | ![Edit a Remote Linux server](docs/images/edit-remote-linux-server.png) |
+| Edit server integrations | |
+| ![Edit server integrations](docs/images/edit-server-integrations.png) | |
 
 ### Gameplay And Operations
 
