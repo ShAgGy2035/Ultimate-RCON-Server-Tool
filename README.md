@@ -88,6 +88,15 @@ chmod +x "CS2 RCON Tool.app/Contents/MacOS/cs2-rcon-tool"
 open "CS2 RCON Tool.app"
 ```
 
+## Updating The Application
+
+Close the application before updating, download the new package for the same operating system and architecture, and choose either method:
+
+1. **Replace the existing application files.** Extract the new package and copy its contents over the old installation. On Linux, run `chmod +x cs2-rcon-tool run.sh` again if executable permissions were not preserved. On macOS, replace the entire `CS2 RCON Tool.app` bundle instead of merging files inside it.
+2. **Use a new folder.** Delete the old application folder after closing the app, then extract and launch the new package from a new folder.
+
+Both methods preserve server profiles, scheduled tasks, application settings, credentials, GeoLite data, and flags because writable data is stored in the per-user `CS2RconTool` directory rather than beside the application. Do not delete the per-user data directory or its `credential.key` when updating. A backup is recommended before any manual cleanup or migration.
+
 ## Connect To A CS2 Server With RCON
 
 1. Open **Servers > Manage servers**.
@@ -198,11 +207,15 @@ Controls include hostname, bots, human-team restrictions, friendly fire, cheats,
 
 Server Actions, Fun Stuff, and Console Commands send runtime commands only. The app never edits server CFG files. When a map load executes the active Startup CFG, values defined there can replace runtime changes made through the app.
 
-Player Alive and Health values depend on the required server-side command. Slay and Slap use CounterStrikeSharp-compatible commands. PlayerPunishments (https://github.com/ShAgGy2035/PlayerPunishments) v1.0.0 or newer can provide them when the installed administration package does not.
+Player Alive and Health values depend on the required server-side command. Slay and Slap use CounterStrikeSharp-compatible commands. [PlayerPunishments 1.0.0 or newer](https://github.com/ShAgGy2035/PlayerPunishments) can provide them when the installed administration package does not.
 
-### Fun Stuff (Required: https://github.com/ShAgGy2035/RconCompanionTool)
+### Fun Stuff
 
 Preset modes include AWP/Sniper Wars, Bhop, Deathmatch, Grenade Wars, Molotov/Incendiary Wars, Headshot Only, Knife Arena, Pistols Only, ScoutzKnives, Surf, and Zeus Wars. Presets apply runtime settings without executing a CFG. Before applying a mode, the app captures that server's current values for every persistent cvar the mode changes. When switching directly between modes, it first restores the active mode's captured values, then captures and applies the replacement mode so settings do not carry over between presets. Choose **None (rollback)** to restore the active mode's exact values. Rollback never executes or modifies a CFG and does not use hard-coded server defaults.
+
+Pistols Only, Zeus Wars, Grenade Wars, Molotov/Incendiary Wars, Knife Arena, AWP/Sniper Wars, and ScoutzKnives require [RCON Tool Companion 1.0.0 or newer](https://github.com/ShAgGy2035/RconCompanionTool). The app verifies its capabilities before changing server settings. The Companion provides the player-aware inventory and buy-control operations that native RCON cannot perform reliably, including maintaining loadouts across spawns and bot takeovers while preserving the Terrorist bomb carrier's C4.
+
+Bhop, Deathmatch, Headshot Only, and Surf use native RCON commands and do not require the Companion. Switching modes restores buy behavior and disables the previous managed loadout before restoring old settings and applying the replacement mode. Rollback restores the previous persistent cvar values without issuing another restart. No server CFG is edited or executed.
 
 ### Server Overview
 
@@ -230,14 +243,16 @@ The built-in scheduler is available everywhere and runs while the app is open an
 - Local Start and Restart show initial process output only through the startup check, then stop forwarding continuous CS2 runtime output. Explicit local-console fallback commands temporarily reopen output capture for their response.
 - Console history, application logs, and debug output redact passwords, SSH/database credentials, ChatRelay tokens, Steam authentication keys, and game-server login tokens. Redaction remains active during Debug Mode, raw-console passthrough, and server restart output.
 
-### Chat See: https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/tree/main#chatrelay)
+### Chat
 
-- Receives authenticated JSON chat messages from ChatRelay over UDP.
+- Receives authenticated JSON chat messages from the separate [ChatRelay](https://github.com/ShAgGy2035/ChatRelay) CounterStrikeSharp plugin over UDP.
 - Selects a local adapter, listen address, and port; the default is `9090`.
 - Uses the selected server's token from **Edit server > Integrations**.
 - **Copy ChatRelay target JSON** creates the selected listener's `TargetIp`, `TargetPort`, and `SharedToken` entry for the plugin configuration.
 - Includes a local authenticated Test action and can send admin chat through RCON.
 - Automatically scrolls to each newly received, sent, or listener-status message.
+
+Install and configure ChatRelay using its repository instructions. In the app, select the receiving network adapter and port, set a unique token in **Edit server > Integrations**, and use **Copy ChatRelay target JSON** to create the matching plugin target. Allow the selected UDP port through the receiving computer's firewall; remote networks may also require routing or port forwarding.
 
 ### Application Log And Debug
 
@@ -284,23 +299,6 @@ Optional plugin deployment is supported for compatible local profiles and Remote
 - **Validate server files** runs SteamCMD with `validate`.
 
 Server and database backup destinations are configured separately under **Settings > Backups**. Remote operations require suitable SSH permissions and archive tools on the managed host.
-
-## ChatRelay
-
-ChatRelay is a separate CounterStrikeSharp server plugin and is not included in these packages.
-
-Repository: <https://github.com/ShAgGy2035/ChatRelay>
-
-1. Install ChatRelay on the CS2 server.
-2. In this app, select the receiving network adapter and port; the default is `9090`.
-3. Set a unique token in **Edit server > Integrations**.
-4. Click **Copy ChatRelay target JSON** and add the copied object to ChatRelay's `Targets` array.
-5. Repeat for up to 10 target users, using each user's reachable IP, UDP port, and unique shared token.
-6. Enable the listener and use **Test** to verify the local authenticated listener.
-
-ChatRelay's `Targets` array is the source of truth for multi-user delivery. Each desktop app listens for one target entry associated with its selected server token. Keep `IgnoreCommands` and `OnlyShowCommands` at the plugin configuration level as required by the server.
-
-Allow the UDP port through the receiving computer's firewall. Remote networks may require routing or port forwarding.
 
 ## GeoLite And Flags
 
