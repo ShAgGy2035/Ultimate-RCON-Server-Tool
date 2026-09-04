@@ -200,11 +200,9 @@ Server Actions, Fun Stuff, and Console Commands send runtime commands only. The 
 
 Player Alive and Health values depend on the required server-side command. Slay and Slap use CounterStrikeSharp-compatible commands. PlayerPunishments (https://github.com/ShAgGy2035/PlayerPunishments) v1.0.0 or newer can provide them when the installed administration package does not.
 
-### Fun Stuff
+### Fun Stuff (Required: https://github.com/ShAgGy2035/RconCompanionTool)
 
 Preset modes include AWP/Sniper Wars, Bhop, Deathmatch, Grenade Wars, Molotov/Incendiary Wars, Headshot Only, Knife Arena, Pistols Only, ScoutzKnives, Surf, and Zeus Wars. Presets apply runtime settings without executing a CFG. Before applying a mode, the app captures that server's current values for every persistent cvar the mode changes. When switching directly between modes, it first restores the active mode's captured values, then captures and applies the replacement mode so settings do not carry over between presets. Choose **None (rollback)** to restore the active mode's exact values. Rollback never executes or modifies a CFG and does not use hard-coded server defaults.
-
-If these commands are not covered by your Admin Plugin of choice you can use https://github.com/ShAgGy2035/RconCompanionTool
 
 ### Server Overview
 
