@@ -410,6 +410,36 @@ When importing across operating systems:
 - Confirm the configured URLs are direct-download sources.
 - Confirm the per-user data directory is writable.
 
+## Application Screenshots
+
+### Server Management
+
+| Server actions | Server context menu |
+| --- | --- |
+| ![Server actions](docs/images/server-actions.png) | ![Server context menu](docs/images/server-context-menu.png) |
+| Manage servers | Edit a Remote Linux server |
+| ![Manage servers](docs/images/manage-servers.png) | ![Edit a Remote Linux server](docs/images/edit-remote-linux-server.png) |
+
+### Gameplay And Operations
+
+| Fun Stuff modes | Server overview |
+| --- | --- |
+| ![Fun Stuff mode selection](docs/images/fun-stuff-modes.png) | ![Server overview](docs/images/server-overview.png) |
+| Scheduled tasks | Console command suggestions |
+| ![Scheduled tasks](docs/images/scheduled-tasks.png) | ![Console command suggestions](docs/images/console-commands.png) |
+| Chat | Application log |
+| ![Chat](docs/images/chat-tab.png) | ![Application log](docs/images/application-log-tab.png) |
+| Debug output | General settings |
+| ![Debug output](docs/images/debug-tab.png) | ![General settings](docs/images/settings-general.png) |
+
+### Settings And Framework Controls
+
+| Settings menu | Backup settings |
+| --- | --- |
+| ![Settings menu](docs/images/settings-menu.png) | ![Backup settings](docs/images/settings-backups.png) |
+| Metamod controls | CounterStrikeSharp controls |
+| ![Metamod controls](docs/images/settings-metamod-menu.png) | ![CounterStrikeSharp controls](docs/images/settings-counterstrikesharp-menu.png) |
+
 ## About
 
 Open **Help > About** to view version `1.0.2`, developer information, and the detected application platform.
