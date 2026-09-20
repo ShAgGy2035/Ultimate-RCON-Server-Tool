@@ -139,7 +139,8 @@ After the Local Linux profile is configured:
 2. Select the server in the top server list.
 3. Right-click the server and select **Install/Update server...** to install or validate CS2 with SteamCMD.
 4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
-5. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
+5. Confirm the Linux host firewall allows the configured game port over UDP and RCON port over TCP.
+6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
 ## Remote Linux Server
 
@@ -155,7 +156,7 @@ Configure:
 - App ID `730` and Steam login, normally `anonymous`.
 - The lifecycle mode and its corresponding fields.
 
-The remote account must run lifecycle commands and write to the installation directory. Remote browsing and file operations require SFTP access.
+The remote account must run lifecycle commands and write to the installation directory. Remote browsing and file operations require SFTP access. Before starting CS2, allow the configured game port through the server firewall over UDP and the configured RCON port over TCP. These are separate connections.
 
 Remote Linux profiles reject Windows drive paths before SteamCMD starts. When a profile is changed from Remote Windows to Remote Linux, stale auto-generated executable and working-directory defaults are replaced with Linux defaults; explicitly configured valid custom paths remain editable.
 
@@ -163,14 +164,14 @@ Remote Linux profiles reject Windows drive paths before SteamCMD starts. When a 
 
 Prepare the remote accounts before configuring the application profile. The **SSH control account** is the username entered in the profile; it runs lifecycle commands and performs SFTP browsing, file transfers, plugin operations, backups, and SteamCMD operations. The **service account** owns and runs CS2 when using Service commands with systemd. These can be the same account, or they can be separate accounts.
 
-The simplest setup uses the Linux account that owns the CS2 installation for both SSH and SFTP. If a dedicated SSH account does not already exist, create it as an administrator on the remote host and grant it SSH access:
+The simplest setup uses the Linux account that owns the CS2 installation for both SSH and SFTP. If a dedicated SSH account does not already exist, create it as a normal user on the remote host and grant it SSH access:
 
 ```bash
 sudo adduser <ssh-user>
 sudo passwd <ssh-user>
 ```
 
-Do not use `root` as the application, SteamCMD, or CS2 account. The SSH control account must be able to traverse every parent directory and read and write the CS2 installation. If it differs from the service account, grant access through a shared group or filesystem ACL rather than making the installation world-writable.
+Do not use `root` as the application, SteamCMD, or CS2 account. The SSH control account does not need unrestricted administrator access; it must be able to traverse every parent directory and read and write the CS2 installation. If it differs from the service account, grant access through a shared group or filesystem ACL rather than making the installation world-writable.
 
 If the systemd service account does not already exist, create it before installing or assigning ownership of the CS2 files. It may be the same account as `<ssh-user>`:
 
@@ -320,7 +321,8 @@ After the Remote Linux profile and its Direct process or Service commands setup 
 2. Select the server in the top server list.
 3. Right-click the server and select **Install/Update server...** to install or validate CS2 with SteamCMD.
 4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
-5. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**. For Service commands, the configured systemd service remains the process owner when the app starts it.
+5. Confirm the remote Linux firewall allows the configured game port over UDP and RCON port over TCP.
+6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**. For Service commands, the configured systemd service remains the process owner when the app starts it.
 
 ## Remote Windows Server
 

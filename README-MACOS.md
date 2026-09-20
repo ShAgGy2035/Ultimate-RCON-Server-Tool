@@ -234,7 +234,8 @@ After the Remote Linux profile and its Direct process or Service commands setup 
 2. Select the server in the top server list.
 3. Right-click the server and select **Install/Update server...** to install or validate CS2 with SteamCMD.
 4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
-5. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
+5. Confirm the remote Linux firewall allows the configured game port over UDP and RCON port over TCP.
+6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
 ## Remote Windows Setup
 
@@ -377,7 +378,8 @@ After the Remote Windows profile and its Direct process or Service commands setu
 2. Select the server in the top server list.
 3. Right-click the server and select **Install/Update server...** to install or validate CS2 with SteamCMD.
 4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
-5. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
+5. Confirm the remote Windows firewall allows the configured game port over UDP and RCON port over TCP.
+6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
 ## Using The Application
 

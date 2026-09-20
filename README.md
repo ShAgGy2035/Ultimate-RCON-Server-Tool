@@ -30,7 +30,7 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 
 ## Choose Your Platform
 
-Each platform guide keeps launch, update, profile, Direct process, and Service commands instructions together.
+The root README is the project overview. The platform guides are the complete start-to-finish procedures for preparing the host, configuring a profile, installing or updating CS2, and starting the server.
 
 | Application package | Guide | Local CS2 hosting | Remote targets |
 | --- | --- | --- | --- |
