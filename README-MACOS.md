@@ -76,6 +76,19 @@ Back up that entire directory, including `credential.key`, before updating. Save
 7. Enter the server address, game/RCON port, and RCON password.
 8. Save the profile and select it in the main server list.
 
+## Using The Application
+
+For a first remote server setup, use this order:
+
+1. Open **Servers > Manage servers** and create a **Remote Linux (SSH)** or **Remote Windows (SSH)** profile.
+2. Enter the SSH/SFTP, server address, game/RCON port, RCON password, lifecycle, and SteamCMD values required by the target setup.
+3. Save the profile, select it in the main server list, and use **Refresh server list** to confirm connectivity.
+4. Complete the matching Remote Linux or Remote Windows setup below.
+5. Right-click the configured server and select **Install/Update server...** or **Install/Update Server + Add-ons**.
+6. Review output in **Console Commands**, **Application Log**, or **Debug**, then use the server context menu to select **Start server**.
+
+After the server is running, continue with the framework, plugin, RCON Tool Companion, PlayerPunishments, and ChatRelay sections as needed.
+
 Imported Local Linux or Local Windows profiles may be displayed, but local lifecycle and installation actions cannot run on macOS. Convert them to the correct Remote profile type and replace local paths with paths valid on the target server.
 
 ## Choose A Lifecycle Mode
@@ -430,7 +443,7 @@ Once installation is complete, continue to the corresponding sections for config
 - [Install Frameworks And Plugins](#install-frameworks-and-plugins) for Metamod, CounterStrikeSharp, and optional CSS plugin details.
 
 
-## Using The Application
+## Application Reference
 
 Open **Servers > Manage servers**, add a Remote Linux or Remote Windows profile, enter its RCON and lifecycle details, save it, select it, and click **Refresh server list**. RCON uses TCP; opening only the UDP game port is insufficient. **Reload server list** reads saved profiles without contacting servers, while **Refresh server list** queries live A2S data.
 

@@ -80,6 +80,19 @@ The Linux data directory contains server profiles, scheduled tasks, application 
 
 Saved secrets use AES-256-GCM. Keep `credential.key` with the JSON files when backing up or migrating data.
 
+## Using The Application
+
+For a first server setup, use this order:
+
+1. Open **Servers > Manage servers** and create a server profile.
+2. Enter the server address, game/RCON port, RCON password, location, and the lifecycle/SteamCMD fields required by the selected configuration.
+3. Save the profile, select it in the top server list, and use **Refresh server list** to confirm connectivity.
+4. Complete the matching Local Linux, Remote Linux, or Remote Windows setup below.
+5. Right-click the configured server and select **Install/Update server...** or **Install/Update Server + Add-ons**.
+6. Review output in **Console Commands**, **Application Log**, or **Debug**, then use the server context menu to select **Start server**.
+
+After the server is running, continue with the framework, plugin, RCON Tool Companion, PlayerPunishments, and ChatRelay sections as needed.
+
 ## Local Linux Server
 
 Use a **Local Linux** profile only when the application and CS2 server run on the same Linux computer.
@@ -607,7 +620,7 @@ These are operating-system packages for SteamCMD, not CS2 server plugins. Metamo
 
 When a managed local CS2 process is running, the application pauses before SteamCMD and offers to stop it and continue. Cancelling leaves the server running and aborts the update or validation. After SteamCMD restores core files, **Install/Update Server** reapplies and validates the Metamod/CounterStrikeSharp loader chain. **Install/Update Server + Add-ons** combines the core update with framework and tracked-plugin maintenance.
 
-## Using The Application
+## Application Reference
 
 ### Connect And Refresh
 
