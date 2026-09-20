@@ -19,6 +19,7 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - [Create A Remote Profile](#create-a-remote-profile)
 - [Choose A Lifecycle Mode](#choose-a-lifecycle-mode)
 - [Remote Linux Setup](#remote-linux-setup)
+- [Remote Linux Account And Permissions](#remote-linux-account-and-permissions)
 - [Remote Windows Setup](#remote-windows-setup)
 - [Using The Application](#using-the-application)
 - [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff)
@@ -105,6 +106,42 @@ Stop the current owner before switching lifecycle modes. Direct process and Serv
 
 Configure SSH host, port, username, password, optional SFTP details, SteamCMD path, install directory, App ID `730`, and login, normally `anonymous`. Blank SFTP values reuse SSH details; port `0` reuses the SSH port, and valid ports range through `65535`. The account must run lifecycle commands and read/write the installation.
 
+### Remote Linux Account And Permissions
+
+Prepare the remote accounts before configuring the macOS profile. The **SSH control account** is the username entered in the profile; it runs lifecycle commands and performs SFTP browsing, file transfers, plugin operations, backups, and SteamCMD operations. The **service account** owns and runs CS2 when using Service commands with systemd. These can be the same account, or they can be separate accounts.
+
+The simplest setup uses the Linux account that owns the CS2 installation for both SSH and SFTP. If a dedicated SSH account does not already exist, create it as an administrator on the remote host and grant it SSH access:
+
+```bash
+sudo adduser <ssh-user>
+sudo passwd <ssh-user>
+```
+
+Do not use `root` as the application, SteamCMD, or CS2 account. The SSH control account must be able to traverse every parent directory and read and write the CS2 installation. If it differs from the service account, grant access through a shared group or filesystem ACL rather than making the installation world-writable.
+
+If the systemd service account does not already exist, create it before installing or assigning ownership of the CS2 files. It may be the same account as `<ssh-user>`:
+
+```bash
+sudo adduser <service-user>
+```
+
+Verify access before saving the macOS profile. Replace the placeholders with the configured account and install directory:
+
+```bash
+namei -l "<install-dir>/game/csgo"
+sudo -u <ssh-user> test -r "<install-dir>/game/csgo/gameinfo.gi"
+sudo -u <ssh-user> touch "<install-dir>/game/csgo/.rcon-tool-write-test"
+sudo -u <ssh-user> rm "<install-dir>/game/csgo/.rcon-tool-write-test"
+```
+
+Prefer a shared group or ACL instead of world-writable permissions:
+
+```bash
+sudo setfacl -m u:<ssh-user>:x "<parent-directory>"
+sudo setfacl -R -m u:<ssh-user>:rwX "<install-dir>"
+sudo setfacl -R -d -m u:<ssh-user>:rwX "<install-dir>"
+```
+
 ### Remote Linux Direct Process
 
 For `/home/cs2/cs2server`, blank fields derive:
@@ -121,8 +158,6 @@ executable='/home/cs2/cs2server/game/bin/linuxsteamrt64/cs2'; for process in /pr
 ```
 
 Start refuses to run during an app `730` SteamCMD update, verifies `game/csgo/gameinfo.gi`, supplies required native-library paths, launches detached from SSH, and monitors for 30 seconds. Output is captured in `/tmp/cs2-rcon-tool-startup-<port>.log`. Direct mode refuses to control an executable owned by the active `cs2-server` systemd cgroup.
-
-The SSH/SFTP account must traverse every parent directory and read/write the installation. Verify access with `namei -l "<install-dir>/game/csgo"` and `sudo -u <ssh-user> test -r "<install-dir>/game/csgo/gameinfo.gi"`. Prefer a shared group or ACL instead of world-writable permissions.
 
 ### Remote Linux Service Commands With systemd
 

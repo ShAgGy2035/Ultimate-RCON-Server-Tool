@@ -159,6 +159,12 @@ sudo passwd <ssh-user>
 
 Do not use `root` as the application, SteamCMD, or CS2 account. The SSH control account must be able to traverse every parent directory and read and write the CS2 installation. If it differs from the service account, grant access through a shared group or filesystem ACL rather than making the installation world-writable.
 
+If the systemd service account does not already exist, create it before installing or assigning ownership of the CS2 files. It may be the same account as `<ssh-user>`:
+
+```bash
+sudo adduser <service-user>
+```
+
 Verify access before saving the application profile. Replace the placeholders with the configured account and install directory:
 
 ```bash
