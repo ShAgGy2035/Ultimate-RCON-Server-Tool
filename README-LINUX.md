@@ -383,7 +383,7 @@ Use **Validate server files** or **Install/Update Server** for explicit SteamCMD
 
 ### SteamCMD Linux Prerequisites
 
-SteamCMD requires Linux 32-bit runtime support. On Ubuntu, the application checks for the `i386` architecture and these packages before downloading or running SteamCMD:
+SteamCMD is a 32-bit Linux binary. This guide covers 64-bit Ubuntu and Debian systems, where SteamCMD requires the `i386` architecture and these 32-bit runtime packages before downloading or running SteamCMD:
 
 ```text
 i386 architecture
@@ -392,13 +392,17 @@ lib32gcc-s1
 lib32stdc++6
 ```
 
-When any Ubuntu prerequisite is missing, the application asks for desktop administrator authorization before installing it. On Ubuntu, if automatic installation is unavailable or you prefer to install the packages manually, run:
+When any Ubuntu prerequisite is missing, the application asks for desktop administrator authorization before installing it. On Debian, or when automatic installation is unavailable, install the packages manually with:
 
 ```bash
 sudo dpkg --add-architecture i386
 sudo apt update
 sudo apt install -y libc6-i386 lib32gcc-s1 lib32stdc++6
 ```
+
+Do not run SteamCMD or the CS2 server as `root`. Run the application and SteamCMD under the normal account that owns the SteamCMD and CS2 installation directories, and grant that account only the filesystem and service permissions it needs.
+
+On first launch, SteamCMD updates its own files before accepting commands. The application performs that bootstrap and uses anonymous Steam login by default for CS2 App ID `730`; users do not need to operate an interactive `Steam>` prompt for normal **Install/Update Server** or validation actions. The application runs the equivalent of `app_update 730 validate` for explicit validation and update workflows.
 
 These are operating-system packages for SteamCMD, not CS2 server plugins. Metamod, CounterStrikeSharp, MenuManagerAPI, RCON Tool Companion, ChatRelay, and other add-ons are installed separately on the managed CS2 server as described in [Frameworks And Plugins](#frameworks-and-plugins) and [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff).
 
