@@ -86,6 +86,8 @@ Use a **Local Linux** profile only when the application and CS2 server run on th
 
 Configure the CS2 install directory, executable, working directory, SteamCMD path, App ID `730`, startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Startup can use a local map, Workshop collection, or single Workshop map. The editable map field suggests Valve maps, including Premier maps, while accepting custom names. Public internet servers can also use a Steam Web API key and game-server login token. These credentials are not required or prompted for when **LAN server** is enabled.
 
+Before the first Local Linux **Install/Update server...** operation, review [SteamCMD Linux Prerequisites](#steamcmd-linux-prerequisites). SteamCMD needs Linux 32-bit runtime packages even on a 64-bit Ubuntu or Debian system. If packages are missing, the application may open the desktop administrator authorization dialog to install them; this is expected prerequisite setup, not a server-plugin installation prompt.
+
 ### Choose A Local Lifecycle Mode
 
 - **Direct process**: the application builds the CS2 launch command and owns the process.
@@ -139,6 +141,8 @@ After the Local Linux profile is configured:
 4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
 5. Confirm the Linux host firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
+
+Linux note: the first Local Linux SteamCMD operation may show an administrator authorization dialog while the application installs the required 32-bit runtime prerequisites. See [SteamCMD Linux Prerequisites](#steamcmd-linux-prerequisites) before cancelling that prompt.
 
 If you selected **Install/Update server...** without add-ons, install the frameworks first:
 
