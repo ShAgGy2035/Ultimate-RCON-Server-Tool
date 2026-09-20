@@ -80,6 +80,14 @@ Each platform build contains a self-contained, single-file native application. A
 
 If you chose **Install/Update server...** without add-ons, right-click the running server and select **Install/Upgrade Metamod**, then **Install/Upgrade CSS**, then **Install/Upgrade CSS Plugins...**. Paste the requested package or plugin repository/release URLs, wait for each operation to finish, and restart the server after framework/plugin installation.
 
+Paste each of these URLs into the **Install/Upgrade CSS Plugins...** window one at a time:
+
+```text
+https://github.com/ShAgGy2035/RconCompanionTool
+https://github.com/ShAgGy2035/ChatRelay
+https://github.com/ShAgGy2035/PlayerPunishments
+```
+
 RCON uses TCP. The configured RCON port must be reachable from the computer running the application; opening only the UDP game port is not sufficient.
 
 ## Lifecycle Modes

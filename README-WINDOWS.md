@@ -123,7 +123,12 @@ If you selected **Install/Update server...** without add-ons, complete the frame
 
 1. Right-click the running server and select **Install/Upgrade Metamod**. Choose a compatible release or paste the direct package URL, then wait for installation to finish.
 2. Right-click the server again and select **Install/Upgrade CSS**. Choose a compatible release or paste the direct package URL, then wait for installation to finish.
-3. Right-click the server again and select **Install/Upgrade CSS Plugins...**. Paste the optional plugin's GitHub or supported GitLab repository/release URL, choose the matching release asset if prompted, and wait for deployment to finish.
+3. Right-click the server again and select **Install/Upgrade CSS Plugins...**. Paste each of these URLs into the **Install/Upgrade CSS Plugins...** window:
+```text
+https://github.com/ShAgGy2035/RconCompanionTool
+https://github.com/ShAgGy2035/ChatRelay
+https://github.com/ShAgGy2035/PlayerPunishments
+```
 4. Restart the server so the frameworks and plugins load.
 
 See [Install Frameworks And Plugins](#install-frameworks-and-plugins) for the detailed framework and plugin behavior. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
@@ -335,7 +340,13 @@ If you selected **Install/Update server...** without add-ons, complete the frame
 
 1. Right-click the running server and select **Install/Upgrade Metamod**. Choose a compatible release or paste the direct package URL, then wait for installation to finish.
 2. Right-click the server again and select **Install/Upgrade CSS**. Choose a compatible release or paste the direct package URL, then wait for installation to finish.
-3. Right-click the server again and select **Install/Upgrade CSS Plugins...**. Paste the optional plugin's GitHub or supported GitLab repository/release URL, choose the matching release asset if prompted, and wait for deployment to finish.
+3. Right-click the server again and select **Install/Upgrade CSS Plugins...**. Paste each of these URLs into the **Install/Upgrade CSS Plugins...** window:
+
+```text
+https://github.com/ShAgGy2035/RconCompanionTool
+https://github.com/ShAgGy2035/ChatRelay
+https://github.com/ShAgGy2035/PlayerPunishments
+```
 4. Restart the server so the frameworks and plugins load.
 
 See [Install Frameworks And Plugins](#install-frameworks-and-plugins) for the detailed framework and plugin behavior. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
@@ -507,7 +518,13 @@ If you selected **Install/Update server...** without add-ons, complete the frame
 
 1. Right-click the running server and select **Install/Upgrade Metamod**. Choose a compatible release or paste the direct package URL, then wait for installation to finish.
 2. Right-click the server again and select **Install/Upgrade CSS**. Choose a compatible release or paste the direct package URL, then wait for installation to finish.
-3. Right-click the server again and select **Install/Upgrade CSS Plugins...**. Paste the optional plugin's GitHub or supported GitLab repository/release URL, choose the matching release asset if prompted, and wait for deployment to finish.
+3. Right-click the server again and select **Install/Upgrade CSS Plugins...**. Paste each of these URLs into the **Install/Upgrade CSS Plugins...** window:
+
+```text
+https://github.com/ShAgGy2035/RconCompanionTool
+https://github.com/ShAgGy2035/ChatRelay
+https://github.com/ShAgGy2035/PlayerPunishments
+```
 4. Restart the server so the frameworks and plugins load.
 
 See [Install Frameworks And Plugins](#install-frameworks-and-plugins) for the detailed framework and plugin behavior. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
