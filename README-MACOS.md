@@ -242,6 +242,7 @@ If you selected **Install/Update server...** without add-ons, complete the frame
 3. Right-click the server again and select **Install/Upgrade CSS Plugins...**. Paste each of these URLs into the **Install/Upgrade CSS Plugins...** window:
 ```text
 https://github.com/ShAgGy2035/RconCompanionTool
+https://github.com/nickj609/MenuManagerAPI
 https://github.com/ShAgGy2035/ChatRelay
 https://github.com/ShAgGy2035/PlayerPunishments
 ```
@@ -409,6 +410,7 @@ If you selected **Install/Update server...** without add-ons, complete the frame
 
 ```text
 https://github.com/ShAgGy2035/RconCompanionTool
+https://github.com/nickj609/MenuManagerAPI
 https://github.com/ShAgGy2035/ChatRelay
 https://github.com/ShAgGy2035/PlayerPunishments
 ```
