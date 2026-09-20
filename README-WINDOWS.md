@@ -131,7 +131,12 @@ https://github.com/ShAgGy2035/PlayerPunishments
 ```
 4. Restart the server so the frameworks and plugins load.
 
-See [Install Frameworks And Plugins](#install-frameworks-and-plugins) for the detailed framework and plugin behavior. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
+Once installation is complete, continue to the corresponding sections for configuration and usage details:
+
+- [RCON Tool Companion and Fun Stuff](#rcon-tool-companion-and-fun-stuff) - [GitHub](https://github.com/ShAgGy2035/RconCompanionTool)
+- [ChatRelay](#chatrelay) - [GitHub](https://github.com/ShAgGy2035/ChatRelay)
+- [PlayerPunishments](#playerpunishments-setup) - [GitHub](https://github.com/ShAgGy2035/PlayerPunishments)
+- [Install Frameworks And Plugins](#install-frameworks-and-plugins) for Metamod, CounterStrikeSharp, and optional CSS plugin details.
 
 ## Remote Windows Server
 
@@ -349,7 +354,12 @@ https://github.com/ShAgGy2035/PlayerPunishments
 ```
 4. Restart the server so the frameworks and plugins load.
 
-See [Install Frameworks And Plugins](#install-frameworks-and-plugins) for the detailed framework and plugin behavior. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
+Once installation is complete, continue to the corresponding sections for configuration and usage details:
+
+- [RCON Tool Companion and Fun Stuff](#rcon-tool-companion-and-fun-stuff) - [GitHub](https://github.com/ShAgGy2035/RconCompanionTool)
+- [ChatRelay](#chatrelay) - [GitHub](https://github.com/ShAgGy2035/ChatRelay)
+- [PlayerPunishments](#playerpunishments-setup) - [GitHub](https://github.com/ShAgGy2035/PlayerPunishments)
+- [Install Frameworks And Plugins](#install-frameworks-and-plugins) for Metamod, CounterStrikeSharp, and optional CSS plugin details.
 
 
 ## Remote Linux Server
@@ -527,7 +537,12 @@ https://github.com/ShAgGy2035/PlayerPunishments
 ```
 4. Restart the server so the frameworks and plugins load.
 
-See [Install Frameworks And Plugins](#install-frameworks-and-plugins) for the detailed framework and plugin behavior. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
+Once installation is complete, continue to the corresponding sections for configuration and usage details:
+
+- [RCON Tool Companion and Fun Stuff](#rcon-tool-companion-and-fun-stuff) - [GitHub](https://github.com/ShAgGy2035/RconCompanionTool)
+- [ChatRelay](#chatrelay) - [GitHub](https://github.com/ShAgGy2035/ChatRelay)
+- [PlayerPunishments](#playerpunishments-setup) - [GitHub](https://github.com/ShAgGy2035/PlayerPunishments)
+- [Install Frameworks And Plugins](#install-frameworks-and-plugins) for Metamod, CounterStrikeSharp, and optional CSS plugin details.
 
 ## SteamCMD Behavior
 
