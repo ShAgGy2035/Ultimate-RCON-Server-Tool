@@ -25,8 +25,8 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - [Finish Remote Windows Setup](#finish-remote-windows-setup)
 - [Using The Application](#using-the-application)
 - [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff)
-- [ChatRelay](#chatrelay)
 - [PlayerPunishments](#playerpunishments)
+- [ChatRelay](#chatrelay)
 - [Frameworks, Plugins, And Backups](#frameworks-plugins-and-backups)
 	- [Install Frameworks And Plugins](#install-frameworks-and-plugins)
 - [macOS Integration](#macos-integration)
@@ -249,9 +249,9 @@ https://github.com/ShAgGy2035/PlayerPunishments
 
 Once installation is complete, continue to the corresponding sections for configuration and usage details:
 
-- [RCON Tool Companion and Fun Stuff](#rcon-tool-companion-and-fun-stuff) - [GitHub](https://github.com/ShAgGy2035/RconCompanionTool)
-- [ChatRelay](#chatrelay) - [GitHub](https://github.com/ShAgGy2035/ChatRelay)
-- [PlayerPunishments](#playerpunishments) - [GitHub](https://github.com/ShAgGy2035/PlayerPunishments)
+- [RCON Tool Companion and Fun Stuff](#rcon-tool-companion-and-fun-stuff)
+- [PlayerPunishments](#playerpunishments)
+- [ChatRelay](#chatrelay)
 - [Install Frameworks And Plugins](#install-frameworks-and-plugins) for Metamod, CounterStrikeSharp, and optional CSS plugin details.
 
 
@@ -416,9 +416,9 @@ https://github.com/ShAgGy2035/PlayerPunishments
 
 Once installation is complete, continue to the corresponding sections for configuration and usage details:
 
-- [RCON Tool Companion and Fun Stuff](#rcon-tool-companion-and-fun-stuff) - [GitHub](https://github.com/ShAgGy2035/RconCompanionTool)
-- [ChatRelay](#chatrelay) - [GitHub](https://github.com/ShAgGy2035/ChatRelay)
-- [PlayerPunishments](#playerpunishments) - [GitHub](https://github.com/ShAgGy2035/PlayerPunishments)
+- [RCON Tool Companion and Fun Stuff](#rcon-tool-companion-and-fun-stuff)
+- [PlayerPunishments](#playerpunishments)
+- [ChatRelay](#chatrelay)
 - [Install Frameworks And Plugins](#install-frameworks-and-plugins) for Metamod, CounterStrikeSharp, and optional CSS plugin details.
 
 
