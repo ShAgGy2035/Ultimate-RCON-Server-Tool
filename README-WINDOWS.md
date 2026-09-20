@@ -133,7 +133,7 @@ https://github.com/nickj609/MenuManagerAPI
 https://github.com/ShAgGy2035/ChatRelay
 https://github.com/ShAgGy2035/PlayerPunishments
 ```
-2. Restart the server so the frameworks and plugins load.
+2. Right-click the server and select **Restart server** so the frameworks and plugins load.
 
 Once installation is complete, continue to the corresponding sections for configuration and usage details:
 
@@ -360,7 +360,7 @@ https://github.com/nickj609/MenuManagerAPI
 https://github.com/ShAgGy2035/ChatRelay
 https://github.com/ShAgGy2035/PlayerPunishments
 ```
-2. Restart the server so the frameworks and plugins load.
+2. Right-click the server and select **Restart server** so the frameworks and plugins load.
 
 Once installation is complete, continue to the corresponding sections for configuration and usage details:
 
@@ -547,7 +547,7 @@ https://github.com/nickj609/MenuManagerAPI
 https://github.com/ShAgGy2035/ChatRelay
 https://github.com/ShAgGy2035/PlayerPunishments
 ```
-2. Restart the server so the frameworks and plugins load.
+2. Right-click the server and select **Restart server** so the frameworks and plugins load.
 
 Once installation is complete, continue to the corresponding sections for configuration and usage details:
 
