@@ -383,7 +383,7 @@ Use **Validate server files** or **Install/Update Server** for explicit SteamCMD
 
 ### SteamCMD Linux Prerequisites
 
-SteamCMD requires Ubuntu 32-bit runtime support. For Local Linux profiles, the application checks for the `i386` architecture and these packages before downloading or running SteamCMD:
+SteamCMD requires Linux 32-bit runtime support. On Ubuntu, the application checks for the `i386` architecture and these packages before downloading or running SteamCMD:
 
 ```text
 i386 architecture
@@ -392,7 +392,7 @@ lib32gcc-s1
 lib32stdc++6
 ```
 
-When any prerequisite is missing, the application asks for desktop administrator authorization before installing it. If automatic installation is unavailable or you prefer to install them manually, run:
+When any Ubuntu prerequisite is missing, the application asks for desktop administrator authorization before installing it. On Ubuntu, if automatic installation is unavailable or you prefer to install the packages manually, run:
 
 ```bash
 sudo dpkg --add-architecture i386
