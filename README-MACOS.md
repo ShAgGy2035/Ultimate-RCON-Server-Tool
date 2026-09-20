@@ -12,7 +12,6 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 
 ## Table of Contents
 
-- [Server Plugin Requirements](#server-plugin-requirements)
 - [Requirements](#requirements)
 - [Install And Launch](#install-and-launch)
 - [Update The Application](#update-the-application)
@@ -27,17 +26,13 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - [Using The Application](#using-the-application)
 - [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff)
 - [ChatRelay](#chatrelay)
+- [PlayerPunishments](#playerpunishments)
 - [Frameworks, Plugins, And Backups](#frameworks-plugins-and-backups)
+	- [Install Optional CSS Plugins](#install-optional-css-plugins)
 - [macOS Integration](#macos-integration)
 - [Troubleshooting](#troubleshooting)
 - [About](#about)
 - [Application Screenshots](#application-screenshots)
-
-## Server Plugin Requirements
-
-The app's Slay and Slap controls send `css_slay #userid` and `css_slap #userid damage`. Install [PlayerPunishments 1.0.0 or newer](https://github.com/ShAgGy2035/PlayerPunishments) on the remote CS2 server when its existing administration package does not provide those commands. PlayerPunishments is a CounterStrikeSharp server plugin and is not installed in the macOS application bundle. Configure Slap damage from `0` to `99` under **Settings > General**.
-
-Alive and Health display **Unknown** when the required server-side player-information command is unavailable.
 
 ## Requirements
 
@@ -409,9 +404,19 @@ ChatRelay is a separate [CounterStrikeSharp plugin](https://github.com/ShAgGy203
 
 The listener accepts authenticated JSON only, limits datagrams to 8 KiB, and drops rejected packets. UDP is unencrypted, so restrict firewall access to the server or trusted LAN, or use a VPN.
 
+## PlayerPunishments
+
+The app's Slay and Slap controls send `css_slay #userid` and `css_slap #userid damage`. Install [PlayerPunishments 1.0.0 or newer](https://github.com/ShAgGy2035/PlayerPunishments) on the remote CS2 server when its existing administration package does not provide those commands. PlayerPunishments is a CounterStrikeSharp server plugin and is not installed in the macOS application bundle. Configure Slap damage from `0` to `99` under **Settings > General**.
+
+Alive and Health display **Unknown** when the required server-side player-information command is unavailable.
+
 ## Frameworks, Plugins, And Backups
 
 Install Metamod before CounterStrikeSharp. Interactive installation shows the latest 20 compatible releases and accepts a selected release or direct package URL. **Settings > Metamod Settings** manages plugin lifecycle; **Settings > CStrikeSharp Settings** reloads admins and manages plugins; **Test Metamod/CSS command availability** safely probes supported command forms.
+
+### Install Optional CSS Plugins
+
+After Metamod and CounterStrikeSharp are installed, optional CSS plugins can be installed from the server context menu. Right-click the configured server, select **Install/Upgrade CSS Plugins...**, paste the plugin's GitHub or supported GitLab repository/release URL when prompted, choose the matching release asset if more than one is offered, and wait for deployment to finish. Restart the server after installing or upgrading a plugin so CounterStrikeSharp loads it.
 
 Optional plugins can come from GitHub, nested public GitLab.com projects, or supported local packages. Assets are filtered by target server OS, and repeated choices remember a version-independent filename preference. Keep `game/csgo/.cs2-rcon-tool-plugins.json` with the server so uninstall removes only owned files. Remote updates replace native binaries atomically so a running process keeps the old binary until restart.
 

@@ -13,7 +13,6 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
   - [Install and launch](#install-and-launch)
   - [Update the application](#update-the-application)
   - [Configuration and data](#configuration-and-data)
-   - [PlayerPunishments setup](#playerpunishments-setup)
 - **Local Windows server**
   - [Choose a lifecycle mode](#choose-a-local-lifecycle-mode)
   - [Direct process](#local-windows-direct-process)
@@ -35,7 +34,9 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - [Using the application](#using-the-application)
 - [RCON Tool Companion and Fun Stuff](#rcon-tool-companion-and-fun-stuff)
 - [ChatRelay](#chatrelay)
+- [PlayerPunishments setup](#playerpunishments-setup)
 - [Frameworks and plugins](#frameworks-and-plugins)
+   - [Install Optional CSS Plugins](#install-optional-css-plugins)
 - [Backups, data, and security](#backups-data-and-security)
 - [Troubleshooting](#troubleshooting)
 - [Application Screenshots](#application-screenshots)
@@ -64,12 +65,6 @@ The Windows data directory contains server profiles, scheduled tasks, applicatio
 ```
 
 Saved secrets use AES-256-GCM. Keep `credential.key` with the JSON files when backing up or migrating data.
-
-### PlayerPunishments Setup
-
-The app's Slay and Slap controls send `css_slay #userid` and `css_slap #userid damage`. Install [PlayerPunishments 1.0.0 or newer](https://github.com/ShAgGy2035/PlayerPunishments) on each managed CS2 server when its existing administration package does not provide those commands. Configure Slap damage from `0` to `99` under **Settings > General**.
-
-PlayerPunishments is a CounterStrikeSharp server plugin. Install it in the Windows CS2 server's CounterStrikeSharp plugin directory, not in the desktop application's folder. Alive and Health display **Unknown** when the required server-side player-information command is unavailable.
 
 ## Local Windows Server
 
@@ -559,6 +554,12 @@ ScoutzKnives manages SSG 08 plus team knife and exposes air acceleration, gravit
 
 Deathmatch stages duration, respawn, and random-spawn behavior before map initialization. Leaving Deathmatch reloads the current map because CS2 only fully exits its built-in Deathmatch mode on a map load; other rollbacks and switches restart the round. Companion stores one authoritative pre-mode snapshot under `configs/plugins/RCT`, allowing Universal or `!fun` to roll back a mode applied by either interface.
 
+## PlayerPunishments Setup
+
+The app's Slay and Slap controls send `css_slay #userid` and `css_slap #userid damage`. Install [PlayerPunishments 1.0.0 or newer](https://github.com/ShAgGy2035/PlayerPunishments) on each managed CS2 server when its existing administration package does not provide those commands. Configure Slap damage from `0` to `99` under **Settings > General**.
+
+PlayerPunishments is a CounterStrikeSharp server plugin. Install it in the managed Windows CS2 server's CounterStrikeSharp plugin directory, not in the desktop application's folder. Alive and Health display **Unknown** when the required server-side player-information command is unavailable.
+
 ## ChatRelay
 
 ChatRelay is a separate [CounterStrikeSharp plugin](https://github.com/ShAgGy2035/ChatRelay); its binaries are not bundled with this application.
@@ -574,6 +575,10 @@ The listener accepts authenticated JSON only, limits datagrams to 8 KiB, and dro
 ## Frameworks And Plugins
 
 Install Metamod before CounterStrikeSharp. Interactive installation shows the latest 20 compatible releases and accepts a selected release or direct HTTP(S) ZIP, TAR.GZ, or TGZ URL. Scheduled and headless maintenance use the newest compatible releases because they cannot display selection dialogs.
+
+### Install Optional CSS Plugins
+
+After Metamod and CounterStrikeSharp are installed, optional CSS plugins can be installed from the server context menu. Right-click the configured server, select **Install/Upgrade CSS Plugins...**, paste the plugin's GitHub or supported GitLab repository/release URL when prompted, choose the matching release asset if more than one is offered, and wait for deployment to finish. Restart the server after installing or upgrading a plugin so CounterStrikeSharp loads it.
 
 Under **Settings > Metamod Settings**, list plugins and run info, pause, unpause, retry, load, unload, or force-unload operations. Under **Settings > CStrikeSharp Settings**, reload admins and list, reload, or unload plugins. **Settings > Test Metamod/CSS command availability** probes safe command forms with nonexistent plugin IDs.
 

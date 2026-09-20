@@ -19,8 +19,10 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - [Lifecycle Modes](#lifecycle-modes)
 - [Server Installation And Updates](#server-installation-and-updates)
 - [Main Areas](#main-areas)
+- [PlayerPunishments](#playerpunishments)
 - [Settings](#settings)
 - [Frameworks And Plugins](#frameworks-and-plugins)
+	- [Install Optional CSS Plugins](#install-optional-css-plugins)
 - [Backups And Restore](#backups-and-restore)
 - [Data Storage And Security](#data-storage-and-security)
 - [Updating Or Migrating Data](#updating-or-migrating-data)
@@ -120,12 +122,6 @@ Server Actions control hostname, bots, teams, passwords, friendly fire, cheats, 
 
 Deleting a server requires confirmation. Optional app-state cleanup removes that profile's scheduled tasks, external scheduler entries, console history, and cached state. It does not delete CS2 installations, plugins, backups, or files from the managed server.
 
-### PlayerPunishments
-
-The Slay and Slap controls send `css_slay #userid` and `css_slap #userid damage`. Install [PlayerPunishments 1.0.0 or newer](https://github.com/ShAgGy2035/PlayerPunishments) when the server's existing administration package does not provide those commands. The player table's Alive and Health values also depend on the required server-side player-information command and display **Unknown** when it is unavailable.
-
-Configure Slap damage from `0` to `99` under **Settings > General**. PlayerPunishments is installed on the managed CS2 server as a CounterStrikeSharp plugin, not beside the desktop application.
-
 ### Joining A Server
 
 Select a server and click **Join server**. Windows uses the registered Steam URI handler, Linux tries Steam and desktop URI handlers, and macOS uses `open`. If CS2 opens without connecting, paste the copied `connect IP:port` command into the CS2 developer console.
@@ -156,6 +152,12 @@ Console Commands accepts free-form RCON commands and provides categorized sugges
 
 The Chat tab receives authenticated JSON messages from the separate [ChatRelay](https://github.com/ShAgGy2035/ChatRelay) CounterStrikeSharp plugin over UDP and can send admin chat through RCON. Configure the receiving adapter and port, set a unique token under **Edit server > Integrations**, then use **Copy ChatRelay target JSON**. The listener accepts authenticated JSON only, limits datagrams to 8 KiB, and drops rejected packets. Restrict firewall access to the game server or trusted LAN, or use a VPN.
 
+## PlayerPunishments
+
+The Slay and Slap controls send `css_slay #userid` and `css_slap #userid damage`. Install [PlayerPunishments 1.0.0 or newer](https://github.com/ShAgGy2035/PlayerPunishments) when the server's existing administration package does not provide those commands. The player table's Alive and Health values also depend on the required server-side player-information command and display **Unknown** when it is unavailable.
+
+Configure Slap damage from `0` to `99` under **Settings > General**. PlayerPunishments is installed on the managed CS2 server as a CounterStrikeSharp plugin, not beside the desktop application.
+
 ## Settings
 
 Open **Settings > Settings** for application-wide options. The **General** tab includes GeoLite and country-flag URLs, slap damage, automatic 15-second server-list refresh, noisy-output filtering, and GeoLite/flag updates. The **Backups** tab provides separate destinations for server-file and database backups.
@@ -165,6 +167,10 @@ Server-specific lifecycle, SteamCMD, map, RCON, player-password, database, ChatR
 ## Frameworks And Plugins
 
 Install Metamod before CounterStrikeSharp. Interactive installation shows the latest 20 compatible releases and accepts a selected release or direct HTTP(S) package URL. Scheduled and headless maintenance use the newest compatible releases because they cannot display selection dialogs.
+
+### Install Optional CSS Plugins
+
+After Metamod and CounterStrikeSharp are installed, optional CSS plugins can be installed from the server context menu. Right-click the configured server, select **Install/Upgrade CSS Plugins...**, paste the plugin's GitHub or supported GitLab repository/release URL when prompted, choose the matching release asset if more than one is offered, and wait for deployment to finish. Restart the server after installing or upgrading a plugin so CounterStrikeSharp loads it.
 
 Under **Settings > Metamod Settings**, list plugins and run info, pause, unpause, retry, load, unload, or force-unload operations. Under **Settings > CStrikeSharp Settings**, reload admins and list, reload, or unload plugins. Use **Settings > Test Metamod/CSS command availability** to probe safe command forms with nonexistent plugin IDs without targeting real plugins.
 
