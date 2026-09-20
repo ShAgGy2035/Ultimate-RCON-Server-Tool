@@ -8,6 +8,7 @@ This self-contained guide covers the Linux x64 application, Local Linux servers,
 
 Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
 
+## Table of Content
 - **Linux application**
   - [Install and launch](#install-and-launch)
   - [Update the application](#update-the-application)
@@ -379,6 +380,27 @@ All launch arguments belong in the WinSW XML. WinSW writes rolled output and err
 | Remote Linux, Service commands | Checks SteamCMD is idle, verifies the core file, and monitors the service process without validation | Performs the same preflight and monitoring without validation |
 
 Use **Validate server files** or **Install/Update Server** for explicit SteamCMD validation.
+
+### SteamCMD Linux Prerequisites
+
+SteamCMD requires Ubuntu 32-bit runtime support. For Local Linux profiles, the application checks for the `i386` architecture and these packages before downloading or running SteamCMD:
+
+```text
+i386 architecture
+libc6-i386
+lib32gcc-s1
+lib32stdc++6
+```
+
+When any prerequisite is missing, the application asks for desktop administrator authorization before installing it. If automatic installation is unavailable or you prefer to install them manually, run:
+
+```bash
+sudo dpkg --add-architecture i386
+sudo apt update
+sudo apt install -y libc6-i386 lib32gcc-s1 lib32stdc++6
+```
+
+These are operating-system packages for SteamCMD, not CS2 server plugins. Metamod, CounterStrikeSharp, MenuManagerAPI, RCON Tool Companion, ChatRelay, and other add-ons are installed separately on the managed CS2 server as described in [Frameworks And Plugins](#frameworks-and-plugins) and [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff).
 
 When a managed local CS2 process is running, the application pauses before SteamCMD and offers to stop it and continue. Cancelling leaves the server running and aborts the update or validation. After SteamCMD restores core files, **Install/Update Server** reapplies and validates the Metamod/CounterStrikeSharp loader chain. **Install/Update Server + Add-ons** combines the core update with framework and tracked-plugin maintenance.
 

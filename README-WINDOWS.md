@@ -8,6 +8,7 @@ This self-contained guide covers the Windows x64 application, Local Windows serv
 
 Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
 
+## Table of Content
 - **Windows application**
   - [Install and launch](#install-and-launch)
   - [Update the application](#update-the-application)
