@@ -18,15 +18,18 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
   - [Choose a lifecycle mode](#choose-a-local-lifecycle-mode)
   - [Direct process](#local-windows-direct-process)
   - [Service commands](#local-windows-service-commands)
+   - [Finish Local Windows setup](#finish-local-windows-setup)
 - **Remote Windows server**
   - [Requirements](#remote-windows-requirements)
   - [Direct process](#remote-windows-direct-process)
   - [Service commands with WinSW](#remote-windows-service-commands-with-winsw)
+   - [Finish Remote Windows setup](#finish-remote-windows-setup)
 - **Remote Linux server**
    - [Requirements](#remote-linux-requirements)
    - [Account and permissions](#remote-linux-account-and-permissions)
    - [Direct process](#remote-linux-direct-process)
    - [Service commands with systemd](#remote-linux-service-commands-with-systemd)
+   - [Finish Remote Linux setup](#finish-remote-linux-setup)
 - [SteamCMD behavior](#steamcmd-behavior)
 - [Using the application](#using-the-application)
 - [RCON Tool Companion and Fun Stuff](#rcon-tool-companion-and-fun-stuff)
@@ -111,6 +114,16 @@ Restart-Service -Name 'cs2-server'
 The account running the application must have permission to control the service. Put all CS2 launch arguments, including `-tickrate`, `+sv_lan`, and `-secure` or `-insecure`, in the service wrapper configuration. Service Start and Restart do not run SteamCMD validation.
 
 Use the WinSW example below for either a local or remote Windows service. For a local profile, enter the commands above without an outer `powershell -Command` wrapper because the application already invokes local PowerShell.
+
+### Finish Local Windows Setup
+
+After the Local Windows profile is configured:
+
+1. Save the server profile.
+2. Select the server in the top server list.
+3. Right-click the server and select **Install/Update server...** to install or validate CS2 with SteamCMD.
+4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
+5. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug** before selecting **Start**.
 
 ## Remote Windows Server
 
@@ -236,6 +249,16 @@ Restart: powershell -NoProfile -NonInteractive -Command "Restart-Service -Name '
 For a **Local Windows** profile, use the shorter commands shown under [Local Windows Service Commands](#local-windows-service-commands).
 
 Service mode expects all CS2 launch arguments in the WinSW XML. It monitors the service-owned process and prevents Direct mode from managing the same executable. WinSW writes rolled output and error logs under `C:\cs2server\logs`.
+
+### Finish Remote Windows Setup
+
+After the Remote Windows profile and its Direct process or Service commands setup are complete:
+
+1. Save the server profile.
+2. Select the server in the top server list.
+3. Right-click the server and select **Install/Update server...** to install or validate CS2 with SteamCMD.
+4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
+5. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug** before selecting **Start**.
 
 ## Remote Linux Server
 
@@ -384,6 +407,16 @@ Remote install directory: <install-dir>
 ```
 
 All CS2 arguments belong in the launcher. Start and Restart verify SteamCMD is idle, check the core file, and require the service-owned process to remain alive for 30 seconds. Stop verifies that it exits.
+
+### Finish Remote Linux Setup
+
+After the Remote Linux profile and its Direct process or Service commands setup are complete:
+
+1. Save the server profile.
+2. Select the server in the top server list.
+3. Right-click the server and select **Install/Update server...** to install or validate CS2 with SteamCMD.
+4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
+5. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug** before selecting **Start**.
 
 ## SteamCMD Behavior
 

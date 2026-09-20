@@ -20,7 +20,9 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - [Choose A Lifecycle Mode](#choose-a-lifecycle-mode)
 - [Remote Linux Setup](#remote-linux-setup)
 - [Remote Linux Account And Permissions](#remote-linux-account-and-permissions)
+- [Finish Remote Linux Setup](#finish-remote-linux-setup)
 - [Remote Windows Setup](#remote-windows-setup)
+- [Finish Remote Windows Setup](#finish-remote-windows-setup)
 - [Using The Application](#using-the-application)
 - [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff)
 - [ChatRelay](#chatrelay)
@@ -223,6 +225,16 @@ Remote install directory: <install-dir>
 
 All CS2 arguments belong in the launcher. Start and Restart verify SteamCMD is idle, check the core file, and require the service-owned process to remain alive for 30 seconds. Stop verifies that it exits.
 
+### Finish Remote Linux Setup
+
+After the Remote Linux profile and its Direct process or Service commands setup are complete:
+
+1. Save the server profile.
+2. Select the server in the top server list.
+3. Right-click the server and select **Install/Update server...** to install or validate CS2 with SteamCMD.
+4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
+5. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug** before selecting **Start**.
+
 ## Remote Windows Setup
 
 Configure OpenSSH access, optional SFTP details, Windows SteamCMD path, and CS2 installation directory. The SSH account must belong to the remote computer's local Administrators group for WMI process creation and firewall configuration. Remote Windows management does not require WinRM or a separate SFTP service for Direct startup and plugin deployment.
@@ -287,6 +299,16 @@ Restart: powershell -NoProfile -NonInteractive -Command "Restart-Service -Name '
 ```
 
 Put all CS2 launch arguments in the WinSW XML. Configure inbound UDP and TCP firewall rules for the game/RCON port. WinSW writes rolled logs under `C:\cs2server\logs` and restarts CS2 after unexpected exits.
+
+### Finish Remote Windows Setup
+
+After the Remote Windows profile and its Direct process or Service commands setup are complete:
+
+1. Save the server profile.
+2. Select the server in the top server list.
+3. Right-click the server and select **Install/Update server...** to install or validate CS2 with SteamCMD.
+4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
+5. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug** before selecting **Start**.
 
 ## Using The Application
 

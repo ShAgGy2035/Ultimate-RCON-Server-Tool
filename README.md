@@ -74,6 +74,7 @@ Each platform build contains a self-contained, single-file native application. A
 4. Add a server and enter its name, host/IP, game/RCON port, RCON password, and location.
 5. Complete lifecycle and SteamCMD settings when the application will manage those operations.
 6. Save the profile, select it in the top server list, and click **Refresh server list**.
+7. Right-click the server and select **Install/Update server...**, or **Install/Update Server + Add-ons** when framework and tracked-plugin maintenance is also required. Wait for it to finish before selecting **Start**.
 
 RCON uses TCP. The configured RCON port must be reachable from the computer running the application; opening only the UDP game port is not sufficient.
 

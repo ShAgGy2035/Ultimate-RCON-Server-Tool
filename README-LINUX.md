@@ -18,11 +18,13 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
   - [Choose a lifecycle mode](#choose-a-local-lifecycle-mode)
   - [Direct process](#local-linux-direct-process)
   - [Service commands](#local-linux-service-commands)
+   - [Finish Local Linux setup](#finish-local-linux-setup)
 - **Remote Linux server**
   - [Requirements](#remote-linux-requirements)
    - [Account and permissions](#remote-linux-account-and-permissions)
   - [Direct process](#remote-linux-direct-process)
   - [Service commands with systemd](#linux-service-commands-with-systemd)
+   - [Finish Remote Linux setup](#finish-remote-linux-setup)
 - **Remote Windows server**
    - [Requirements](#remote-windows-requirements)
    - [Direct process](#remote-windows-direct-process)
@@ -127,6 +129,16 @@ sudo -n systemctl restart cs2-server
 The account running the application needs noninteractive sudo permission for these commands. Put all launch arguments, including `-tickrate`, `+sv_lan`, and `-secure` or `-insecure`, in the systemd launcher. Service Start and Restart do not run SteamCMD validation.
 
 Use the complete setup under [Linux Service Commands With systemd](#linux-service-commands-with-systemd). For a local profile, replace `<ssh-user>` in its sudoers example with the desktop account running the application.
+
+### Finish Local Linux Setup
+
+After the Local Linux profile is configured:
+
+1. Save the server profile.
+2. Select the server in the top server list.
+3. Right-click the server and select **Install/Update server...** to install or validate CS2 with SteamCMD.
+4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
+5. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug** before selecting **Start**.
 
 ## Remote Linux Server
 
@@ -298,6 +310,16 @@ Remote install directory: <install-dir>
 For Local Linux, use the same lifecycle commands and configure the local install directory. Service launch arguments belong in the launcher, not in Direct-process fields.
 
 Remote Service Start and Restart perform a SteamCMD/core-file preflight, resolve the expected executable, and require the service-owned process to remain alive for 30 seconds. Verification uses the exact executable when readable and otherwise requires a `cs2` process in the configured unit's exact cgroup. Stop requires the process to disappear.
+
+### Finish Remote Linux Setup
+
+After the Remote Linux profile and its Direct process or Service commands setup are complete:
+
+1. Save the server profile.
+2. Select the server in the top server list.
+3. Right-click the server and select **Install/Update server...** to install or validate CS2 with SteamCMD.
+4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
+5. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug** before selecting **Start**. For Service commands, the configured systemd service remains the process owner when the app starts it.
 
 ## Remote Windows Server
 
