@@ -28,7 +28,7 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - [ChatRelay](#chatrelay)
 - [PlayerPunishments](#playerpunishments)
 - [Frameworks, Plugins, And Backups](#frameworks-plugins-and-backups)
-	- [Install Optional CSS Plugins](#install-optional-css-plugins)
+	- [Install Frameworks And Plugins](#install-frameworks-and-plugins)
 - [macOS Integration](#macos-integration)
 - [Troubleshooting](#troubleshooting)
 - [About](#about)
@@ -235,7 +235,7 @@ After the Remote Linux profile and its Direct process or Service commands setup 
 5. Confirm the remote Linux firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
-If you selected **Install/Update server...** without add-ons, continue to [Frameworks, Plugins, And Backups](#frameworks-plugins-and-backups) to install Metamod, CounterStrikeSharp, and optional CSS plugins. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
+If you selected **Install/Update server...** without add-ons, continue to [Install Frameworks And Plugins](#install-frameworks-and-plugins). If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
 
 
 ## Remote Windows Setup
@@ -384,7 +384,7 @@ After the Remote Windows profile and its Direct process or Service commands setu
 5. Confirm the remote Windows firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
-If you selected **Install/Update server...** without add-ons, continue to [Frameworks, Plugins, And Backups](#frameworks-plugins-and-backups) to install Metamod, CounterStrikeSharp, and optional CSS plugins. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
+If you selected **Install/Update server...** without add-ons, continue to [Install Frameworks And Plugins](#install-frameworks-and-plugins). If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
 
 
 ## Using The Application
@@ -425,9 +425,15 @@ Alive and Health display **Unknown** when the required server-side player-inform
 
 Install Metamod before CounterStrikeSharp. Interactive installation shows the latest 20 compatible releases and accepts a selected release or direct package URL. **Settings > Metamod Settings** manages plugin lifecycle; **Settings > CStrikeSharp Settings** reloads admins and manages plugins; **Test Metamod/CSS command availability** safely probes supported command forms.
 
-### Install Optional CSS Plugins
+### Install Frameworks And Plugins
 
-After Metamod and CounterStrikeSharp are installed, optional CSS plugins can be installed from the server context menu. Right-click the configured server, select **Install/Upgrade CSS Plugins...**, paste the plugin's GitHub or supported GitLab repository/release URL when prompted, choose the matching release asset if more than one is offered, and wait for deployment to finish. Restart the server after installing or upgrading a plugin so CounterStrikeSharp loads it.
+Install Metamod before CounterStrikeSharp. Use the application menus in this order:
+
+1. Select the configured server in the top server list.
+2. Right-click the server and select **Install/Upgrade Metamod**. Choose a compatible release or paste the direct package URL when prompted, then wait for installation to finish.
+3. Right-click the server again and select **Install/Upgrade CSS**. Choose a compatible release or paste the direct package URL when prompted, then wait for installation to finish.
+4. Right-click the server again and select **Install/Upgrade CSS Plugins...** to install optional CounterStrikeSharp plugins. Paste the plugin's GitHub or supported GitLab repository/release URL, choose the matching release asset if prompted, and wait for deployment to finish.
+5. Restart the server after installing or upgrading frameworks or plugins so the server loads them.
 
 Optional plugins can come from GitHub, nested public GitLab.com projects, or supported local packages. Assets are filtered by target server OS, and repeated choices remember a version-independent filename preference. Keep `game/csgo/.cs2-rcon-tool-plugins.json` with the server so uninstall removes only owned files. Remote updates replace native binaries atomically so a running process keeps the old binary until restart.
 

@@ -36,7 +36,7 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - [ChatRelay](#chatrelay)
 - [PlayerPunishments setup](#playerpunishments-setup)
 - [Frameworks and plugins](#frameworks-and-plugins)
-   - [Install Optional CSS Plugins](#install-optional-css-plugins)
+   - [Install Frameworks And Plugins](#install-frameworks-and-plugins)
 - [Backups, data, and security](#backups-data-and-security)
 - [Troubleshooting](#troubleshooting)
 - [Application Screenshots](#application-screenshots)
@@ -140,7 +140,7 @@ After the Local Linux profile is configured:
 5. Confirm the Linux host firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
-If you selected **Install/Update server...** without add-ons, continue to [Frameworks And Plugins](#frameworks-and-plugins) to install Metamod, CounterStrikeSharp, and optional CSS plugins. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
+If you selected **Install/Update server...** without add-ons, continue to [Install Frameworks And Plugins](#install-frameworks-and-plugins). If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
 
 ## Remote Linux Server
 
@@ -327,7 +327,7 @@ After the Remote Linux profile and its Direct process or Service commands setup 
 5. Confirm the remote Linux firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**. For Service commands, the configured systemd service remains the process owner when the app starts it.
 
-If you selected **Install/Update server...** without add-ons, continue to [Frameworks And Plugins](#frameworks-and-plugins) to install Metamod, CounterStrikeSharp, and optional CSS plugins. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
+If you selected **Install/Update server...** without add-ons, continue to [Install Frameworks And Plugins](#install-frameworks-and-plugins). If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
 
 
 ## Remote Windows Server
@@ -498,7 +498,7 @@ After the Remote Windows profile and its Direct process or Service commands setu
 5. Confirm the remote Windows firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
-If you selected **Install/Update server...** without add-ons, continue to [Frameworks And Plugins](#frameworks-and-plugins) to install Metamod, CounterStrikeSharp, and optional CSS plugins. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
+If you selected **Install/Update server...** without add-ons, continue to [Install Frameworks And Plugins](#install-frameworks-and-plugins). If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
 
 
 ## SteamCMD Behavior
@@ -611,9 +611,15 @@ The listener accepts authenticated JSON only, limits datagrams to 8 KiB, and dro
 
 Install Metamod before CounterStrikeSharp. Interactive installation shows the latest 20 compatible releases and accepts a selected release or direct HTTP(S) ZIP, TAR.GZ, or TGZ URL. Scheduled and headless maintenance use the newest compatible releases because they cannot display selection dialogs.
 
-### Install Optional CSS Plugins
+### Install Frameworks And Plugins
 
-After Metamod and CounterStrikeSharp are installed, optional CSS plugins can be installed from the server context menu. Right-click the configured server, select **Install/Upgrade CSS Plugins...**, paste the plugin's GitHub or supported GitLab repository/release URL when prompted, choose the matching release asset if more than one is offered, and wait for deployment to finish. Restart the server after installing or upgrading a plugin so CounterStrikeSharp loads it.
+Install Metamod before CounterStrikeSharp. Use the application menus in this order:
+
+1. Select the configured server in the top server list.
+2. Right-click the server and select **Install/Upgrade Metamod**. Choose a compatible release or paste the direct package URL when prompted, then wait for installation to finish.
+3. Right-click the server again and select **Install/Upgrade CSS**. Choose a compatible release or paste the direct package URL when prompted, then wait for installation to finish.
+4. Right-click the server again and select **Install/Upgrade CSS Plugins...** to install optional CounterStrikeSharp plugins. Paste the plugin's GitHub or supported GitLab repository/release URL, choose the matching release asset if prompted, and wait for deployment to finish.
+5. Restart the server after installing or upgrading frameworks or plugins so the server loads them.
 
 Under **Settings > Metamod Settings**, list plugins and run info, pause, unpause, retry, load, unload, or force-unload operations. Under **Settings > CStrikeSharp Settings**, reload admins and list, reload, or unload plugins. **Settings > Test Metamod/CSS command availability** probes safe command forms with nonexistent plugin IDs.
 

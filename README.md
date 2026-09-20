@@ -22,7 +22,7 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - [PlayerPunishments](#playerpunishments)
 - [Settings](#settings)
 - [Frameworks And Plugins](#frameworks-and-plugins)
-	- [Install Optional CSS Plugins](#install-optional-css-plugins)
+	- [Install Frameworks And Plugins](#install-frameworks-and-plugins)
 - [Backups And Restore](#backups-and-restore)
 - [Data Storage And Security](#data-storage-and-security)
 - [Updating Or Migrating Data](#updating-or-migrating-data)
@@ -170,11 +170,15 @@ Server-specific lifecycle, SteamCMD, map, RCON, player-password, database, ChatR
 
 ## Frameworks And Plugins
 
+### Install Frameworks And Plugins
+
 Install Metamod before CounterStrikeSharp. Interactive installation shows the latest 20 compatible releases and accepts a selected release or direct HTTP(S) package URL. Scheduled and headless maintenance use the newest compatible releases because they cannot display selection dialogs.
 
-### Install Optional CSS Plugins
-
-After Metamod and CounterStrikeSharp are installed, optional CSS plugins can be installed from the server context menu. Right-click the configured server, select **Install/Upgrade CSS Plugins...**, paste the plugin's GitHub or supported GitLab repository/release URL when prompted, choose the matching release asset if more than one is offered, and wait for deployment to finish. Restart the server after installing or upgrading a plugin so CounterStrikeSharp loads it.
+1. Select the configured server in the top server list.
+2. Right-click the server and select **Install/Upgrade Metamod**. Choose a compatible release or paste the direct package URL when prompted, then wait for installation to finish.
+3. Right-click the server again and select **Install/Upgrade CSS**. Choose a compatible release or paste the direct package URL when prompted, then wait for installation to finish.
+4. Right-click the server again and select **Install/Upgrade CSS Plugins...** to install optional CounterStrikeSharp plugins. Paste the plugin's GitHub or supported GitLab repository/release URL, choose the matching release asset if prompted, and wait for deployment to finish.
+5. Restart the server after installing or upgrading frameworks or plugins so the server loads them.
 
 Under **Settings > Metamod Settings**, list plugins and run info, pause, unpause, retry, load, unload, or force-unload operations. Under **Settings > CStrikeSharp Settings**, reload admins and list, reload, or unload plugins. Use **Settings > Test Metamod/CSS command availability** to probe safe command forms with nonexistent plugin IDs without targeting real plugins.
 
