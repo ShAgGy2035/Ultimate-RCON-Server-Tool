@@ -4,44 +4,19 @@ Version: 1.0.4
 
 Developer: ShAgGy
 
-ShAgGy's Ultimate CS2 RCON and Server Management Tool is a cross-platform desktop application for administering Counter-Strike 2 dedicated servers. Use it to send CS2 RCON commands, manage local or remote CS2 servers, install updates and plugins, schedule maintenance, and monitor players from Windows, Linux, or macOS.
+ShAgGy's Ultimate CS2 RCON and Server Management Tool is a cross-platform desktop application for administering Counter-Strike 2 dedicated servers. It provides RCON commands, local and remote lifecycle management, SteamCMD maintenance, add-on installation, scheduling, backups, player monitoring, and authenticated chat integration from one shared Avalonia application.
 
-## Issues
-If you find any issues with the application please report the issue at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new
+## Choose Your Platform
 
-## CS2 RCON And Server Management Features
+Each platform guide keeps launch, update, profile, Direct process, and Service commands instructions together.
 
-The application provides one place to:
+| Application package | Guide | Local CS2 hosting | Remote targets |
+| --- | --- | --- | --- |
+| Windows x64 | [Windows guide](README-WINDOWS.md) | Local Windows | Linux and Windows |
+| Linux x64 | [Linux guide](README-LINUX.md) | Local Linux | Linux and Windows |
+| macOS Intel or Apple Silicon | [macOS guide](README-MACOS.md) | Not supported by Valve | Linux and Windows |
 
-- Query CS2 server information and connected players.
-- Run RCON commands with categorized suggestions and autocomplete.
-- Start, stop, restart, install, update, and validate supported servers.
-- Manage maps, bots, teams, passwords, friendly fire, cheats, and gameplay settings.
-- Apply Fun Stuff presets such as AWP, Bhop, Surf, and Zeus Wars.
-- Configure a startup CFG and optional player connection password separately from the RCON password.
-- Control automatic server-list refresh and noisy console-output filtering.
-- Join a selected server through a Steam connection URI.
-- Install or upgrade Metamod and CounterStrikeSharp.
-- Install, upgrade, track, and safely uninstall supported optional plugins.
-- Back up and restore server files and MySQL/MariaDB databases.
-- Schedule RCON and maintenance operations.
-- Receive authenticated game chat from the separate ChatRelay plugin over UDP.
-- Maintain GeoLite country information and a 195-country flag set.
-
-## Supported Platforms
-
-| Application package | Local CS2 hosting | Remote Linux | Remote Windows | Native scheduler |
-| --- | --- | --- | --- | --- |
-| Windows x64 | Yes, with `Local Windows` | Yes | Yes | Windows Task Scheduler |
-| Linux x64 | Yes, with `Local Linux` | Yes | Yes | systemd user timers |
-| macOS Intel (12.0+) | No | Yes | Yes | launchd user agents |
-| macOS Apple Silicon (12.0+) | No | Yes | Yes | launchd user agents |
-
-macOS 12.0 or later is required. macOS supports RCON and remote administration, but Valve does not publish a native macOS CS2 dedicated-server runtime. Imported local profiles for another OS can be displayed, but local lifecycle and installation actions only work when the profile matches the current OS.
-
-Remote Linux and Remote Windows management use SSH/SFTP. Remote Windows does not require WinRM.
-
-Deleting a server requires confirmation. Optional app-state cleanup removes that profile's scheduled tasks, external scheduler entries, console history, and cached state. It does not delete CS2 installations, plugins, backups, or files from the managed server.
+macOS 12.0 or later is required. Remote Linux and Remote Windows management use SSH/SFTP; Remote Windows does not require WinRM.
 
 ## Release Packages
 
@@ -51,565 +26,124 @@ Deleting a server requires confirmation. Optional app-state cleanup removes that
 - `cs2-rcon-tool-universal-v1.0.4-macos-arm64.zip`
 - `cs2-rcon-tool-universal-v1.0.4-all-platforms.zip`
 
-Each platform build has one self-contained, single-file native application. A separate .NET installation is not required. The GeoLite database and flag images remain external runtime assets by design.
+Each platform build contains a self-contained, single-file native application. A separate .NET installation is not required. GeoLite data and flag images remain external runtime assets by design.
 
-## Download And Launch
+## Features
 
-### Windows x64
+- Query CS2 server information and connected players.
+- Run categorized RCON commands with suggestions and autocomplete.
+- Start, stop, restart, install, update, and validate supported servers.
+- Manage local servers on Windows and Linux.
+- Manage remote Linux and Windows servers over SSH.
+- Choose Direct process or Service commands lifecycle ownership.
+- Configure startup maps, Workshop content, CFG, player passwords, tickrate, VAC, and LAN mode.
+- Install or upgrade Metamod, CounterStrikeSharp, and tracked optional plugins.
+- Apply Fun Stuff modes with exact per-server rollback.
+- Back up and restore server files and MySQL/MariaDB databases.
+- Schedule RCON and maintenance operations using built-in or native schedulers.
+- Receive authenticated game chat from the separate ChatRelay plugin over UDP.
+- Maintain GeoLite country information and a 195-country flag set.
 
-1. Extract the Windows ZIP to a folder you control.
-2. Run `cs2-rcon-tool.exe`.
+## Quick Start
 
-This is a GUI application. A command prompt does not need to remain open.
+1. Download and extract the package for your operating system.
+2. Follow the matching [Windows](README-WINDOWS.md), [Linux](README-LINUX.md), or [macOS](README-MACOS.md) launch instructions.
+3. Open **Servers > Manage servers**.
+4. Add a server and enter its name, host/IP, game/RCON port, RCON password, and location.
+5. Complete lifecycle and SteamCMD settings when the application will manage those operations.
+6. Save the profile, select it in the top server list, and click **Refresh server list**.
 
-### Linux x64
+RCON uses TCP. The configured RCON port must be reachable from the computer running the application; opening only the UDP game port is not sufficient.
 
-1. Extract the Linux TAR.GZ:
+## Lifecycle Modes
 
-   ```bash
-   tar -xzf cs2-rcon-tool-universal-v1.0.4-linux-x64.tar.gz
-   ```
+Every supported local or remote profile separates two ownership models:
 
-2. Open the extracted directory:
+- **Direct process**: the application builds the launch arguments and owns the CS2 process. Tickrate, VAC, LAN mode, startup map, CFG, credentials, and related launch settings come from the profile.
+- **Service commands**: an existing systemd service or Windows service wrapper owns CS2. The application executes configured Start, Stop, and Restart commands but does not install the service. Launch arguments belong in the service configuration.
 
-   ```bash
-   cd cs2-rcon-tool-universal-v1.0.4-linux-x64
-   ```
+Stop the current owner before switching modes. Direct process and Service commands must never manage the same executable and port simultaneously.
 
-3. Launch through the included script:
+Detailed setup:
 
-   ```bash
-   ./run.sh
-   ```
+- [Local and Remote Windows lifecycle](README-WINDOWS.md)
+- [Local and Remote Linux lifecycle](README-LINUX.md)
+- [Remote management from macOS](README-MACOS.md)
 
-   Alternatively, open the extracted directory in your Linux file manager, right-click `run.sh`, and select **Run as a Program**. If that option is unavailable, open the file's **Properties > Permissions**, enable execution as a program, and try again.
-
-Use `./run.sh --foreground` to keep the process attached for troubleshooting. The launcher uses an app-local `.net` directory for extracted native single-file libraries. It is a cache, not a separately installed .NET runtime, and can be deleted while the app is closed.
-
-### macOS Intel And Apple Silicon
-
-macOS 12.0 or later is required. Choose the x64 package for Intel Macs or arm64 for Apple Silicon, extract it, and open `CS2 RCON Tool.app`.
-
-The macOS packages are unsigned and not notarized. If Gatekeeper quarantines a test build, run:
-
-```bash
-xattr -dr com.apple.quarantine "CS2 RCON Tool.app"
-chmod +x "CS2 RCON Tool.app/Contents/MacOS/cs2-rcon-tool"
-open "CS2 RCON Tool.app"
-```
-
-## Updating The Application
-
-Close the application before updating, download the new package for the same operating system and architecture, and choose either method:
-
-1. **Replace the existing application files.** Extract the new package and copy its contents over the old installation. The Linux TAR.GZ preserves executable permissions. On macOS, replace the entire `CS2 RCON Tool.app` bundle instead of merging files inside it.
-2. **Use a new folder.** Delete the old application folder after closing the app, then extract and launch the new package from a new folder.
-
-Both methods preserve server profiles, scheduled tasks, application settings, credentials, GeoLite data, and flags because writable data is stored in the per-user `CS2RconTool` directory rather than beside the application. Do not delete the per-user data directory or its `credential.key` when updating. A backup is recommended before any manual cleanup or migration.
-
-## Connect To A CS2 Server With RCON
-
-1. Open **Servers > Manage servers**.
-2. Add a server and enter its name, host/IP, game/RCON port, RCON password, and location.
-3. Complete the location-specific lifecycle or SteamCMD fields when the app will manage those operations.
-4. Add the per-server Workshop collection ID when Workshop map selection is needed.
-5. Configure database and ChatRelay integration values when used.
-6. Save the profile and select it in the top server list.
-7. Click **Refresh server list** to query map, player, ping, and country information.
-
-RCON uses TCP. The configured RCON port must be reachable from the computer running this app; opening only the UDP game port is not sufficient.
-
-## Server Profiles
-
-New profiles default to the local server type supported by the current operating system: **Local Linux** on Linux and **Local Windows** on Windows. Windows does not offer Local Linux, Linux does not offer Local Windows, and macOS offers only Remote Linux and Remote Windows. Existing profile locations are not changed; an imported incompatible local profile must be changed to a location supported by the current operating system before it can be saved.
-
-### Local Windows
-
-Use this profile only in the Windows application. Configure:
-
-- RCON password. This is required for saving a managed server profile and receiving command responses in the app.
-- Startup mode: **Direct process** or **Service commands**.
-- Service mode Start, Stop, and Restart PowerShell commands.
-- CS2 executable, normally `<install-dir>\game\bin\win64\cs2.exe`.
-- Working directory and launch arguments.
-- Game type, game mode, and maximum players.
-- Tickrate, default `64`, VAC security, enabled by default with `-secure`, and optional LAN mode using `+sv_lan 1`.
-- SteamCMD path, install directory, App ID `730`, and Steam login.
-- Steam Web API key and game-server login token (GSLT) for public internet servers. Neither credential is required or prompted for when **LAN server** is enabled; configured values remain optional.
-- Startup CFG and optional player connection password.
-- Local map, Workshop collection, or single Workshop map startup mode. The editable map field suggests Valve maps, including Premier maps, while accepting custom names.
-
-The app can download Windows SteamCMD as a ZIP when bootstrapping a local installation. Windows SteamCMD is kept in a sibling `<install-dir>-steamcmd` directory because SteamCMD rejects a game install root that contains its own files. Existing profiles that used `<install-dir>\steamcmd` are migrated without redownloading an already completed app `730` payload. SteamCMD output remains visible in the app, while Direct process mode runs Local Windows CS2 without creating a native console window. Direct launch arguments visibly default to `-dedicated +ip 0.0.0.0`; administrators can edit or replace the bind address.
-
-Service commands mode executes the configured commands through local Windows PowerShell and does not install a service. Use an existing service wrapper such as WinSW because `cs2.exe` is not itself a Windows service. The defaults target a service named `cs2-server`: `Start-Service -Name 'cs2-server'`, `Stop-Service -Name 'cs2-server'`, and `Restart-Service -Name 'cs2-server'`. The account running the app must have permission to control that service. Use the WinSW setup under **Remote Windows service setup with WinSW** for a complete wrapper example.
-
-### Local Linux
-
-Use this profile only in the Linux application. Configure:
-
-- Startup mode: **Direct process** or **Service commands**.
-- Service mode Start, Stop, and Restart shell commands.
-- CS2 executable, normally `<install-dir>/game/bin/linuxsteamrt64/cs2`.
-- Working directory and launch arguments.
-- Game type, game mode, and maximum players.
-- Tickrate, default `64`, VAC security, enabled by default with `-secure`, and optional LAN mode using `+sv_lan 1`.
-- SteamCMD path, install directory, App ID `730`, and Steam login.
-- Steam Web API key and game-server login token (GSLT) for public internet servers. Neither credential is required or prompted for when **LAN server** is enabled; configured values remain optional.
-- Startup CFG and optional player connection password.
-- Local map, Workshop collection, or single Workshop map startup mode. The editable map field suggests Valve maps, including Premier maps, while accepting custom names.
-
-On supported Linux systems, the app can check SteamCMD prerequisites and bootstrap SteamCMD. In Direct process mode, an ordinary Start runs SteamCMD validation when SteamCMD and install-directory settings are configured, then launches CS2. Local Linux launch arguments visibly default to `-dedicated +ip 0.0.0.0`; administrators can edit or replace the bind address. Local profiles can enable startup maintenance, which warns players, stops the server, updates CS2 and supported add-ons, and restarts it.
-
-Service commands mode executes the configured commands through `/bin/sh` and does not install a service. The defaults target `cs2-server` through `sudo -n systemctl start`, `stop`, and `restart`; configure non-interactive sudo permission for the account running the app. The unit must own the CS2 process because systemd cannot adopt an already-running Direct process instance. Use the unit and launcher under **Remote Linux systemd service setup** as a complete setup example.
-
-### Remote Linux
-
-Configure:
-
-- SSH host, port, username, and password.
-- Optional separate SFTP address, username, password, and port. Blank values reuse the server host and SSH credentials; port `0` reuses the SSH port. Valid SFTP ports range through `65535`.
-- Startup mode: **Service commands** or **Direct process**.
-- Service mode Start, Stop, and Restart commands, normally non-interactive systemd commands.
-- Direct mode executable, working directory, startup map, game type, game mode, additional arguments, and Stop command.
-- Tickrate, default `64`, VAC security, enabled by default with `-secure`, and optional LAN mode for Direct process launches.
-- Remote SteamCMD path and CS2 install directory for managed updates.
-- App ID `730` and Steam login, normally `anonymous`.
-
-Service mode expects CS2 arguments, including `-tickrate`, `+sv_lan`, and `-secure` or `-insecure`, to be configured in the remote systemd unit. It cannot start, stop, or restart a matching CS2 process launched directly by Local Linux, another application, or a shell. Start and Restart reject a matching executable that is already running outside the configured service cgroup, preventing duplicate processes and port conflicts. To move an installation from Direct process to Service commands, stop the direct instance first and then start the systemd service; to move back, stop the service before using Direct process.
-
-Direct mode builds a detached SSH launch command and ensures `-dedicated`, `-console`, profile port, hostname, RCON settings, selected tickrate, LAN mode, and selected VAC state are present. On Linux, it also supplies the CS2 and install-local SteamCMD native-library directories required by the raw server executable. The structured startup fields generate authoritative `+map`, `+game_type`, `+game_mode`, `+exec`, `-tickrate`, `+sv_lan`, VAC, and optional `+sv_password` arguments, replacing older copies in the additional arguments when necessary. The editable startup-map field suggests Valve maps, including Premier maps, while accepting custom names. Remote Direct-process profiles visibly default to additional arguments containing `-dedicated +ip 0.0.0.0`; administrators can edit or replace the bind address. Remote path fields include SFTP browsing. The remote account must run the configured commands and write to the installation directory. Default Linux service commands use `sudo -n`, which requires suitable non-interactive sudo permissions.
-
-#### Remote Linux direct-process setup
-
-Direct process mode runs CS2 without creating a systemd service. It is suitable when the SSH account owns the CS2 installation and the app should start and stop the executable itself.
-
-1. Select **Remote Linux (SSH)** and set **Startup mode** to **Direct process**.
-2. Enter the remote CS2 install directory, for example `/home/cs2/cs2server`. The app derives these defaults when the corresponding fields are blank:
-
-   ```text
-   Executable:  /home/cs2/cs2server/game/bin/linuxsteamrt64/cs2
-   Working dir: /home/cs2/cs2server/game
-   ```
-
-3. Set the startup map, game type, and game mode. Put only additional optional switches in **Additional arguments**. The app supplies `-dedicated`, `-console`, the configured port and hostname, `+map`, `+game_type`, `+game_mode`, `+exec`, `-usercon`, and the saved RCON password. The default `+ip 0.0.0.0` allows remote game and RCON connections.
-4. Enter a **Stop command** that terminates only the configured executable. For the example path above, a path-specific command is:
-
-   ```bash
-   executable='/home/cs2/cs2server/game/bin/linuxsteamrt64/cs2'; for process in /proc/[0-9]*; do target=$(readlink "$process/exe" 2>/dev/null || true); if [ "$target" = "$executable" ]; then kill -TERM "${process##*/}"; fi; done
-   ```
-
-5. Optionally enter the Steam API authentication key and game-server login token. They are appended at launch and redacted from application output.
-6. Save the profile and use **Start**, **Stop**, or **Restart** from the server context menu.
-
-Start refuses to run while SteamCMD is updating app `730`, verifies `game/csgo/gameinfo.gi`, supplies the required Linux native-library paths, launches CS2 detached from SSH, and monitors it for 30 seconds. Output is captured in `/tmp/cs2-rcon-tool-startup-<port>.log`. Stop runs the configured command and verifies that the exact executable exited; Restart performs Stop and then Start. Direct mode refuses to control the executable while it belongs to the active `cs2-server` systemd service.
-
-Direct mode does not automatically start CS2 at operating-system boot or restart it after a crash. Use the systemd service method below when those behaviors are required.
-
-#### Remote Linux SSH and file permissions
-
-Remote lifecycle commands use SSH, while browsing, plugin management, backups, and file transfers use SFTP. The simplest configuration is to use the Linux account that owns the CS2 installation for both SSH and SFTP. Leave the separate SFTP fields blank to reuse the SSH host, port, username, and password.
-
-If a different service account is used, it must be able to traverse every parent directory leading to the CS2 installation and read and write the installation itself. This matters when the server is stored below another user's home directory. Replace the placeholders below with the configured account and install directory:
-
-```bash
-namei -l "<install-dir>/game/csgo"
-sudo -u <ssh-user> test -r "<install-dir>/game/csgo/gameinfo.gi"
-sudo -u <ssh-user> touch "<install-dir>/game/csgo/.rcon-tool-write-test"
-sudo -u <ssh-user> rm "<install-dir>/game/csgo/.rcon-tool-write-test"
-```
-
-Prefer granting access through a dedicated shared group or filesystem ACL instead of making the installation world-writable. One ACL-based example is:
-
-```bash
-sudo setfacl -m u:<ssh-user>:x "<parent-directory>"
-sudo setfacl -R -m u:<ssh-user>:rwX "<install-dir>"
-sudo setfacl -R -d -m u:<ssh-user>:rwX "<install-dir>"
-```
-
-The first interactive `ssh <user>@<host>` connection may ask whether to trust the server fingerprint. Review and accept the fingerprint for command-line SSH as appropriate. The app uses its own SSH library and does not depend on the command-line client's `known_hosts` entry, so accepting that prompt alone does not grant filesystem access.
-
-#### Remote Linux systemd service setup
-
-Service commands require an existing service; the app does not create privileged systemd or sudoers files. The following tested pattern runs CS2 as the account that owns the installation, supplies the native library paths required by the raw executable, preserves real crash exit codes for `Restart=on-failure`, and translates an explicit service stop into a clean exit. The SSH control account may be different from the service account. Replace `<install-dir>`, `<service-home>`, `<service-user>`, `<service-group>`, `<ssh-user>`, hostname, map, and passwords before installation.
-
-Create a launcher named `cs2-rcon-tool-start`:
-
-```bash
-#!/usr/bin/env bash
-export HOME="<service-home>"
-export LD_LIBRARY_PATH="<install-dir>/game/bin/linuxsteamrt64:<install-dir>/game/csgo/bin/linuxsteamrt64:<install-dir>/.steam/sdk64:<install-dir>/steamcmd/linux64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-cd "<install-dir>/game"
-
-"<install-dir>/game/bin/linuxsteamrt64/cs2" \
-   -dedicated +ip 0.0.0.0 -high -nobreakpad -nomemorystats -nojoy \
-   +sv_hibernate_when_empty 0 +map de_dust2 +game_type 0 +game_mode 1 \
-   +exec server.cfg -console -port 27015 -tickrate 64 -secure +hostname "CS2 Server" \
-   -usercon +rcon_password "<rcon-password>" &
-child=$!
-
-shutdown() {
-      kill -TERM "$child" 2>/dev/null || true
-      wait "$child" 2>/dev/null || true
-      exit 0
-}
-
-trap shutdown TERM INT
-wait "$child"
-exit $?
-```
-
-Create `cs2-server.service`:
-
-```ini
-[Unit]
-Description=Counter-Strike 2 Dedicated Server
-After=network-online.target
-Wants=network-online.target
-StartLimitIntervalSec=300
-StartLimitBurst=5
-
-[Service]
-Type=simple
-User=<service-user>
-Group=<service-group>
-ExecStart=/usr/local/libexec/cs2-rcon-tool-start
-Restart=on-failure
-RestartSec=5
-TimeoutStopSec=30
-KillSignal=SIGTERM
-KillMode=mixed
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Create a sudoers file containing only the lifecycle commands required by the app:
-
-```sudoers
-<ssh-user> ALL=(root) NOPASSWD: /usr/bin/systemctl start cs2-server, /usr/bin/systemctl stop cs2-server, /usr/bin/systemctl restart cs2-server, /usr/bin/systemctl status cs2-server, /usr/bin/systemctl is-active cs2-server
-```
-
-Install and validate the files from an administrator terminal. `<service-home>` must be the service account's real home directory, such as `/home/cs2`; do not set it to the CS2 installation directory. The launcher contains the RCON password, so keep it readable only by root and the service account's group:
-
-```bash
-sudo install -d -o root -g root -m 755 /usr/local/libexec
-sudo install -o root -g <service-group> -m 750 ./cs2-rcon-tool-start /usr/local/libexec/cs2-rcon-tool-start
-sudo install -o root -g root -m 644 ./cs2-server.service /etc/systemd/system/cs2-server.service
-sudo visudo -cf ./cs2-rcon-tool.sudoers
-sudo install -o root -g root -m 440 ./cs2-rcon-tool.sudoers /etc/sudoers.d/cs2-rcon-tool
-sudo systemctl daemon-reload
-sudo systemctl enable cs2-server.service
-```
-
-Configure the Remote Linux profile as follows:
-
-```text
-Startup mode: Service commands
-Start:   sudo -n systemctl start cs2-server
-Stop:    sudo -n systemctl stop cs2-server
-Restart: sudo -n systemctl restart cs2-server
-Remote install directory: <install-dir>
-```
-
-Start and Restart perform the same SteamCMD/core-file preflight used by direct mode, resolve the expected executable from the remote install directory when necessary, and require the service-owned CS2 process to remain alive for 30 seconds. When the SSH account cannot read another user's `/proc/<pid>/exe` link, verification matches the `cs2` process only inside the configured systemd unit's exact cgroup. Stop requires the configured process to disappear. SteamCMD `app_update 730 validate` remains an explicit **Install/Update Server** operation and is not run by ordinary lifecycle commands.
-
-### Remote Windows
-
-Configure:
-
-- SSH host, port, username, and password.
-- Optional separate SFTP address, username, password, and port. Blank values reuse the server host and SSH credentials; port `0` reuses the SSH port. Valid SFTP ports range through `65535`.
-- Startup mode: **Service commands** or **Direct process**.
-- Service mode Start, Stop, and Restart commands.
-- Direct mode executable, working directory, startup map, game type, game mode, additional arguments, and Stop command.
-- Tickrate, default `64`, VAC security, enabled by default with `-secure`, and optional LAN mode using `+sv_lan 1` for Direct process launches.
-- Windows SteamCMD path, installation directory, App ID `730`, and login.
-
-Service mode expects CS2 arguments, including `-tickrate`, `+sv_lan`, and `-secure` or `-insecure`, to be configured in the Windows service wrapper. Direct mode transfers a temporary PowerShell startup script in bounded chunks over SSH, invokes it with a short SSH command, and uses WMI to launch CS2 independently of the OpenSSH session. It does not require a separate SFTP service. The SSH account must belong to the remote computer's local Administrators group for WMI process creation and Windows Firewall configuration. Direct mode applies the same required/default argument handling as Remote Linux, including the selected tickrate, LAN mode, and VAC state, binds CS2 to `0.0.0.0`, and permits inbound UDP and TCP traffic on the configured server port. The editable startup-map field suggests Valve maps, including Premier maps, while accepting custom names. The selected directory remains the actual CS2 root, containing `game`, `steamapps`, and other app `730` files. Unlike Linux SteamCMD, Windows SteamCMD rejects a game root that contains its own executable directory, so the app derives a sibling tool directory: `C:\cs2server` uses `C:\cs2server-steamcmd\steamcmd.exe`. Existing overlapping or former global defaults are migrated automatically; an explicitly configured non-overlapping custom path remains unchanged. Remote browsing and general file transfers can use the optional SFTP settings, and saved paths are normalized to drive-letter form where applicable.
-
-For Direct process mode, the app derives the executable, working directory, and Stop command when those fields are blank. For example, `C:\cs2server` produces `C:\cs2server\game\bin\win64\cs2.exe` and `C:\cs2server\game`; the generated PowerShell Stop command terminates the `cs2` process. Each generated value remains editable for custom layouts or process-management policies.
-
-The app rejects Windows drive paths in Remote Linux profiles and Unix paths in Remote Windows profiles before starting SteamCMD. When a profile is switched between those operating systems, stale auto-generated executable and working-directory defaults are replaced for the selected platform.
-
-Existing remote profiles remain in Service commands mode after upgrading. Remote Restart now uses the configured service Restart command instead of rebooting the remote operating system. In Direct process mode, Restart runs the configured Stop command, waits briefly, and launches the process again.
-
-#### Remote Windows direct-process setup
-
-Direct process mode runs CS2 without installing a Windows service wrapper. The remote Windows account must have OpenSSH access and belong to the remote computer's local Administrators group because startup uses WMI process creation and configures firewall rules.
-
-1. Select **Remote Windows (SSH)** and set **Startup mode** to **Direct process**.
-2. Enter the remote CS2 install directory, for example `C:\cs2server`. The app derives these defaults when the corresponding fields are blank:
-
-   ```text
-   Executable:    C:\cs2server\game\bin\win64\cs2.exe
-   Working dir:   C:\cs2server\game
-   SteamCMD path: C:\cs2server-steamcmd\steamcmd.exe
-   ```
-
-3. Set the startup map, game type, and game mode. Put only additional optional switches in **Additional arguments**. The app supplies `-dedicated`, `-console`, `+ip 0.0.0.0`, the configured port and hostname, `+map`, `+game_type`, `+game_mode`, `+exec`, `-usercon`, and the saved RCON password.
-4. Keep the generated PowerShell **Stop command** unless a custom process-management policy is required. The generated command stops `cs2` processes, and the app verifies that the configured executable is no longer running.
-5. Optionally enter the Steam API authentication key and game-server login token. They are appended at launch and redacted from application output.
-6. Save the profile and use **Start**, **Stop**, or **Restart** from the server context menu.
-
-Start uploads a temporary PowerShell launcher over SSH, prepares the Steam runtime, starts CS2 through WMI independently of the SSH session, creates the required UDP and TCP firewall rules, captures startup output, and monitors the process for 30 seconds. Restart performs the configured Stop command and then launches a new process. Direct mode refuses to control the executable while the `cs2-server` Windows service is actively managing it.
-
-Direct mode does not automatically start CS2 at operating-system boot or restart it after a crash. Use the WinSW service method below when those behaviors are required.
-
-#### Remote Windows service setup with WinSW
-
-Windows service mode requires a service wrapper because `cs2.exe` is a console application and does not implement the Windows Service Control Manager protocol itself. The following setup uses [WinSW](https://github.com/winsw/winsw), keeps the stable `cs2-server` service identity, and uses the standard `C:\cs2server` layout. Run it once from an Administrator PowerShell terminal on the remote Windows server. Stop any Direct-mode CS2 process first, and replace the hostname, map, passwords, Steam API key, and GSLT placeholders. The credentials become part of the protected Windows service configuration; this procedure does not create or modify a server CFG file.
-
-Install WinSW:
-
-```powershell
-$ErrorActionPreference = 'Stop'
-$ProgressPreference = 'SilentlyContinue'
-
-New-Item -ItemType Directory -Force -Path C:\Services\cs2-server | Out-Null
-Invoke-WebRequest `
-    -Uri 'https://github.com/winsw/winsw/releases/download/v2.12.0/WinSW-x64.exe' `
-    -OutFile 'C:\Services\cs2-server\cs2-server.exe'
-```
-
-If an earlier wrapper already registered `cs2-server`, migrate only its Windows service registration. This does not delete the CS2 installation or profile settings:
-
-```powershell
-$existingService = Get-Service -Name 'cs2-server' -ErrorAction SilentlyContinue
-if ($existingService) {
-   Stop-Service -Name 'cs2-server' -Force -ErrorAction SilentlyContinue
-   sc.exe delete 'cs2-server' | Out-Null
-   while (Get-Service -Name 'cs2-server' -ErrorAction SilentlyContinue) {
-      Start-Sleep -Seconds 1
-   }
-}
-```
-
-Create `C:\Services\cs2-server\cs2-server.xml` with the following content. XML-escape special characters in replacement values, especially `&` as `&amp;`, `<` as `&lt;`, and `>` as `&gt;`.
-
-```xml
-<service>
-   <id>cs2-server</id>
-   <name>CS2 Dedicated Server</name>
-   <description>Counter-Strike 2 Dedicated Server managed by CS2 RCON Tool</description>
-   <executable>C:\cs2server\game\bin\win64\cs2.exe</executable>
-   <arguments>-dedicated -console -usercon -port 27015 -tickrate 64 -secure +ip 0.0.0.0 +map de_dust2 +game_type 0 +game_mode 1 +exec server.cfg +hostname "CS2 Server" +rcon_password "&lt;rcon-password&gt;" -authkey "&lt;steam-api-key&gt;" +sv_setsteamaccount "&lt;gslt&gt;"</arguments>
-   <workingdirectory>C:\cs2server\game</workingdirectory>
-   <env name="SteamAppId" value="730" />
-   <env name="SteamGameId" value="730" />
-   <startmode>Automatic</startmode>
-   <stoptimeout>30 sec</stoptimeout>
-   <onfailure action="restart" delay="10 sec" />
-   <logpath>C:\cs2server\logs</logpath>
-   <log mode="roll-by-size">
-      <sizeThreshold>10240</sizeThreshold>
-      <keepFiles>8</keepFiles>
-   </log>
-</service>
-```
-
-Install the service:
-
-```powershell
-New-Item -ItemType Directory -Force -Path C:\cs2server\logs | Out-Null
-Set-Location C:\Services\cs2-server
-.\cs2-server.exe install
-```
-
-Permit game queries over UDP and RCON over TCP:
-
-```powershell
-New-NetFirewallRule -DisplayName 'CS2 RCON Tool UDP 27015' `
-   -Direction Inbound -Action Allow -Protocol UDP -LocalPort 27015 `
-   -Program 'C:\cs2server\game\bin\win64\cs2.exe' -Profile Any
-New-NetFirewallRule -DisplayName 'CS2 RCON Tool TCP 27015' `
-   -Direction Inbound -Action Allow -Protocol TCP -LocalPort 27015 `
-   -Program 'C:\cs2server\game\bin\win64\cs2.exe' -Profile Any
-```
-
-Start and validate the service:
-
-```powershell
-Start-Service -Name 'cs2-server'
-Get-Service -Name 'cs2-server'
-Get-Process -Name 'cs2'
-```
-
-Configure the Remote Windows profile as follows:
-
-```text
-Startup mode: Service commands
-Start:   powershell -NoProfile -NonInteractive -Command "Start-Service -Name 'cs2-server'"
-Stop:    powershell -NoProfile -NonInteractive -Command "Stop-Service -Name 'cs2-server'"
-Restart: powershell -NoProfile -NonInteractive -Command "Restart-Service -Name 'cs2-server'"
-```
-
-WinSW writes rolled `cs2-server.out.log` and `cs2-server.err.log` files under `C:\cs2server\logs`. The service is configured for automatic startup and restarts CS2 after an unexpected process exit.
-
-## Fresh Server Installation And Updates
+## Server Installation And Updates
 
 Right-click a configured server and select **Install/Update server...**.
 
 - Local Windows can download and run Windows SteamCMD.
-- Local Linux can download and run Linux SteamCMD and check supported prerequisites.
+- Local Linux can check prerequisites and download Linux SteamCMD.
 - Remote Linux and Remote Windows run configured SteamCMD operations over SSH.
+- Use App ID `730`.
 
-### SteamCMD During Start And Restart
+**Validate server files** and **Install/Update Server** perform explicit SteamCMD validation. Ordinary Restart skips validation so routine restarts do not become lengthy updates. Direct-process local Start validates when SteamCMD and install-directory settings are configured; Service commands defer maintenance to explicit operations.
 
-This table describes automatic SteamCMD `app_update <app-id> validate` behavior during ordinary lifecycle actions. Startup preflight and process-health checks are separate and may still run when SteamCMD validation does not.
+**Install/Update Server + Add-ons** combines a server update with supported framework and tracked-plugin maintenance.
 
-| Server profile and launch mode | Start | Restart |
-| --- | --- | --- |
-| Local Windows or Local Linux, Direct process | Runs SteamCMD validation when both the SteamCMD path and install directory are configured | Does not run SteamCMD validation |
-| Local Windows or Local Linux, Service commands | Does not run SteamCMD validation; executes the configured local service command | Does not run SteamCMD validation; executes the configured local Restart command |
-| Remote Linux, Service commands | Does not run SteamCMD validation; checks SteamCMD is idle, verifies the core file, and monitors the service-owned process | Does not run SteamCMD validation; performs the same preflight and process monitoring |
-| Remote Linux, Direct process | Does not run SteamCMD validation; checks launch ownership and monitors startup | Does not run SteamCMD validation |
-| Remote Windows, Service commands | Does not run SteamCMD validation; monitors the service-owned process | Does not run SteamCMD validation; monitors the service-owned process |
-| Remote Windows, Direct process | Does not run SteamCMD validation; prepares required runtime files and monitors startup | Does not run SteamCMD validation |
+## Main Areas
 
-Use **Validate server files** or **Install/Update Server** when an explicit SteamCMD validation is required. Local Start waits for SteamCMD to finish before launching CS2, so validation time does not consume the post-launch startup health-check window. A normal Restart deliberately skips SteamCMD on every profile so routine restarts do not become lengthy file-validation operations. Restarts performed after maintenance or restore also skip SteamCMD because the workflow has already completed its required file operation.
+### Server List And Actions
 
-Use App ID `730`. Verify SteamCMD path, installation directory, and remote credentials before starting. Wait for completion before launching the server or installing add-ons.
+The top list displays hostname, address, port, map, players, ping, location, and country. Its context menu provides lifecycle, installation, add-on, backup, restore, validation, copy, and edit operations.
 
-When a managed local CS2 process is running, the app pauses before SteamCMD and offers to stop the server and continue. Cancelling leaves the server running and aborts the update or validation.
+Server Actions control hostname, bots, teams, passwords, friendly fire, cheats, pause, map changes, maximum rounds, timed restarts, and player punishments. These controls send runtime commands and do not edit server CFG files. Configure the Startup CFG and player connection password in the server profile.
 
-**Install/Update Server + Add-ons** combines the server update with supported framework and tracked-plugin maintenance.
+### PlayerPunishments
 
-## Joining A Server
+The Slay and Slap controls send `css_slay #userid` and `css_slap #userid damage`. Install [PlayerPunishments 1.0.0 or newer](https://github.com/ShAgGy2035/PlayerPunishments) when the server's existing administration package does not provide those commands. The player table's Alive and Health values also depend on the required server-side player-information command and display **Unknown** when it is unavailable.
 
-Select a server and click **Join server**.
+Configure Slap damage from `0` to `99` under **Settings > General**. PlayerPunishments is installed on the managed CS2 server as a CounterStrikeSharp plugin, not beside the desktop application.
 
-- Windows uses the registered Steam URI handler.
-- Linux tries Steam and available desktop URI handlers.
-- macOS uses the native `open` command.
-- If CS2 is not detected, the app copies `connect IP:port` and shows a confirmation window before launching Steam.
+### Joining A Server
 
-If Steam opens CS2 without connecting, enable the CS2 developer console, press `~`, paste the copied `connect` command, and press Enter.
-
-## Main Areas Of The App
-
-### Top Server List
-
-- Displays hostname, address, port, map, players, ping, location, and country.
-- Provides Join, Reload, and Refresh actions.
-- The context menu includes copy, lifecycle, installation, add-on, backup, restore, validation, and edit operations.
-- **Reload server list** reads saved profiles without contacting servers.
-- **Refresh server list** queries live A2S information.
-
-### Server Actions
-
-Controls include hostname, bots, human-team restrictions, friendly fire, cheats, pause, teams, map changes, maximum rounds, timed restart, and player kick/ban/slay/slap actions. Configure the Startup CFG and player connection password in the server profile so they are applied consistently at launch; the player password is stored encrypted and is separate from the RCON password.
-
-Server Actions, Fun Stuff, and Console Commands send runtime commands only. The app never edits server CFG files. When a map load executes the active Startup CFG, values defined there can replace runtime changes made through the app.
-
-Player Alive and Health values depend on the required server-side command. Slay and Slap use CounterStrikeSharp-compatible commands. [PlayerPunishments 1.0.0 or newer](https://github.com/ShAgGy2035/PlayerPunishments) can provide them when the installed administration package does not.
+Select a server and click **Join server**. Windows uses the registered Steam URI handler, Linux tries Steam and desktop URI handlers, and macOS uses `open`. If CS2 opens without connecting, paste the copied `connect IP:port` command into the CS2 developer console.
 
 ### Fun Stuff
 
-Preset modes include AWP/Sniper Wars, Bhop, Deathmatch, Grenade Wars, Molotov/Incendiary Wars, Headshot Only, Knife Arena, Pistols Only, ScoutzKnives, Surf, and Zeus Wars. Every mode includes **Enable bots**, an optional quota from 1 to 64, and a quota mode of `normal`, `fill`, or `match`. Enabled with a blank quota preserves the server's existing quota; entering a value enforces that exact quota for the mode. The `fill` mode replaces bots as human players join to maintain the configured total quota. Disabled ignores both fields, removes current bots, and holds the quota at zero until rollback or a mode switch restores the captured quota and quota mode. Presets apply runtime settings without executing a CFG. Before applying a mode, the app captures that server's current values for every persistent cvar the mode changes. When switching directly between modes, it first restores the active mode's captured values, then captures and applies the replacement mode so settings do not carry over between presets. Choose **None (rollback)** to restore the active mode's exact values. Rollback never executes or modifies a CFG and does not use hard-coded server defaults. Modes with managed weapon behavior apply dropped-weapon cleanup so map-placed loadouts do not pile up across rounds. Headshot Only deliberately leaves buying, buy zones, loadouts, dropped weapons, and weapons on the ground unchanged.
+Modes include AWP/Sniper Wars, Bhop, Deathmatch, Grenade Wars, Molotov/Incendiary Wars, Headshot Only, Knife Arena, Pistols Only, ScoutzKnives, Surf, and Zeus Wars. Modes support bot controls and capture the selected server's affected values before applying changes. Switching modes restores the previous state first; **None (rollback)** restores the exact captured values. No server CFG is edited or executed.
 
-ScoutzKnives provides numeric controls for air acceleration, gravity, fall-damage scale, and friction, plus separate bunnyhopping and automatic-bunnyhopping switches. Surf provides numeric controls for acceleration, air acceleration, gravity, jump and landing stamina costs, round time, and freeze time, plus cheats and both bunnyhop switches. These values are also available in standalone `RCT.json`. Grenade Wars, Molotov/Incendiary Wars, and Zeus Wars always enforce the loadouts required for those modes to function.
-
-All Fun Stuff modes require the current [RCON Tool Companion 1.0.1 build](https://github.com/ShAgGy2035/RconCompanionTool). The app verifies profile and mode-specific capabilities before changing server settings. Each mode activates an isolated Companion profile and rollback disables only that same profile, so a stale cleanup command from one mode cannot change another mode's loadout, buying, ground cleanup, or Deathmatch preparation. Headshot Only, Bhop, Surf, and Deathmatch profiles deliberately keep unrestricted weapons.
-
-The Companion maintains player-aware inventories across spawns and bot takeovers while preserving the Terrorist bomb carrier's C4. ScoutzKnives manages one SSG 08 plus the team knife, AWP/Sniper Wars manages an AWP-only inventory, and the existing Pistols, Knife, Zeus, HE-grenade, and fire-grenade profiles retain their dedicated loadouts. For Deathmatch, Companion stages the selected duration, respawn behavior, and random-spawn rules before map and round initialization so the first round does not require a second restart. Switching modes still restores the previous mode before applying the replacement. Restoring settings after Deathmatch reloads the current map, since CS2 only fully leaves the built-in Deathmatch game mode on a map load; every other rollback or mode switch restarts the round so restored cvars take effect immediately. No server CFG is edited or executed.
-
-Administrators granted the CounterStrikeSharp permission `@css/fun` can type `!fun` or `/fun` in game to select a mode or roll it back without access to the RCON password. The current Companion build targets CounterStrikeSharp API 1.0.374 and supports the `v1.0.374-khs-khook` KHS build. Install the complete MenuManagerAPI 1.0.3 release before loading Companion; RCT requires its `MenuManagerAPI.Shared.dll` contract during plugin registration and uses its `menu:api` capability for WASD navigation. Without that dependency, CounterStrikeSharp reports RCT as unregistered and its commands are unavailable. Companion stores one authoritative pre-mode snapshot under `configs/plugins/RCT`, allowing Universal or `!fun` to roll back or replace a mode applied by either interface. A shared server-side lock rejects overlapping apply and rollback attempts, including while Deathmatch is changing maps.
-
-
-### Server Overview
-
-Shows a read-only snapshot of the selected server, endpoint, map, players, and ping.
+All modes require the current [RCON Tool Companion 1.0.1 build](https://github.com/ShAgGy2035/RconCompanionTool), targeting CounterStrikeSharp API 1.0.374. Install the complete MenuManagerAPI 1.0.3 release before Companion. Administrators with `@css/fun` can use `!fun` or `/fun` in game.
 
 ### Scheduled Tasks
 
-Task types include RCON command, framework/plugin maintenance, server backup, database backup, and GeoLite/flag updates. Triggers include Day, Hour, and Startup.
+Task types include RCON commands, framework/plugin maintenance, server backups, database backups, and GeoLite/flag updates. The built-in scheduler runs while the application is open and monitoring is active. Native external tasks use Windows Task Scheduler, systemd user timers, or launchd user agents.
 
-Each OS displays its supported external scheduler:
+### Console, Logs, And Chat
 
-- Windows Task Scheduler on Windows.
-- systemd user timers on Linux.
-- launchd user agents on macOS.
+Console Commands accepts free-form RCON commands and provides categorized suggestions. Each server has separate bounded history. Application Log reports normal operations and failures; Debug provides detailed diagnostics. Passwords, credentials, API keys, and tokens are redacted from console history, logs, and debug output.
 
-The built-in scheduler is available everywhere and runs while the app is open and scheduler monitoring is started. Native external tasks invoke the headless task runner and do not require the GUI to remain open.
+The Chat tab receives authenticated JSON messages from the separate [ChatRelay](https://github.com/ShAgGy2035/ChatRelay) CounterStrikeSharp plugin over UDP. Configure the receiving adapter and port, set a unique token under **Edit server > Integrations**, then use **Copy ChatRelay target JSON**. Restrict firewall access to the game server or trusted LAN, or use a VPN.
 
-### Console Commands
+## Settings
 
-- Enter free-form RCON commands or use categorized commands and autocomplete.
-- Press Enter or click **Execute** to send a command.
-- Each server keeps a separate bounded console history.
-- Process, SteamCMD, SSH, and RCON output remains associated with its originating server.
-- **Settings > General** can enable 15-second automatic refresh of the top server list and can disable filtering of noisy startup/restart output.
-- Local Linux Start and Restart show initial process output only through the startup check, then stop forwarding continuous CS2 runtime output. Explicit Local Linux console-fallback commands temporarily reopen output capture for their response. Local Windows suppresses the native CS2 console and uses RCON for command responses.
-- Console history, application logs, and debug output redact passwords, SSH/database credentials, ChatRelay tokens, Steam authentication keys, and game-server login tokens. Redaction remains active during Debug Mode, raw-console passthrough, and server restart output.
+Open **Settings > Settings** for application-wide options. The **General** tab includes GeoLite and country-flag URLs, slap damage, automatic 15-second server-list refresh, noisy-output filtering, and GeoLite/flag updates. The **Backups** tab provides separate destinations for server-file and database backups.
 
-### Chat
+Server-specific lifecycle, SteamCMD, map, RCON, player-password, database, ChatRelay, Steam authentication, and backup credentials remain under **Servers > Manage servers > Edit server**.
 
-- Receives authenticated JSON chat messages from the separate [ChatRelay](https://github.com/ShAgGy2035/ChatRelay) CounterStrikeSharp plugin over UDP.
-- Selects a local adapter, listen address, and port; the default is `9090`.
-- Uses the selected server's token from **Edit server > Integrations**.
-- **Copy ChatRelay target JSON** creates the selected listener's `TargetIp`, `TargetPort`, and `SharedToken` entry for the plugin configuration.
-- Includes a local authenticated Test action and can send admin chat through RCON.
-- Automatically scrolls to each newly received, sent, or listener-status message.
+## Frameworks And Plugins
 
-Install and configure ChatRelay using its repository instructions. In the app, select the receiving network adapter and port, set a unique high-entropy token in **Edit server > Integrations**, and use **Copy ChatRelay target JSON** to create the matching plugin target. The listener refuses to start without a token, accepts authenticated JSON only, limits datagrams to 8 KiB, and drops rejected packets without adding them to the chat view. UDP does not encrypt traffic or prove the sender's network address, so restrict the firewall rule to the game server or trusted LAN whenever possible; use a VPN instead of exposing the listener directly to the public internet.
+Install Metamod before CounterStrikeSharp. Interactive installation shows the latest 20 compatible releases and accepts a selected release or direct HTTP(S) package URL. Scheduled and headless maintenance use the newest compatible releases because they cannot display selection dialogs.
 
-### Application Log And Debug
-
-- **Application Log** shows normal operations and user-facing failures.
-- **Debug** shows detailed diagnostics when Debug Mode is enabled.
-- Tracing covers windows, controls, lifecycle, RCON, scheduling, chat, SteamCMD, and add-on work.
-- Centralized debug messages redact passwords, tokens, API keys, and similar secrets.
-- When closing the application with Debug Mode still enabled, choose **Stop debugging** to disable it and return to the app or **Exit program** to close anyway.
-
-## Metamod And CounterStrikeSharp
-
-Right-click a server and use:
-
-1. **Install/Upgrade Metamod**.
-2. **Install/Upgrade CSS**.
-
-CounterStrikeSharp requires Metamod. Interactive Metamod and CounterStrikeSharp install/update operations show the latest 20 compatible releases for the selected server platform instead of forcing the newest release. This version window allows a compatible pair of older builds to be selected when a framework API change causes a compatibility problem. Each release field is editable and also accepts a direct HTTP(S) URL to a custom ZIP, TAR.GZ, or TGZ package. The combined server and add-on update collects both selections before changing any files. Scheduled and headless maintenance continue to use the newest compatible releases because they cannot display selection dialogs.
-
-The app resolves platform-appropriate assets for listed releases, deploys them, validates loader files, and repairs the Metamod `gameinfo.gi` search path where needed. A custom package URL is an explicit override, so verify that it matches the server operating system before installation. Linux installation also handles the known executable-stack requirement on affected CounterStrikeSharp ELF libraries.
-
-Under **Settings > Metamod Settings**, the app can list plugins and run info, pause, unpause, retry, load, unload, or force-unload operations. Under **Settings > CStrikeSharp Settings**, it can reload admins and list, reload, or unload plugins. These operations query plugin lists and use the numeric IDs expected by each framework.
-
-Use **Settings > Test Metamod/CSS command availability** to probe safe command forms with nonexistent plugin IDs. It does not target real plugins.
-
-## Optional Plugins
-
-Use **Install/Upgrade Metamod Plugins...** or **Install/Upgrade CSS Plugins...**. Packages can come from a GitHub repository, a public GitLab.com project URL, or a supported local archive or library. GitLab projects may use nested groups; the latest release must expose a ZIP, RAR, tar.gz, DLL, or SO through its asset links. Release assets explicitly marked for Windows are never offered to Linux server profiles, and Linux or SteamRT assets are never offered to Windows profiles. The installer stops instead of falling back to an asset for the wrong operating system. When a release has multiple packages for the selected server OS, the app asks which asset to install and remembers a version-independent filename preference for later upgrades.
-
-Installed files are tracked per server in:
+Optional plugins can come from GitHub, a public GitLab.com project, or a supported local archive or library. The installer filters assets by server OS and tracks installed files per server in:
 
 ```text
 game/csgo/.cs2-rcon-tool-plugins.json
 ```
 
-The ownership manifest lets uninstall remove only owned files, preserve shared files and common configuration, and protect framework files. Keep it with the server.
+Keep this ownership manifest with the server. It allows uninstall to remove owned files while preserving shared files, configuration, and framework files.
 
-Optional plugin deployment is supported for compatible local profiles, Remote Linux, and Remote Windows. Remote Windows transfers normalized plugin packages as acknowledged 32 KB parts over SSH to stay below the Windows OpenSSH channel window, safely retries a stalled part over a fresh SSH connection, verifies the assembled byte count, reports package-transfer progress, extracts them with PowerShell, preserves existing configuration files, and atomically replaces plugin binaries. Failed transfers remove their temporary parts and partial archive. It does not require SCP or SFTP. Framework installation supports Local Windows, Local Linux, Remote Windows, and Remote Linux. Do not assume every optional plugin publishes binaries for every server OS.
+## Backups And Restore
 
-For local plugin batches, the app detects a running CS2 process, stops it once before replacing plugin and shared API assemblies, and restarts it after the batch without running SteamCMD. This prevents Windows file-lock failures on loaded DLLs. Stop a Remote Windows service before upgrading plugins that replace loaded shared assemblies, then start it after the batch.
+- **Backup server** archives configuration, add-ons, maps, `gameinfo.gi`, and plugin tracking instead of stock CS2 binaries or Workshop downloads.
+- **Backup database** runs `mysqldump` using the selected server's integration settings.
+- **Restore server backup...** validates and restores ZIP, TAR.GZ, or TGZ content, stopping and restarting the server as needed.
+- **Install/update + restore server backup...** updates core files before restoring a backup.
+- **Restore database backup...** imports SQL using the configured MySQL client.
 
-When a Remote Windows plugin manager opens, installed payloads are checked in one constant-size PowerShell operation that reads the existing ownership manifest on the server. The command does not grow with the number of installed files.
-
-## Backups, Restore, And Validation
-
-- **Backup server** archives configuration, add-ons, maps, `gameinfo.gi`, and plugin tracking rather than stock CS2 binaries or Workshop downloads.
-- **Backup database** runs `mysqldump` with the selected server's integration settings.
-- **Restore server backup...** accepts ZIP, TAR.GZ, or TGZ, validates it, stops the server, restores supported content, and restarts it.
-- **Install/update + restore server backup...** updates core files before restoring the backup.
-- **Restore database backup...** imports SQL with the configured MySQL client.
-- **Validate server files** runs SteamCMD with `validate`.
-
-Server and database backup destinations are configured separately under **Settings > Backups**. Remote operations require suitable SSH permissions and archive tools on the managed host.
-
-## GeoLite And Flags
-
-Release packages include `GeoLite2-Country.mmdb` and 195 country flags. The app copies missing assets into its writable data directory and can update them from **Settings > General > Update GeoLite + flags**.
-
-Settings includes the database URL and flag URL template so trusted direct-download sources can be selected. Missing assets are self-healing when network access is available.
+Remote operations require appropriate SSH permissions and archive tools on the managed host.
 
 ## Data Storage And Security
 
@@ -621,154 +155,64 @@ Writable data is stored per user, not beside the executable:
 
 The directory contains:
 
-- `servers.json`: server profiles and protected credentials.
+- `servers.json`: profiles and protected credentials.
 - `tasks.json`: scheduled tasks and protected credentials.
 - `steam_settings.json`: application settings and protected tokens.
-- `fun_stuff_state.json`: active per-server Fun Stuff mode, rollback values, and map reapply settings; contains no credentials.
+- `fun_stuff_state.json`: per-server Fun Stuff state without credentials.
 - `credential.key`: the per-user AES key.
 - `GeoLite2-Country.mmdb` and `flags/`: writable GeoIP assets.
 
-Saved secrets use AES-256-GCM. Protect `credential.key` as carefully as the JSON files. Files beside the executable are packaged assets, not active writable configuration. Release archives intentionally exclude settings JSON, credential keys, caches, PDB files, and ChatRelay binaries.
+Saved secrets use AES-256-GCM. Protect `credential.key` as carefully as the JSON files. Release archives intentionally exclude settings, keys, caches, PDB files, ChatRelay binaries, and Companion binaries.
 
-## Reinstalling Or Migrating Existing Data
+## Updating Or Migrating Data
 
-For a clean installation or migration from another device:
+Close the application before updating. Replace application files or extract the new package to a new folder; on macOS, replace the entire app bundle. Back up the complete per-user `CS2RconTool` directory first.
 
-1. Extract and open the new application once.
-2. Close it completely.
-3. Locate the new per-user `CS2RconTool` directory listed above.
-4. Back up the generated directory before replacing anything.
-5. Copy `servers.json`, `tasks.json`, `steam_settings.json`, and `fun_stuff_state.json` from the old installation.
-6. Copy the matching old `credential.key` when available.
-7. Open the application again.
+For migration:
 
-Configuration can load even when encrypted credentials cannot be decrypted. After a clean install, device change, missing key, or key mismatch, edit each affected profile and re-enter its RCON password. You may also need to re-enter SSH passwords, database passwords, ChatRelay tokens, Steam authentication keys, and game-server login tokens. Save each profile so those values are encrypted for the current installation.
+1. Open the new application once, then close it.
+2. Back up its generated per-user data directory.
+3. Copy `servers.json`, `tasks.json`, `steam_settings.json`, and `fun_stuff_state.json` from the old installation.
+4. Copy the matching old `credential.key` when available.
+5. Reopen the application.
 
-When importing across operating systems:
+Configuration can load when protected credentials cannot be decrypted, but affected RCON, SSH, database, ChatRelay, Steam API, and GSLT values must be re-entered and saved.
 
-- Remote Linux and Remote Windows profiles remain usable after valid credentials and paths are supplied.
-- Change `Local Linux` to `Local Windows` for local Windows management, then replace Linux executable, SteamCMD, install-directory, and launch paths.
-- Change `Local Windows` to `Local Linux` for local Linux management and replace Windows paths.
-- macOS cannot run either local CS2 profile type.
+Remote profiles remain portable when valid credentials and target paths are supplied. Local profiles must match the operating system running the application; macOS cannot run local CS2 profiles.
 
 ## Troubleshooting
 
-### RCON commands fail
+- Re-enter and save RCON or SSH credentials after migration.
+- Verify the host/IP and RCON TCP port.
+- Confirm firewalls permit the game UDP port and RCON TCP port.
+- Check Application Log and Debug for lifecycle, SteamCMD, SSH, and RCON details.
+- Do not run Direct process and Service commands against the same executable and port.
+- Install or validate Metamod before CounterStrikeSharp when framework commands are unknown.
+- Use **Settings > General > Update GeoLite + flags** when country data is missing.
+- Confirm built-in scheduler monitoring is active or inspect the platform's native scheduler when tasks do not run.
 
-- Re-enter and save the RCON password, especially after migration.
-- Verify host/IP and TCP port.
-- Confirm the server's `rcon_password` matches the profile.
-- Confirm firewalls permit the RCON TCP connection.
-- Use Application Log and Debug for connection details.
+Platform-specific diagnostics:
 
-### A Linux server in a bridged VirtualBox VM is unreachable
-
-- Set the app's server host/IP to the Linux guest VM's bridged LAN address, such as `192.0.2.10`, not the Windows host's address or `127.0.0.1`.
-- Local Linux and remote Direct-process profiles default to `+ip 0.0.0.0`, which makes CS2 listen on every network interface in the guest. Confirm it remains in the launch arguments, then restart the server. In remote Service commands mode, add it to the systemd unit's CS2 command instead.
-- Confirm the VirtualBox adapter is in Bridged Adapter mode and that guest and host firewalls permit the configured game and RCON ports.
-- On the Linux guest, verify the listening sockets with `ss -lntup | grep 27015`, replacing `27015` when the profile uses another port.
-
-### Local server exits immediately
-
-- Check Application Log and Debug for exit code and stderr.
-- Verify executable, working directory, and launch arguments.
-- Confirm the local profile type matches the current OS.
-- On Linux, verify required runtime libraries and Steam client files.
-
-### Remote lifecycle, browsing, or installation fails
-
-- Verify SSH host, port, username, and password.
-- Remote Linux direct-process starts capture engine output in `/tmp/cs2-rcon-tool-startup-<port>.log`. During the 30-second health check, launch and progress milestones appear in both Application Log and Commands sent. On success, Commands sent also receives a filtered framework/engine startup summary; on failure, the app reports the final log lines.
-- Remote lifecycle Stop and service-mode Restart actions stream command output to Commands sent. Explicit sent/completed milestones remain visible even when the configured command produces no output.
-- Remote Linux service-command Start and Restart verify that the service-owned CS2 process remains alive for 30 seconds. Verification uses the exact executable path when readable and otherwise requires the `cs2` process to belong to the configured systemd unit's exact cgroup. Stop verifies that the configured process exited instead of relying only on the service command's exit code.
-- A Service commands profile cannot transfer ownership of a CS2 instance launched in Direct process mode. Stop the direct instance before starting the service, and do not run both ownership modes against the same executable and port.
-- Remote Linux direct-process Start refuses to launch a duplicate when the configured executable is already running, and Direct Start/Stop/Restart refuse when that executable belongs to the active `cs2-server` systemd cgroup. This prevents duplicate port binding and systemd respawn conflicts. Direct Stop is idempotent, verifies that the configured executable actually exited, and identifies a separate active SteamCMD updater. Start is also blocked while SteamCMD is updating the same app or while `game/csgo/gameinfo.gi` is unavailable, preventing launch against a partially updated installation.
-- Re-enter the SSH password after migration if necessary.
-- `Connection refused` means no SSH service accepted the configured host and port; verify `sshd`, its listening port, and the firewall.
-- Authentication errors mean the configured username or password was rejected.
-- `Permission denied` after login usually means the account cannot traverse a parent directory or read/write the configured installation. Use `namei -l` and the read/write tests in **Remote Linux SSH and file permissions**.
-- Confirm the account can run lifecycle commands and write to the install directory without an interactive privilege prompt.
-- Confirm the target has `tar` for TAR.GZ packages and `unzip` or `python3` for ZIP packages.
-- Remote framework downloads require at least one of `curl`, `wget`, or `python3`; the app uses the first available option in that order.
-- Remote SteamCMD bootstrap uses the same `curl`, `wget`, then `python3` fallback order and supports installation paths containing spaces.
-- Remote SteamCMD validation opens the Commands sent tab and streams its output while the operation is running.
-- Remote Windows SteamCMD retries one incomplete update pass (`0x602`, `0x202`, or exit code `8`) without deleting downloaded server files or configuration.
-- Remote Windows add-on downloads suppress PowerShell progress serialization so CLIXML telemetry cannot flood the Commands sent history or turn a successful command into a false failure.
-- Remote Windows direct-process startup is monitored for 30 seconds, reports captured CS2 output when startup fails, and verifies the configured executable has exited after Stop.
-- Remote Windows Install/Update provisions Steamworks SDK Redist app `1007`; Direct process startup repairs that cache when needed, refreshes its required 64-bit Steam runtime DLLs beside `cs2.exe`, and exposes the runtime to the child process without changing the machine-wide `PATH`.
-- Remote Linux and Remote Windows Direct process profiles support encrypted Steam API auth keys and game server login tokens, supplied at launch as `-authkey` and `+sv_setsteamaccount` and redacted from application output.
-- After SteamCMD restores core files, Install/Update Server reapplies and validates the Metamod/CounterStrikeSharp loader chain before reporting success.
-- Remote framework and plugin updates replace native binaries instead of truncating loaded files in place. A running server keeps using the previous binary until it is restarted, avoiding memory-mapped library crashes during deployment.
-
-### Metamod or CounterStrikeSharp commands are unknown
-
-- Install or validate Metamod first, then CounterStrikeSharp.
-- Confirm `gameinfo.gi` contains the Metamod search path.
-- On Linux, the installer deploys Metamod's CS2 bridge as `addons/metamod/bin/linuxsteamrt64/libserver_valve.so`, matching the library name requested by current CS2 builds. If `Source2ServerConfig001` still fails, stop the server, validate CS2 with **Install/Update Server**, and reinstall Metamod before starting it again.
-- Restart CS2 after framework installation or repair.
-- Run `meta list` and `css_plugins list` from Console Commands.
-- Use the built-in command-availability test.
-
-### Join Server opens CS2 but does not connect
-
-- Open the CS2 developer console with `~`.
-- Paste the copied `connect IP:port` command and press Enter.
-- Enable the developer console in CS2 settings if needed.
-
-### Chat does not appear
-
-- Verify ChatRelay is installed and running separately.
-- Verify destination IP, adapter, UDP port, and token on both sides.
-- Re-enter the token after migration if necessary.
-- Check firewall rules and use the Chat tab's Test action.
-
-### Scheduled tasks do not run
-
-- Confirm the task is active and its trigger/time is valid.
-- Start monitoring for built-in tasks and keep the app open.
-- For native tasks, inspect Task Scheduler, the user systemd timer, or LaunchAgent.
-- Confirm the selected profile and credentials are valid.
-
-### Country or flag data is missing
-
-- Select **Settings > General > Update GeoLite + flags**.
-- Confirm the configured URLs are direct-download sources.
-- Confirm the per-user data directory is writable.
+- [Windows troubleshooting](README-WINDOWS.md#troubleshooting)
+- [Linux troubleshooting](README-LINUX.md#troubleshooting)
+- [macOS troubleshooting](README-MACOS.md#troubleshooting)
 
 ## Application Screenshots
-
-### Server Management
 
 | Server actions | Server context menu |
 | --- | --- |
 | ![Server actions](docs/images/server-actions.png) | ![Server context menu](docs/images/server-context-menu.png) |
 | Manage servers | Edit a Remote Linux server |
 | ![Manage servers](docs/images/manage-servers.png) | ![Edit a Remote Linux server](docs/images/edit-remote-linux-server.png) |
-| Edit server integrations | |
-| ![Edit server integrations](docs/images/edit-server-integrations.png) | |
-
-### Gameplay And Operations
-
 | Fun Stuff modes | Server overview |
-| --- | --- |
 | ![Fun Stuff mode selection](docs/images/fun-stuff-modes.png) | ![Server overview](docs/images/server-overview.png) |
-| Scheduled tasks | Add new scheduled task |
-| ![Scheduled tasks](docs/images/scheduled-tasks.png) | ![Add new scheduled task](docs/images/add-scheduled-task.png) |
-| Console command suggestions | Chat |
-| ![Console command suggestions](docs/images/console-commands.png) | ![Chat](docs/images/chat-tab.png) |
-| Application log | Debug output |
-| ![Application log](docs/images/application-log-tab.png) | ![Debug output](docs/images/debug-tab.png) |
-| General settings | |
-| ![General settings](docs/images/settings-general.png) | |
+| Scheduled tasks | Console commands |
+| ![Scheduled tasks](docs/images/scheduled-tasks.png) | ![Console command suggestions](docs/images/console-commands.png) |
+| Chat | Application log |
+| ![Chat](docs/images/chat-tab.png) | ![Application log](docs/images/application-log-tab.png) |
 
-### Settings And Framework Controls
+## Issues
 
-| Settings menu | Backup settings |
-| --- | --- |
-| ![Settings menu](docs/images/settings-menu.png) | ![Backup settings](docs/images/settings-backups.png) |
-| Metamod controls | CounterStrikeSharp controls |
-| ![Metamod controls](docs/images/settings-metamod-menu.png) | ![CounterStrikeSharp controls](docs/images/settings-counterstrikesharp-menu.png) |
+Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
 
-## About
-
-Open **Help > About** to view version `1.0.4`, developer information, and the detected application platform.
+Open **Help > About** to view the application version, developer information, and detected platform.
