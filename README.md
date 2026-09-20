@@ -10,6 +10,24 @@ ShAgGy's Ultimate CS2 RCON and Server Management Tool is a cross-platform deskto
 
 Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
 
+## Table of Contents
+
+- [Choose Your Platform](#choose-your-platform)
+- [Release Packages](#release-packages)
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [Lifecycle Modes](#lifecycle-modes)
+- [Server Installation And Updates](#server-installation-and-updates)
+- [Main Areas](#main-areas)
+- [Settings](#settings)
+- [Frameworks And Plugins](#frameworks-and-plugins)
+- [Backups And Restore](#backups-and-restore)
+- [Data Storage And Security](#data-storage-and-security)
+- [Updating Or Migrating Data](#updating-or-migrating-data)
+- [Troubleshooting](#troubleshooting)
+- [About](#about)
+- [Application Screenshots](#application-screenshots)
+
 ## Choose Your Platform
 
 Each platform guide keeps launch, update, profile, Direct process, and Service commands instructions together.
@@ -82,6 +100,8 @@ Right-click a configured server and select **Install/Update server...**.
 - Local Linux can check prerequisites and download Linux SteamCMD.
 - Remote Linux and Remote Windows run configured SteamCMD operations over SSH.
 - Use App ID `730`.
+
+SteamCMD runs through the application, and its progress and output are captured in **Console Commands**, **Application Log**, and **Debug** so installation and validation can be monitored without a separate interactive terminal.
 
 **Validate server files** and **Install/Update Server** perform explicit SteamCMD validation. Ordinary Restart skips validation so routine restarts do not become lengthy updates. Direct-process local Start validates when SteamCMD and install-directory settings are configured; Service commands defer maintenance to explicit operations.
 
@@ -225,6 +245,10 @@ Platform-specific diagnostics:
 - [Linux troubleshooting](README-LINUX.md#troubleshooting)
 - [macOS troubleshooting](README-MACOS.md#troubleshooting)
 
+## About
+
+Open **Help > About** to view the application version, developer information, and detected platform.
+
 ## Application Screenshots
 
 | Server actions | Server context menu |
@@ -246,7 +270,3 @@ Platform-specific diagnostics:
 | ![Settings menu](docs/images/settings-menu.png) | ![Backup settings](docs/images/settings-backups.png) |
 | Metamod controls | CounterStrikeSharp controls |
 | ![Metamod controls](docs/images/settings-metamod-menu.png) | ![CounterStrikeSharp controls](docs/images/settings-counterstrikesharp-menu.png) |
-
-## About
-
-Open **Help > About** to view the application version, developer information, and detected platform.

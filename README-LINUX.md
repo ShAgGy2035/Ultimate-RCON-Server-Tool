@@ -34,6 +34,7 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - [Frameworks and plugins](#frameworks-and-plugins)
 - [Backups, data, and security](#backups-data-and-security)
 - [Troubleshooting](#troubleshooting)
+- [Application Screenshots](#application-screenshots)
 
 ## Install And Launch
 
@@ -402,7 +403,7 @@ sudo apt install -y libc6-i386 lib32gcc-s1 lib32stdc++6
 
 Do not run SteamCMD or the CS2 server as `root`. Run the application and SteamCMD under the normal account that owns the SteamCMD and CS2 installation directories, and grant that account only the filesystem and service permissions it needs.
 
-On first launch, SteamCMD updates its own files before accepting commands. The application performs that bootstrap and uses anonymous Steam login by default for CS2 App ID `730`; users do not need to operate an interactive `Steam>` prompt for normal **Install/Update Server** or validation actions. The application runs the equivalent of `app_update 730 validate` for explicit validation and update workflows.
+On first launch, SteamCMD updates its own files before accepting commands. The application performs that bootstrap and uses anonymous Steam login by default for CS2 App ID `730`. SteamCMD runs through the application, and its progress and output are captured in **Console Commands**, **Application Log**, and **Debug** tabs so users can monitor installation and validation without a separate interactive terminal.
 
 These are operating-system packages for SteamCMD, not CS2 server plugins. Metamod, CounterStrikeSharp, MenuManagerAPI, RCON Tool Companion, ChatRelay, and other add-ons are installed separately on the managed CS2 server as described in [Frameworks And Plugins](#frameworks-and-plugins) and [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff).
 
@@ -493,6 +494,31 @@ Writable data is stored under `~/.config/CS2RconTool`, not beside the executable
 
 For migration, open the new application once and close it, back up the generated data directory, then copy the old JSON files and matching `credential.key`. Re-enter and save any credential that cannot be decrypted. Imported `Local Windows` profiles must be changed to `Local Linux` with Linux executable, SteamCMD, install, working-directory, and launch paths before they can be saved. Remote profiles remain usable with valid target paths and credentials.
 
+## Troubleshooting
+
+- Verify the executable, working directory, SteamCMD path, install directory, and profile OS.
+- For a bridged virtual machine, use the guest's LAN address rather than the host address or `127.0.0.1`.
+- Keep `+ip 0.0.0.0` in Direct-process arguments for remote access. Put it in the systemd launcher for Service commands mode.
+- Verify listening sockets with `ss -lntup | grep 27015`, replacing the port as needed.
+- `Connection refused` means no SSH service accepted the configured host and port.
+- Authentication errors mean the SSH username or password was rejected.
+- `Permission denied` after login usually means the account cannot traverse a parent directory or access the installation. Run the checks under [Remote Linux SSH And File Permissions](#remote-linux-ssh-and-file-permissions).
+- Confirm lifecycle commands do not require an interactive privilege prompt.
+- Remote archive operations require `tar` and either `unzip` or `python3` for ZIP files.
+- Framework and SteamCMD downloads require `curl`, `wget`, or `python3`; the application uses the first available option. Remote SteamCMD bootstrap supports installation paths containing spaces.
+- Remote SteamCMD validation opens **Console Commands** and streams output while it runs. Remote Stop and service-mode Restart also stream command output and retain explicit sent/completed milestones when a command produces no output.
+- If a local server exits immediately, check Application Log and Debug for its exit code and stderr, verify executable, working directory, and launch arguments, and confirm required Linux runtime libraries and Steam client files are available.
+- Linux framework installation handles the known executable-stack requirement on affected CounterStrikeSharp ELF libraries.
+- The installer deploys Metamod's CS2 bridge as `addons/metamod/bin/linuxsteamrt64/libserver_valve.so`. If `Source2ServerConfig001` still fails, stop CS2, validate it with **Install/Update Server**, reinstall Metamod, and then start the server.
+- If Chat does not appear, verify ChatRelay is running, match the destination IP, adapter, UDP port, and token, check firewall rules, and use the Chat tab's **Test** action.
+- If country or flag data is missing, run **Settings > General > Update GeoLite + flags**, confirm the configured URLs are direct downloads, and verify the per-user data directory is writable.
+- If a scheduled task does not run, confirm it is active and valid. Start monitoring for built-in tasks; inspect the systemd user timer for native tasks.
+- Do not run Direct process and Service commands modes against the same executable and port.
+
+## About
+
+Open **Help > About** to view version `1.0.4`, developer information, and the detected application platform.
+
 ## Application Screenshots
 
 | Server management | Integrations |
@@ -508,28 +534,3 @@ For migration, open the new application once and close it, back up the generated
 | ![General settings](docs/images/settings-general.png) | ![Backup settings](docs/images/settings-backups.png) |
 | Metamod controls | CounterStrikeSharp controls |
 | ![Metamod controls](docs/images/settings-metamod-menu.png) | ![CounterStrikeSharp controls](docs/images/settings-counterstrikesharp-menu.png) |
-
-## Troubleshooting
-
-- Verify the executable, working directory, SteamCMD path, install directory, and profile OS.
-- For a bridged virtual machine, use the guest's LAN address rather than the host address or `127.0.0.1`.
-- Keep `+ip 0.0.0.0` in Direct-process arguments for remote access. Put it in the systemd launcher for Service commands mode.
-- Verify listening sockets with `ss -lntup | grep 27015`, replacing the port as needed.
-- `Connection refused` means no SSH service accepted the configured host and port.
-- Authentication errors mean the SSH username or password was rejected.
-- `Permission denied` after login usually means the account cannot traverse a parent directory or access the installation. Run the checks under [Remote Linux SSH And File Permissions](#remote-linux-ssh-and-file-permissions).
-- Confirm lifecycle commands do not require an interactive privilege prompt.
-- Remote archive operations require `tar` and either `unzip` or `python3` for ZIP files.
-- Framework and SteamCMD downloads require `curl`, `wget`, or `python3`; the application uses the first available option. Remote SteamCMD bootstrap supports installation paths containing spaces.
-- Remote SteamCMD validation opens **Commands sent** and streams output while it runs. Remote Stop and service-mode Restart also stream command output and retain explicit sent/completed milestones when a command produces no output.
-- If a local server exits immediately, check Application Log and Debug for its exit code and stderr, verify executable, working directory, and launch arguments, and confirm required Linux runtime libraries and Steam client files are available.
-- Linux framework installation handles the known executable-stack requirement on affected CounterStrikeSharp ELF libraries.
-- The installer deploys Metamod's CS2 bridge as `addons/metamod/bin/linuxsteamrt64/libserver_valve.so`. If `Source2ServerConfig001` still fails, stop CS2, validate it with **Install/Update Server**, reinstall Metamod, and then start the server.
-- If Chat does not appear, verify ChatRelay is running, match the destination IP, adapter, UDP port, and token, check firewall rules, and use the Chat tab's **Test** action.
-- If country or flag data is missing, run **Settings > General > Update GeoLite + flags**, confirm the configured URLs are direct downloads, and verify the per-user data directory is writable.
-- If a scheduled task does not run, confirm it is active and valid. Start monitoring for built-in tasks; inspect the systemd user timer for native tasks.
-- Do not run Direct process and Service commands modes against the same executable and port.
-
-## About
-
-Open **Help > About** to view version `1.0.4`, developer information, and the detected application platform.

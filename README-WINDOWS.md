@@ -34,6 +34,7 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - [Frameworks and plugins](#frameworks-and-plugins)
 - [Backups, data, and security](#backups-data-and-security)
 - [Troubleshooting](#troubleshooting)
+- [Application Screenshots](#application-screenshots)
 
 ## Install And Launch
 
@@ -378,7 +379,7 @@ Use **Validate server files** or **Install/Update Server** for an explicit Steam
 
 Remote Windows transfers normalized plugin packages as acknowledged 32 KB parts over SSH to stay below the OpenSSH channel window. A stalled part is retried over a fresh connection, the assembled byte count is verified, transfer progress is reported, and temporary parts and partial archives are removed after failure. PowerShell extracts the package, preserves existing configuration files, and atomically replaces plugin binaries without requiring SCP or SFTP.
 
-Remote Windows add-on downloads suppress PowerShell progress serialization so CLIXML telemetry cannot flood **Commands sent** or turn a successful command into a false failure. Installed payload checks use one constant-size PowerShell operation that reads the ownership manifest on the server instead of growing with its file count.
+Remote Windows add-on downloads suppress PowerShell progress serialization so CLIXML telemetry cannot flood **Console Commands** or turn a successful command into a false failure. Installed payload checks use one constant-size PowerShell operation that reads the ownership manifest on the server instead of growing with its file count.
 
 For local plugin batches, the application detects a running CS2 process, stops it once before replacing plugin and shared API assemblies, then restarts it without SteamCMD. This avoids Windows file-lock failures on loaded DLLs. Stop a Remote Windows service before upgrading plugins that replace loaded shared assemblies, then start it after the batch.
 
@@ -467,22 +468,6 @@ Writable data is stored under `%APPDATA%\CS2RconTool`, not beside the executable
 
 For migration, open the new application once and close it, back up the generated data directory, then copy the old JSON files and matching `credential.key`. Re-enter and save credentials that cannot be decrypted. Imported `Local Linux` profiles must be changed to `Local Windows` with Windows executable, SteamCMD, install, working-directory, and launch paths before they can be saved. Remote profiles remain usable with valid target paths and credentials.
 
-## Application Screenshots
-
-| Server management | Integrations |
-| --- | --- |
-| ![Manage servers](docs/images/manage-servers.png) | ![Edit server integrations](docs/images/edit-server-integrations.png) |
-| Fun Stuff | Console commands |
-| ![Fun Stuff modes](docs/images/fun-stuff-modes.png) | ![Console command suggestions](docs/images/console-commands.png) |
-| Scheduled tasks | Add scheduled task |
-| ![Scheduled tasks](docs/images/scheduled-tasks.png) | ![Add scheduled task](docs/images/add-scheduled-task.png) |
-| Chat | Debug output |
-| ![Chat](docs/images/chat-tab.png) | ![Debug output](docs/images/debug-tab.png) |
-| General settings | Backup settings |
-| ![General settings](docs/images/settings-general.png) | ![Backup settings](docs/images/settings-backups.png) |
-| Metamod controls | CounterStrikeSharp controls |
-| ![Metamod controls](docs/images/settings-metamod-menu.png) | ![CounterStrikeSharp controls](docs/images/settings-counterstrikesharp-menu.png) |
-
 ## Troubleshooting
 
 - Re-enter SSH or RCON credentials after migration when decryption fails.
@@ -503,3 +488,19 @@ For migration, open the new application once and close it, back up the generated
 ## About
 
 Open **Help > About** to view version `1.0.4`, developer information, and the detected application platform.
+
+## Application Screenshots
+
+| Server management | Integrations |
+| --- | --- |
+| ![Manage servers](docs/images/manage-servers.png) | ![Edit server integrations](docs/images/edit-server-integrations.png) |
+| Fun Stuff | Console commands |
+| ![Fun Stuff modes](docs/images/fun-stuff-modes.png) | ![Console command suggestions](docs/images/console-commands.png) |
+| Scheduled tasks | Add scheduled task |
+| ![Scheduled tasks](docs/images/scheduled-tasks.png) | ![Add scheduled task](docs/images/add-scheduled-task.png) |
+| Chat | Debug output |
+| ![Chat](docs/images/chat-tab.png) | ![Debug output](docs/images/debug-tab.png) |
+| General settings | Backup settings |
+| ![General settings](docs/images/settings-general.png) | ![Backup settings](docs/images/settings-backups.png) |
+| Metamod controls | CounterStrikeSharp controls |
+| ![Metamod controls](docs/images/settings-metamod-menu.png) | ![CounterStrikeSharp controls](docs/images/settings-counterstrikesharp-menu.png) |

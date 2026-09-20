@@ -10,6 +10,25 @@ This self-contained guide covers the macOS application packages and Remote Linux
 
 Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
 
+## Table of Contents
+
+- [Server Plugin Requirements](#server-plugin-requirements)
+- [Requirements](#requirements)
+- [Install And Launch](#install-and-launch)
+- [Update The Application](#update-the-application)
+- [Create A Remote Profile](#create-a-remote-profile)
+- [Choose A Lifecycle Mode](#choose-a-lifecycle-mode)
+- [Remote Linux Setup](#remote-linux-setup)
+- [Remote Windows Setup](#remote-windows-setup)
+- [Using The Application](#using-the-application)
+- [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff)
+- [ChatRelay](#chatrelay)
+- [Frameworks, Plugins, And Backups](#frameworks-plugins-and-backups)
+- [macOS Integration](#macos-integration)
+- [Troubleshooting](#troubleshooting)
+- [About](#about)
+- [Application Screenshots](#application-screenshots)
+
 ## Server Plugin Requirements
 
 The app's Slay and Slap controls send `css_slay #userid` and `css_slap #userid damage`. Install [PlayerPunishments 1.0.0 or newer](https://github.com/ShAgGy2035/PlayerPunishments) on the remote CS2 server when its existing administration package does not provide those commands. PlayerPunishments is a CounterStrikeSharp server plugin and is not installed in the macOS application bundle. Configure Slap damage from `0` to `99` under **Settings > General**.
@@ -272,18 +291,6 @@ Server backup includes configuration, add-ons, maps, `gameinfo.gi`, and plugin t
 
 Writable data lives under `~/Library/Application Support/CS2RconTool` and includes profile/settings JSON, Fun Stuff state, `credential.key`, GeoLite data, and flags. Secrets use AES-256-GCM. Back up the entire directory and preserve `credential.key`; release archives exclude settings, credentials, caches, PDBs, ChatRelay, and Companion binaries.
 
-## Application Screenshots
-
-| Server management | Integrations |
-| --- | --- |
-| ![Manage servers](docs/images/manage-servers.png) | ![Edit server integrations](docs/images/edit-server-integrations.png) |
-| Fun Stuff | Console commands |
-| ![Fun Stuff modes](docs/images/fun-stuff-modes.png) | ![Console command suggestions](docs/images/console-commands.png) |
-| Scheduled tasks | Chat |
-| ![Scheduled tasks](docs/images/scheduled-tasks.png) | ![Chat](docs/images/chat-tab.png) |
-| Debug output | General settings |
-| ![Debug output](docs/images/debug-tab.png) | ![General settings](docs/images/settings-general.png) |
-
 ## macOS Integration
 
 - **Join server** uses the native `open` command for Steam connection URIs.
@@ -306,3 +313,15 @@ Writable data lives under `~/Library/Application Support/CS2RconTool` and includ
 ## About
 
 Open **Help > About** to view version `1.0.4`, developer information, and the detected application platform.
+
+## Application Screenshots
+
+| Server management | Integrations |
+| --- | --- |
+| ![Manage servers](docs/images/manage-servers.png) | ![Edit server integrations](docs/images/edit-server-integrations.png) |
+| Fun Stuff | Console commands |
+| ![Fun Stuff modes](docs/images/fun-stuff-modes.png) | ![Console command suggestions](docs/images/console-commands.png) |
+| Scheduled tasks | Chat |
+| ![Scheduled tasks](docs/images/scheduled-tasks.png) | ![Chat](docs/images/chat-tab.png) |
+| Debug output | General settings |
+| ![Debug output](docs/images/debug-tab.png) | ![General settings](docs/images/settings-general.png) |
