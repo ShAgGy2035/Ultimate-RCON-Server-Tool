@@ -81,6 +81,8 @@ Right-click a configured server and select **Install/Update server...**.
 
 **Validate server files** and **Install/Update Server** perform explicit SteamCMD validation. Ordinary Restart skips validation so routine restarts do not become lengthy updates. Direct-process local Start validates when SteamCMD and install-directory settings are configured; Service commands defer maintenance to explicit operations.
 
+When a managed local CS2 process is running, the application pauses before SteamCMD and offers to stop the server and continue. Cancelling leaves the server running and aborts the update or validation. After SteamCMD restores core files, **Install/Update Server** reapplies and validates the Metamod/CounterStrikeSharp loader chain before reporting success.
+
 **Install/Update Server + Add-ons** combines a server update with supported framework and tracked-plugin maintenance.
 
 ## Main Areas
@@ -90,6 +92,8 @@ Right-click a configured server and select **Install/Update server...**.
 The top list displays hostname, address, port, map, players, ping, location, and country. Its context menu provides lifecycle, installation, add-on, backup, restore, validation, copy, and edit operations.
 
 Server Actions control hostname, bots, teams, passwords, friendly fire, cheats, pause, map changes, maximum rounds, timed restarts, and player punishments. These controls send runtime commands and do not edit server CFG files. Configure the Startup CFG and player connection password in the server profile.
+
+Deleting a server requires confirmation. Optional app-state cleanup removes that profile's scheduled tasks, external scheduler entries, console history, and cached state. It does not delete CS2 installations, plugins, backups, or files from the managed server.
 
 ### PlayerPunishments
 
@@ -103,19 +107,29 @@ Select a server and click **Join server**. Windows uses the registered Steam URI
 
 ### Fun Stuff
 
-Modes include AWP/Sniper Wars, Bhop, Deathmatch, Grenade Wars, Molotov/Incendiary Wars, Headshot Only, Knife Arena, Pistols Only, ScoutzKnives, Surf, and Zeus Wars. Modes support bot controls and capture the selected server's affected values before applying changes. Switching modes restores the previous state first; **None (rollback)** restores the exact captured values. No server CFG is edited or executed.
+Modes include AWP/Sniper Wars, Bhop, Deathmatch, Grenade Wars, Molotov/Incendiary Wars, Headshot Only, Knife Arena, Pistols Only, ScoutzKnives, Surf, and Zeus Wars. Every mode includes **Enable bots**, an optional quota from 1 to 64, and a quota mode of `normal`, `fill`, or `match`. Enabled with a blank quota preserves the existing quota; entering a value enforces it. `fill` replaces bots as humans join to maintain the configured total. Disabled removes current bots and holds the quota at zero until rollback or a mode switch restores the captured quota and mode.
+
+Before applying a mode, the application captures that server's affected persistent cvars. Switching modes restores the active mode first, then captures and applies the replacement. **None (rollback)** restores the exact captured values without executing or editing a CFG. Managed-weapon modes clean up dropped and map-placed weapons; Headshot Only deliberately leaves buying, buy zones, loadouts, dropped weapons, and ground weapons unchanged.
+
+ScoutzKnives provides controls for air acceleration, gravity, fall-damage scale, friction, bunnyhopping, and automatic bunnyhopping. Surf provides acceleration, air acceleration, gravity, jump and landing stamina costs, round time, freeze time, cheats, and both bunnyhop switches. These values are also available in standalone `RCT.json`. Grenade Wars, Molotov/Incendiary Wars, and Zeus Wars always enforce their required loadouts.
 
 All modes require the current [RCON Tool Companion 1.0.1 build](https://github.com/ShAgGy2035/RconCompanionTool), targeting CounterStrikeSharp API 1.0.374. Install the complete MenuManagerAPI 1.0.3 release before Companion. Administrators with `@css/fun` can use `!fun` or `/fun` in game.
 
+Each mode activates an isolated Companion profile, so stale cleanup from one mode cannot change another mode's loadout, buying state, ground cleanup, or Deathmatch preparation. Companion maintains player-aware inventories across spawns and bot takeovers while preserving the Terrorist bomb carrier's C4. It manages SSG 08 plus team knife for ScoutzKnives, AWP-only for AWP/Sniper Wars, and dedicated Pistols, Knife, Zeus, HE-grenade, and fire-grenade loadouts.
+
+Deathmatch stages duration, respawn, and random-spawn rules before map and round initialization. Leaving Deathmatch reloads the current map because CS2 only fully exits its built-in Deathmatch mode on a map load; other rollbacks and switches restart the round. Companion stores one authoritative pre-mode snapshot under `configs/plugins/RCT`, and a server-side lock rejects overlapping apply or rollback attempts, including during Deathmatch map changes.
+
+MenuManagerAPI provides the `MenuManagerAPI.Shared.dll` contract used during Companion registration and the `menu:api` capability for WASD navigation. Without the complete dependency, CounterStrikeSharp reports RCT as unregistered and its commands are unavailable.
+
 ### Scheduled Tasks
 
-Task types include RCON commands, framework/plugin maintenance, server backups, database backups, and GeoLite/flag updates. The built-in scheduler runs while the application is open and monitoring is active. Native external tasks use Windows Task Scheduler, systemd user timers, or launchd user agents.
+Task types include RCON commands, framework/plugin maintenance, server backups, database backups, and GeoLite/flag updates. Triggers include Day, Hour, and Startup. The built-in scheduler runs while the application is open and monitoring is active. Native external tasks invoke the headless task runner and do not require the GUI to remain open; they use Windows Task Scheduler, systemd user timers, or launchd user agents.
 
 ### Console, Logs, And Chat
 
-Console Commands accepts free-form RCON commands and provides categorized suggestions. Each server has separate bounded history. Application Log reports normal operations and failures; Debug provides detailed diagnostics. Passwords, credentials, API keys, and tokens are redacted from console history, logs, and debug output.
+Console Commands accepts free-form RCON commands and provides categorized suggestions. Each server has separate bounded history. Application Log reports normal operations and failures; Debug provides detailed diagnostics. Passwords, credentials, API keys, and tokens are redacted from console history, logs, and debug output. When closing with Debug Mode enabled, choose **Stop debugging** to disable it and return to the app or **Exit program** to close anyway.
 
-The Chat tab receives authenticated JSON messages from the separate [ChatRelay](https://github.com/ShAgGy2035/ChatRelay) CounterStrikeSharp plugin over UDP. Configure the receiving adapter and port, set a unique token under **Edit server > Integrations**, then use **Copy ChatRelay target JSON**. Restrict firewall access to the game server or trusted LAN, or use a VPN.
+The Chat tab receives authenticated JSON messages from the separate [ChatRelay](https://github.com/ShAgGy2035/ChatRelay) CounterStrikeSharp plugin over UDP and can send admin chat through RCON. Configure the receiving adapter and port, set a unique token under **Edit server > Integrations**, then use **Copy ChatRelay target JSON**. The listener accepts authenticated JSON only, limits datagrams to 8 KiB, and drops rejected packets. Restrict firewall access to the game server or trusted LAN, or use a VPN.
 
 ## Settings
 
@@ -127,13 +141,17 @@ Server-specific lifecycle, SteamCMD, map, RCON, player-password, database, ChatR
 
 Install Metamod before CounterStrikeSharp. Interactive installation shows the latest 20 compatible releases and accepts a selected release or direct HTTP(S) package URL. Scheduled and headless maintenance use the newest compatible releases because they cannot display selection dialogs.
 
-Optional plugins can come from GitHub, a public GitLab.com project, or a supported local archive or library. The installer filters assets by server OS and tracks installed files per server in:
+Under **Settings > Metamod Settings**, list plugins and run info, pause, unpause, retry, load, unload, or force-unload operations. Under **Settings > CStrikeSharp Settings**, reload admins and list, reload, or unload plugins. Use **Settings > Test Metamod/CSS command availability** to probe safe command forms with nonexistent plugin IDs without targeting real plugins.
+
+Optional plugins can come from GitHub, a public GitLab.com project including nested groups, or a supported local archive or library. The installer filters assets by server OS. When a release has multiple packages for that OS, the application asks which asset to install and remembers a version-independent filename preference for later upgrades. Installed files are tracked per server in:
 
 ```text
 game/csgo/.cs2-rcon-tool-plugins.json
 ```
 
 Keep this ownership manifest with the server. It allows uninstall to remove owned files while preserving shared files, configuration, and framework files.
+
+Remote framework and plugin updates replace native binaries instead of truncating loaded files in place. A running server continues using the previous binary until restart, avoiding memory-mapped library crashes during deployment.
 
 ## Backups And Restore
 
@@ -178,7 +196,11 @@ For migration:
 
 Configuration can load when protected credentials cannot be decrypted, but affected RCON, SSH, database, ChatRelay, Steam API, and GSLT values must be re-entered and saved.
 
-Remote profiles remain portable when valid credentials and target paths are supplied. Local profiles must match the operating system running the application; macOS cannot run local CS2 profiles.
+Remote profiles remain portable when valid credentials and target paths are supplied. New profiles default to the local type supported by the current OS. Existing imported profile locations are not changed automatically, and an incompatible local profile must be changed to a supported location before it can be saved.
+
+- When moving to Windows, change `Local Linux` to `Local Windows`, then replace the Linux executable, SteamCMD, install-directory, working-directory, and launch paths with Windows paths.
+- When moving to Linux, change `Local Windows` to `Local Linux`, then replace the Windows executable, SteamCMD, install-directory, working-directory, and launch paths with Linux paths.
+- macOS cannot run local CS2 profiles. Convert an imported local profile to the correct Remote Linux or Remote Windows type and provide valid target paths and credentials.
 
 ## Troubleshooting
 
@@ -188,7 +210,9 @@ Remote profiles remain portable when valid credentials and target paths are supp
 - Check Application Log and Debug for lifecycle, SteamCMD, SSH, and RCON details.
 - Do not run Direct process and Service commands against the same executable and port.
 - Install or validate Metamod before CounterStrikeSharp when framework commands are unknown.
-- Use **Settings > General > Update GeoLite + flags** when country data is missing.
+- If Steam opens CS2 without connecting, enable the developer console, press `~`, and paste the copied `connect IP:port` command.
+- If Chat does not appear, verify ChatRelay is running, match the destination IP, adapter, UDP port, and token on both sides, check firewall rules, and use the Chat tab's **Test** action.
+- Use **Settings > General > Update GeoLite + flags** when country data is missing. Confirm the configured URLs are direct-download sources and the per-user data directory is writable.
 - Confirm built-in scheduler monitoring is active or inspect the platform's native scheduler when tasks do not run.
 
 Platform-specific diagnostics:
@@ -204,12 +228,20 @@ Platform-specific diagnostics:
 | ![Server actions](docs/images/server-actions.png) | ![Server context menu](docs/images/server-context-menu.png) |
 | Manage servers | Edit a Remote Linux server |
 | ![Manage servers](docs/images/manage-servers.png) | ![Edit a Remote Linux server](docs/images/edit-remote-linux-server.png) |
+| Edit server integrations | Add scheduled task |
+| ![Edit server integrations](docs/images/edit-server-integrations.png) | ![Add scheduled task](docs/images/add-scheduled-task.png) |
 | Fun Stuff modes | Server overview |
 | ![Fun Stuff mode selection](docs/images/fun-stuff-modes.png) | ![Server overview](docs/images/server-overview.png) |
 | Scheduled tasks | Console commands |
 | ![Scheduled tasks](docs/images/scheduled-tasks.png) | ![Console command suggestions](docs/images/console-commands.png) |
 | Chat | Application log |
 | ![Chat](docs/images/chat-tab.png) | ![Application log](docs/images/application-log-tab.png) |
+| Debug output | General settings |
+| ![Debug output](docs/images/debug-tab.png) | ![General settings](docs/images/settings-general.png) |
+| Settings menu | Backup settings |
+| ![Settings menu](docs/images/settings-menu.png) | ![Backup settings](docs/images/settings-backups.png) |
+| Metamod controls | CounterStrikeSharp controls |
+| ![Metamod controls](docs/images/settings-metamod-menu.png) | ![CounterStrikeSharp controls](docs/images/settings-counterstrikesharp-menu.png) |
 
 ## Issues
 

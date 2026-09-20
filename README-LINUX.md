@@ -36,7 +36,9 @@ Launch through the included script:
 ./run.sh
 ```
 
-Alternatively, mark `run.sh` as executable in your file manager and select **Run as a Program**. Use `./run.sh --foreground` to keep the process attached for troubleshooting.
+Alternatively, open the extracted directory in your Linux file manager, right-click `run.sh`, and select **Run as a Program**. If that option is unavailable, open the file's **Properties > Permissions**, enable execution as a program, and try again.
+
+Use `./run.sh --foreground` to keep the process attached for troubleshooting.
 
 The package is self-contained and does not require a separate .NET installation. The launcher uses an app-local `.net` directory for extracted native single-file libraries. It is a cache and can be deleted while the application is closed.
 
@@ -68,7 +70,7 @@ PlayerPunishments is a CounterStrikeSharp server plugin. Install it in the Linux
 
 Use a **Local Linux** profile only when the application and CS2 server run on the same Linux computer.
 
-Configure the CS2 install directory, executable, working directory, SteamCMD path, App ID `730`, startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Public internet servers can also use a Steam Web API key and game-server login token. These credentials are not required or prompted for when **LAN server** is enabled.
+Configure the CS2 install directory, executable, working directory, SteamCMD path, App ID `730`, startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Startup can use a local map, Workshop collection, or single Workshop map. The editable map field suggests Valve maps, including Premier maps, while accepting custom names. Public internet servers can also use a Steam Web API key and game-server login token. These credentials are not required or prompted for when **LAN server** is enabled.
 
 ### Choose A Local Lifecycle Mode
 
@@ -92,6 +94,8 @@ Arguments:         -dedicated +ip 0.0.0.0
 The application adds authoritative map, game type, game mode, CFG, port, hostname, RCON, tickrate, VAC, LAN, Steam API, GSLT, and optional player-password arguments. An ordinary Start runs SteamCMD validation when SteamCMD and install-directory settings are configured. Restart does not run SteamCMD validation.
 
 On supported Linux systems, the application can check SteamCMD prerequisites and bootstrap SteamCMD. Local profiles can also enable startup maintenance to warn players, stop CS2, update the server and supported add-ons, and restart it.
+
+Local Linux Start and Restart show initial process output only through the startup check, then stop forwarding continuous CS2 runtime output. Explicit Local Linux console-fallback commands temporarily reopen output capture for their response.
 
 ### Local Linux Service Commands
 
@@ -118,12 +122,14 @@ Use a **Remote Linux** profile when CS2 runs on another Linux computer.
 Configure:
 
 - SSH host, port, username, and password.
-- Optional SFTP address, username, password, and port. Blank values reuse SSH details; port `0` reuses the SSH port.
+- Optional SFTP address, username, password, and port. Blank values reuse SSH details; port `0` reuses the SSH port. Valid SFTP ports range through `65535`.
 - Remote SteamCMD path and CS2 installation directory for managed updates.
 - App ID `730` and Steam login, normally `anonymous`.
 - The lifecycle mode and its corresponding fields.
 
 The remote account must run lifecycle commands and write to the installation directory. Remote browsing and file operations require SFTP access.
+
+Remote Linux profiles reject Windows drive paths before SteamCMD starts. When a profile is changed from Remote Windows to Remote Linux, stale auto-generated executable and working-directory defaults are replaced with Linux defaults; explicitly configured valid custom paths remain editable.
 
 ### Remote Linux Direct Process
 
@@ -285,5 +291,9 @@ Use **Validate server files** or **Install/Update Server** for explicit SteamCMD
 - `Permission denied` after login usually means the account cannot traverse a parent directory or access the installation. Run the checks under [Remote Linux SSH And File Permissions](#remote-linux-ssh-and-file-permissions).
 - Confirm lifecycle commands do not require an interactive privilege prompt.
 - Remote archive operations require `tar` and either `unzip` or `python3` for ZIP files.
-- Framework and SteamCMD downloads require `curl`, `wget`, or `python3`; the application uses the first available option.
+- Framework and SteamCMD downloads require `curl`, `wget`, or `python3`; the application uses the first available option. Remote SteamCMD bootstrap supports installation paths containing spaces.
+- Remote SteamCMD validation opens **Commands sent** and streams output while it runs. Remote Stop and service-mode Restart also stream command output and retain explicit sent/completed milestones when a command produces no output.
+- If a local server exits immediately, check Application Log and Debug for its exit code and stderr, verify executable, working directory, and launch arguments, and confirm required Linux runtime libraries and Steam client files are available.
+- Linux framework installation handles the known executable-stack requirement on affected CounterStrikeSharp ELF libraries.
+- The installer deploys Metamod's CS2 bridge as `addons/metamod/bin/linuxsteamrt64/libserver_valve.so`. If `Source2ServerConfig001` still fails, stop CS2, validate it with **Install/Update Server**, reinstall Metamod, and then start the server.
 - Do not run Direct process and Service commands modes against the same executable and port.

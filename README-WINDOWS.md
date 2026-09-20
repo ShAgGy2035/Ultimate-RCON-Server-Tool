@@ -55,7 +55,7 @@ PlayerPunishments is a CounterStrikeSharp server plugin. Install it in the Windo
 
 Use a **Local Windows** profile only when the application and CS2 server run on the same Windows computer.
 
-Configure the RCON password, CS2 install directory, SteamCMD path, App ID `730`, startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Public internet servers can also use a Steam Web API key and game-server login token. These credentials are not required or prompted for when **LAN server** is enabled.
+Configure the RCON password, CS2 install directory, SteamCMD path, App ID `730`, startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Startup can use a local map, Workshop collection, or single Workshop map. The editable map field suggests Valve maps, including Premier maps, while accepting custom names. Public internet servers can also use a Steam Web API key and game-server login token. These credentials are not required or prompted for when **LAN server** is enabled.
 
 ### Choose A Local Lifecycle Mode
 
@@ -78,7 +78,7 @@ Arguments:         -dedicated +ip 0.0.0.0
 
 The application adds authoritative map, game type, game mode, CFG, port, hostname, RCON, tickrate, VAC, LAN, Steam API, GSLT, and optional player-password arguments. Local Windows launches CS2 without opening a native console window and uses RCON for command responses.
 
-Windows SteamCMD is stored in a sibling `<install-dir>-steamcmd` directory because SteamCMD rejects a game installation inside its own directory. An ordinary Direct-process Start runs SteamCMD validation when both SteamCMD and install-directory settings are configured. Restart does not run SteamCMD validation.
+Windows SteamCMD is stored in a sibling `<install-dir>-steamcmd` directory because SteamCMD rejects a game installation inside its own directory. Existing profiles that used `<install-dir>\steamcmd` are migrated without redownloading an already completed app `730` payload. An ordinary Direct-process Start runs SteamCMD validation when both SteamCMD and install-directory settings are configured. Restart does not run SteamCMD validation.
 
 ### Local Windows Service Commands
 
@@ -104,10 +104,12 @@ Use a **Remote Windows** profile when CS2 runs on another Windows computer.
 
 - OpenSSH server access to the remote Windows computer.
 - The SSH account must belong to the remote computer's local Administrators group for WMI process creation and firewall configuration.
-- Optional SFTP settings for browsing and general file transfers. Blank values reuse the SSH host and credentials.
+- Optional SFTP settings for browsing and general file transfers. Blank values reuse the SSH host and credentials; port `0` reuses the SSH port. Valid SFTP ports range through `65535`.
 - A Windows SteamCMD path and CS2 installation directory for managed updates.
 
 Remote Windows lifecycle and plugin deployment do not require WinRM. Direct process startup and plugin transfers do not require a separate SFTP service.
+
+Remote Windows profiles reject Unix paths before SteamCMD starts. When a profile is changed from Remote Linux to Remote Windows, stale auto-generated executable and working-directory defaults are replaced with Windows defaults. Existing overlapping or former global SteamCMD defaults are migrated automatically; an explicitly configured non-overlapping custom path remains unchanged.
 
 ### Remote Windows Direct Process
 
@@ -230,6 +232,14 @@ Service mode expects all CS2 launch arguments in the WinSW XML. It monitors the 
 
 Use **Validate server files** or **Install/Update Server** for an explicit SteamCMD validation.
 
+## Windows Plugin Deployment
+
+Remote Windows transfers normalized plugin packages as acknowledged 32 KB parts over SSH to stay below the OpenSSH channel window. A stalled part is retried over a fresh connection, the assembled byte count is verified, transfer progress is reported, and temporary parts and partial archives are removed after failure. PowerShell extracts the package, preserves existing configuration files, and atomically replaces plugin binaries without requiring SCP or SFTP.
+
+Remote Windows add-on downloads suppress PowerShell progress serialization so CLIXML telemetry cannot flood **Commands sent** or turn a successful command into a false failure. Installed payload checks use one constant-size PowerShell operation that reads the ownership manifest on the server instead of growing with its file count.
+
+For local plugin batches, the application detects a running CS2 process, stops it once before replacing plugin and shared API assemblies, then restarts it without SteamCMD. This avoids Windows file-lock failures on loaded DLLs. Stop a Remote Windows service before upgrading plugins that replace loaded shared assemblies, then start it after the batch.
+
 ## Troubleshooting
 
 - Re-enter SSH or RCON credentials after migration when decryption fails.
@@ -240,4 +250,5 @@ Use **Validate server files** or **Install/Update Server** for an explicit Steam
 - Remote Windows SteamCMD retries one incomplete update pass for `0x602`, `0x202`, or exit code `8`.
 - Direct-process startup is monitored for 30 seconds and reports captured output on failure.
 - Stop operations verify that the configured executable exited.
+- If a local server exits immediately, check Application Log and Debug for its exit code and stderr, then verify the executable, working directory, launch arguments, and profile OS.
 - Do not run Direct process and Service commands modes against the same executable and port.
