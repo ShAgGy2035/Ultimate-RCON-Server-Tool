@@ -235,18 +235,21 @@ After the Remote Linux profile and its Direct process or Service commands setup 
 5. Confirm the remote Linux firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
-If you selected **Install/Update server...** without add-ons, complete the framework setup now:
+If you selected **Install/Update server...** without add-ons, install the frameworks first:
 
 1. Right-click the running server and select **Install/Upgrade Metamod**. Choose a compatible release or paste the direct package URL, then wait for installation to finish.
 2. Right-click the server again and select **Install/Upgrade CSS**. Choose a compatible release or paste the direct package URL, then wait for installation to finish.
-3. Right-click the server again and select **Install/Upgrade CSS Plugins...**. Paste each of these URLs into the **Install/Upgrade CSS Plugins...** window:
+
+Whether you selected **Install/Update server...** or **Install/Update Server + Add-ons**, the next step is to install the optional CSS plugins:
+
+1. Right-click the running server and select **Install/Upgrade CSS Plugins...**. Paste each of these URLs into the plugin window:
 ```text
 https://github.com/ShAgGy2035/RconCompanionTool
 https://github.com/nickj609/MenuManagerAPI
 https://github.com/ShAgGy2035/ChatRelay
 https://github.com/ShAgGy2035/PlayerPunishments
 ```
-4. Restart the server so the frameworks and plugins load.
+2. Restart the server so the frameworks and plugins load.
 
 Once installation is complete, continue to the corresponding sections for configuration and usage details:
 
@@ -402,11 +405,14 @@ After the Remote Windows profile and its Direct process or Service commands setu
 5. Confirm the remote Windows firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
-If you selected **Install/Update server...** without add-ons, complete the framework setup now:
+If you selected **Install/Update server...** without add-ons, install the frameworks first:
 
 1. Right-click the running server and select **Install/Upgrade Metamod**. Choose a compatible release or paste the direct package URL, then wait for installation to finish.
 2. Right-click the server again and select **Install/Upgrade CSS**. Choose a compatible release or paste the direct package URL, then wait for installation to finish.
-3. Right-click the server again and select **Install/Upgrade CSS Plugins...**. Paste each of these URLs into the **Install/Upgrade CSS Plugins...** window:
+
+Whether you selected **Install/Update server...** or **Install/Update Server + Add-ons**, the next step is to install the optional CSS plugins:
+
+1. Right-click the running server and select **Install/Upgrade CSS Plugins...**. Paste each of these URLs into the plugin window:
 
 ```text
 https://github.com/ShAgGy2035/RconCompanionTool
@@ -414,7 +420,7 @@ https://github.com/nickj609/MenuManagerAPI
 https://github.com/ShAgGy2035/ChatRelay
 https://github.com/ShAgGy2035/PlayerPunishments
 ```
-4. Restart the server so the frameworks and plugins load.
+2. Restart the server so the frameworks and plugins load.
 
 Once installation is complete, continue to the corresponding sections for configuration and usage details:
 
