@@ -78,6 +78,8 @@ Each platform build contains a self-contained, single-file native application. A
 6. Save the profile, select it in the top server list, and click **Refresh server list**.
 7. Right-click the server and select **Install/Update server...**, or **Install/Update Server + Add-ons** when framework and tracked-plugin maintenance is also required. Wait for the operation to finish, review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
+If you chose **Install/Update server...** without add-ons, right-click the running server and select **Install/Upgrade Metamod**, then **Install/Upgrade CSS**, then **Install/Upgrade CSS Plugins...**. Paste the requested package or plugin repository/release URLs, wait for each operation to finish, and restart the server after framework/plugin installation.
+
 RCON uses TCP. The configured RCON port must be reachable from the computer running the application; opening only the UDP game port is not sufficient.
 
 ## Lifecycle Modes
