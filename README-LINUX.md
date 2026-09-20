@@ -20,8 +20,8 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
   - [Service commands](#local-linux-service-commands)
 - **Remote Linux server**
   - [Requirements](#remote-linux-requirements)
+   - [Account and permissions](#remote-linux-account-and-permissions)
   - [Direct process](#remote-linux-direct-process)
-  - [SSH and file permissions](#remote-linux-ssh-and-file-permissions)
   - [Service commands with systemd](#linux-service-commands-with-systemd)
 - **Remote Windows server**
    - [Requirements](#remote-windows-requirements)
@@ -146,6 +146,38 @@ The remote account must run lifecycle commands and write to the installation dir
 
 Remote Linux profiles reject Windows drive paths before SteamCMD starts. When a profile is changed from Remote Windows to Remote Linux, stale auto-generated executable and working-directory defaults are replaced with Linux defaults; explicitly configured valid custom paths remain editable.
 
+### Remote Linux Account And Permissions
+
+Prepare the remote accounts before configuring the application profile. The **SSH control account** is the username entered in the profile; it runs lifecycle commands and performs SFTP browsing, file transfers, plugin operations, backups, and SteamCMD operations. The **service account** owns and runs CS2 when using Service commands with systemd. These can be the same account, or they can be separate accounts.
+
+The simplest setup uses the Linux account that owns the CS2 installation for both SSH and SFTP. If a dedicated SSH account does not already exist, create it as an administrator on the remote host and grant it SSH access:
+
+```bash
+sudo adduser <ssh-user>
+sudo passwd <ssh-user>
+```
+
+Do not use `root` as the application, SteamCMD, or CS2 account. The SSH control account must be able to traverse every parent directory and read and write the CS2 installation. If it differs from the service account, grant access through a shared group or filesystem ACL rather than making the installation world-writable.
+
+Verify access before saving the application profile. Replace the placeholders with the configured account and install directory:
+
+```bash
+namei -l "<install-dir>/game/csgo"
+sudo -u <ssh-user> test -r "<install-dir>/game/csgo/gameinfo.gi"
+sudo -u <ssh-user> touch "<install-dir>/game/csgo/.rcon-tool-write-test"
+sudo -u <ssh-user> rm "<install-dir>/game/csgo/.rcon-tool-write-test"
+```
+
+One ACL example is:
+
+```bash
+sudo setfacl -m u:<ssh-user>:x "<parent-directory>"
+sudo setfacl -R -m u:<ssh-user>:rwX "<install-dir>"
+sudo setfacl -R -d -m u:<ssh-user>:rwX "<install-dir>"
+```
+
+The first command-line SSH connection may ask you to trust the host fingerprint. The application uses its own SSH library and does not depend on the command-line client's `known_hosts` entry.
+
 ### Remote Linux Direct Process
 
 Direct process mode runs CS2 without a systemd service. It is appropriate when the SSH account owns the installation and the application should manage the executable.
@@ -171,29 +203,6 @@ Direct process mode runs CS2 without a systemd service. It is appropriate when t
 Start refuses to run while SteamCMD is updating app `730`, verifies `game/csgo/gameinfo.gi`, supplies required Linux native-library paths, launches CS2 detached from SSH, and monitors it for 30 seconds. Startup output is captured in `/tmp/cs2-rcon-tool-startup-<port>.log`. Stop verifies that the exact executable exited.
 
 Direct mode refuses to control an executable owned by the active `cs2-server` systemd cgroup. It does not start CS2 at boot or restart it after a crash.
-
-### Remote Linux SSH And File Permissions
-
-The simplest setup uses the Linux account that owns the CS2 installation for both SSH and SFTP. Leave separate SFTP fields blank to reuse the SSH credentials.
-
-A different account must traverse every parent directory and read and write the installation. Replace placeholders before running these checks:
-
-```bash
-namei -l "<install-dir>/game/csgo"
-sudo -u <ssh-user> test -r "<install-dir>/game/csgo/gameinfo.gi"
-sudo -u <ssh-user> touch "<install-dir>/game/csgo/.rcon-tool-write-test"
-sudo -u <ssh-user> rm "<install-dir>/game/csgo/.rcon-tool-write-test"
-```
-
-Prefer a dedicated shared group or filesystem ACL instead of world-writable permissions. One ACL example is:
-
-```bash
-sudo setfacl -m u:<ssh-user>:x "<parent-directory>"
-sudo setfacl -R -m u:<ssh-user>:rwX "<install-dir>"
-sudo setfacl -R -d -m u:<ssh-user>:rwX "<install-dir>"
-```
-
-The first command-line SSH connection may ask you to trust the host fingerprint. The application uses its own SSH library and does not depend on the command-line client's `known_hosts` entry.
 
 ### Linux Service Commands With systemd
 
@@ -502,7 +511,7 @@ For migration, open the new application once and close it, back up the generated
 - Verify listening sockets with `ss -lntup | grep 27015`, replacing the port as needed.
 - `Connection refused` means no SSH service accepted the configured host and port.
 - Authentication errors mean the SSH username or password was rejected.
-- `Permission denied` after login usually means the account cannot traverse a parent directory or access the installation. Run the checks under [Remote Linux SSH And File Permissions](#remote-linux-ssh-and-file-permissions).
+- `Permission denied` after login usually means the account cannot traverse a parent directory or access the installation. Run the checks under [Remote Linux Account And Permissions](#remote-linux-account-and-permissions).
 - Confirm lifecycle commands do not require an interactive privilege prompt.
 - Remote archive operations require `tar` and either `unzip` or `python3` for ZIP files.
 - Framework and SteamCMD downloads require `curl`, `wget`, or `python3`; the application uses the first available option. Remote SteamCMD bootstrap supports installation paths containing spaces.
