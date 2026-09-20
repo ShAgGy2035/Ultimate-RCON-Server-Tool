@@ -21,7 +21,7 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - **Remote Windows server**
   - [Requirements](#remote-windows-requirements)
    - [Create the Windows SSH user](#create-the-windows-ssh-user)
-  - [Direct process](#remote-windows-direct-process)
+   - [Direct process](#remote-windows-direct-process)
   - [Service commands with WinSW](#remote-windows-service-commands-with-winsw)
    - [Finish Remote Windows setup](#finish-remote-windows-setup)
 - **Remote Linux server**
@@ -54,16 +54,11 @@ Close the application, then either replace the existing application files with t
 
 Writable settings are stored under `%APPDATA%\CS2RconTool`, not beside the executable. Back up that entire directory, including `credential.key`, before updating. Do not replace or delete it while updating application files.
 
-## Configuration And Data
-
-Open **Settings > Settings** for application-wide GeoLite, flag, slap-damage, refresh, output-filtering, and backup-directory options. Configure lifecycle, SteamCMD, RCON, database, ChatRelay, and Steam authentication values per server under **Servers > Manage servers > Edit server**.
-
 The Windows data directory contains server profiles, scheduled tasks, application settings, protected credentials, Fun Stuff state, GeoLite data, and flags:
 
 ```text
 %APPDATA%\CS2RconTool
 ```
-
 Saved secrets use AES-256-GCM. Keep `credential.key` with the JSON files when backing up or migrating data.
 
 ## Local Windows Server
@@ -95,7 +90,6 @@ The application adds authoritative map, game type, game mode, CFG, port, hostnam
 
 Windows SteamCMD is stored in a sibling `<install-dir>-steamcmd` directory because SteamCMD rejects a game installation inside its own directory. Existing profiles that used `<install-dir>\steamcmd` are migrated without redownloading an already completed app `730` payload. An ordinary Direct-process Start runs SteamCMD validation when both SteamCMD and install-directory settings are configured. Restart does not run SteamCMD validation.
 
-Next: [Finish Local Windows Setup](#finish-local-windows-setup).
 
 ### Local Windows Service Commands
 
@@ -113,7 +107,6 @@ The account running the application must have permission to control the service.
 
 Use the WinSW example below for either a local or remote Windows service. For a local profile, enter the commands above without an outer `powershell -Command` wrapper because the application already invokes local PowerShell.
 
-Next: [Finish Local Windows Setup](#finish-local-windows-setup).
 
 ### Finish Local Windows Setup
 
@@ -125,6 +118,8 @@ After the Local Windows profile is configured:
 4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
 5. Confirm the Windows host firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
+
+If you selected **Install/Update server...** without add-ons, continue to [Frameworks And Plugins](#frameworks-and-plugins) to install Metamod, CounterStrikeSharp, and optional CSS plugins. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
 
 ## Remote Windows Server
 
@@ -141,7 +136,6 @@ Remote Windows lifecycle and plugin deployment do not require WinRM. Direct proc
 
 Remote Windows profiles reject Unix paths before SteamCMD starts. When a profile is changed from Remote Linux to Remote Windows, stale auto-generated executable and working-directory defaults are replaced with Windows defaults. Existing overlapping or former global SteamCMD defaults are migrated automatically; an explicitly configured non-overlapping custom path remains unchanged.
 
-Next: [Create The Windows SSH User](#create-the-windows-ssh-user), then choose [Remote Windows Direct Process](#remote-windows-direct-process) or [Remote Windows Service Commands With WinSW](#remote-windows-service-commands-with-winsw).
 
 ### Create The Windows SSH User
 
@@ -229,7 +223,6 @@ Start transfers a temporary PowerShell launcher over SSH, starts CS2 through WMI
 
 Direct mode refuses to control the configured executable while the `cs2-server` Windows service is actively managing it. It does not automatically start CS2 at operating-system boot or restart it after a crash.
 
-Next: [Finish Remote Windows Setup](#finish-remote-windows-setup).
 
 ### Remote Windows Service Commands With WinSW
 
@@ -264,10 +257,6 @@ Create `C:\Services\cs2-server\cs2-server.xml`. Replace the sample hostname, map
 
 ```xml
 <service>
-   <id>cs2-server</id>
-   <name>CS2 Dedicated Server</name>
-   <description>Counter-Strike 2 Dedicated Server managed by CS2 RCON Tool</description>
-   <executable>C:\cs2server\game\bin\win64\cs2.exe</executable>
    <arguments>-dedicated -console -usercon -port 27015 -tickrate 64 -secure +ip 0.0.0.0 +sv_lan 0 +map de_dust2 +game_type 0 +game_mode 1 +exec server.cfg +hostname "CS2 Server" +rcon_password "&lt;rcon-password&gt;" -authkey "&lt;steam-api-key&gt;" +sv_setsteamaccount "&lt;gslt&gt;"</arguments>
    <workingdirectory>C:\cs2server\game</workingdirectory>
    <env name="SteamAppId" value="730" />
@@ -323,7 +312,6 @@ For a **Local Windows** profile, use the shorter commands shown under [Local Win
 
 Service mode expects all CS2 launch arguments in the WinSW XML. It monitors the service-owned process and prevents Direct mode from managing the same executable. WinSW writes rolled output and error logs under `C:\cs2server\logs`.
 
-Next: [Finish Remote Windows Setup](#finish-remote-windows-setup).
 
 ### Finish Remote Windows Setup
 
@@ -336,7 +324,8 @@ After the Remote Windows profile and its Direct process or Service commands setu
 5. Confirm the remote Windows firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
-Next: [Frameworks And Plugins](#frameworks-and-plugins), then [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) and [ChatRelay](#chatrelay) when those integrations are needed.
+If you selected **Install/Update server...** without add-ons, continue to [Frameworks And Plugins](#frameworks-and-plugins) to install Metamod, CounterStrikeSharp, and optional CSS plugins. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
+
 
 ## Remote Linux Server
 
@@ -351,7 +340,6 @@ Use a **Remote Linux** profile to manage a CS2 server on another Linux computer 
 
 Remote Linux profiles reject Windows drive paths before SteamCMD starts. Switching from Remote Windows replaces stale auto-generated executable and working-directory defaults with Linux defaults.
 
-Next: [Remote Linux Account And Permissions](#remote-linux-account-and-permissions), then choose [Remote Linux Direct Process](#remote-linux-direct-process) or [Remote Linux Service Commands With systemd](#remote-linux-service-commands-with-systemd).
 
 ### Remote Linux Account And Permissions
 
@@ -412,7 +400,6 @@ executable='/home/cs2/cs2server/game/bin/linuxsteamrt64/cs2'; for process in /pr
 
 Start refuses to run during an app `730` SteamCMD update, verifies `game/csgo/gameinfo.gi`, supplies required native-library paths, launches detached from SSH, and monitors for 30 seconds. Output is captured in `/tmp/cs2-rcon-tool-startup-<port>.log`. Direct mode refuses to control an executable in the active `cs2-server` systemd cgroup and does not provide boot startup or crash restart.
 
-Next: [Finish Remote Linux Setup](#finish-remote-linux-setup).
 
 ### Remote Linux Service Commands With systemd
 
@@ -490,7 +477,6 @@ Remote install directory: <install-dir>
 
 All CS2 arguments belong in the launcher. Start and Restart verify SteamCMD is idle, check the core file, and require the service-owned process to remain alive for 30 seconds. Stop verifies that it exits.
 
-Next: [Finish Remote Linux Setup](#finish-remote-linux-setup).
 
 ### Finish Remote Linux Setup
 
@@ -502,6 +488,8 @@ After the Remote Linux profile and its Direct process or Service commands setup 
 4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
 5. Confirm the remote Linux firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
+
+If you selected **Install/Update server...** without add-ons, continue to [Frameworks And Plugins](#frameworks-and-plugins) to install Metamod, CounterStrikeSharp, and optional CSS plugins. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
 
 ## SteamCMD Behavior
 

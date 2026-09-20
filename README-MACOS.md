@@ -140,7 +140,6 @@ sudo setfacl -R -m u:<ssh-user>:rwX "<install-dir>"
 sudo setfacl -R -d -m u:<ssh-user>:rwX "<install-dir>"
 ```
 
-Next: choose [Remote Linux Direct Process](#remote-linux-direct-process) or [Remote Linux Service Commands With systemd](#remote-linux-service-commands-with-systemd).
 
 ### Remote Linux Direct Process
 
@@ -159,7 +158,6 @@ executable='/home/cs2/cs2server/game/bin/linuxsteamrt64/cs2'; for process in /pr
 
 Start refuses to run during an app `730` SteamCMD update, verifies `game/csgo/gameinfo.gi`, supplies required native-library paths, launches detached from SSH, and monitors for 30 seconds. Output is captured in `/tmp/cs2-rcon-tool-startup-<port>.log`. Direct mode refuses to control an executable owned by the active `cs2-server` systemd cgroup.
 
-Next: [Finish Remote Linux Setup](#finish-remote-linux-setup).
 
 ### Remote Linux Service Commands With systemd
 
@@ -225,7 +223,6 @@ Remote install directory: <install-dir>
 
 All CS2 arguments belong in the launcher. Start and Restart verify SteamCMD is idle, check the core file, and require the service-owned process to remain alive for 30 seconds. Stop verifies that it exits.
 
-Next: [Finish Remote Linux Setup](#finish-remote-linux-setup).
 
 ### Finish Remote Linux Setup
 
@@ -238,7 +235,8 @@ After the Remote Linux profile and its Direct process or Service commands setup 
 5. Confirm the remote Linux firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
-Next: [Frameworks, Plugins, And Backups](#frameworks-plugins-and-backups), then [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) and [ChatRelay](#chatrelay) when those integrations are needed.
+If you selected **Install/Update server...** without add-ons, continue to [Frameworks, Plugins, And Backups](#frameworks-plugins-and-backups) to install Metamod, CounterStrikeSharp, and optional CSS plugins. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
+
 
 ## Remote Windows Setup
 
@@ -324,7 +322,6 @@ SteamCMD path:     C:\cs2server-steamcmd\steamcmd.exe
 
 The application supplies `-dedicated`, `-console`, `+ip 0.0.0.0`, port, hostname, map, game type, game mode, CFG, RCON password, tickrate, LAN mode, and VAC state. Start transfers a temporary PowerShell launcher over SSH, launches through WMI independently of the SSH session, creates UDP/TCP firewall rules, captures output, and monitors for 30 seconds. Direct mode refuses to control an executable owned by the active `cs2-server` service.
 
-Next: [Finish Remote Windows Setup](#finish-remote-windows-setup).
 
 ### Remote Windows Service Commands With WinSW
 
@@ -375,7 +372,6 @@ Restart: powershell -NoProfile -NonInteractive -Command "Restart-Service -Name '
 
 Put all CS2 launch arguments in the WinSW XML. Configure inbound UDP and TCP firewall rules for the game/RCON port. WinSW writes rolled logs under `C:\cs2server\logs` and restarts CS2 after unexpected exits.
 
-Next: [Finish Remote Windows Setup](#finish-remote-windows-setup).
 
 ### Finish Remote Windows Setup
 
@@ -388,7 +384,8 @@ After the Remote Windows profile and its Direct process or Service commands setu
 5. Confirm the remote Windows firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
 
-Next: [Frameworks, Plugins, And Backups](#frameworks-plugins-and-backups), then [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) and [ChatRelay](#chatrelay) when those integrations are needed.
+If you selected **Install/Update server...** without add-ons, continue to [Frameworks, Plugins, And Backups](#frameworks-plugins-and-backups) to install Metamod, CounterStrikeSharp, and optional CSS plugins. If you selected **Install/Update Server + Add-ons**, continue to [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) or [ChatRelay](#chatrelay) when those integrations are needed.
+
 
 ## Using The Application
 
