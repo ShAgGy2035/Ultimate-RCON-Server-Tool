@@ -6,6 +6,10 @@ Developer: ShAgGy
 
 ShAgGy's Ultimate CS2 RCON and Server Management Tool is a cross-platform desktop application for administering Counter-Strike 2 dedicated servers. It provides RCON commands, local and remote lifecycle management, SteamCMD maintenance, add-on installation, scheduling, backups, player monitoring, and authenticated chat integration from one shared Avalonia application.
 
+## Issues
+
+Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
+
 ## Choose Your Platform
 
 Each platform guide keeps launch, update, profile, Direct process, and Service commands instructions together.
@@ -243,8 +247,6 @@ Platform-specific diagnostics:
 | Metamod controls | CounterStrikeSharp controls |
 | ![Metamod controls](docs/images/settings-metamod-menu.png) | ![CounterStrikeSharp controls](docs/images/settings-counterstrikesharp-menu.png) |
 
-## Issues
-
-Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
+## About
 
 Open **Help > About** to view the application version, developer information, and detected platform.
