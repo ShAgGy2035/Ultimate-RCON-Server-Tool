@@ -38,7 +38,7 @@ Each platform guide keeps launch, update, profile, Direct process, and Service c
 | Linux x64 | [Linux guide](README-LINUX.md) | Local Linux | Linux and Windows |
 | macOS Intel or Apple Silicon | [macOS guide](README-MACOS.md) | Not supported by Valve | Linux and Windows |
 
-macOS 12.0 or later is required. Remote Linux and Remote Windows management use SSH/SFTP; Remote Windows does not require WinRM.
+macOS 12.0 or later is required. Remote Linux and Remote Windows management use SSH/SFTP; Remote Windows does not require WinRM or a separate SFTP server. Before configuring a Remote Windows profile, prepare OpenSSH and the remote Windows account using the [Remote Windows SSH setup](README-WINDOWS.md#create-the-windows-ssh-user) instructions.
 
 ## Release Packages
 

@@ -27,6 +27,7 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
    - [Finish Remote Linux setup](#finish-remote-linux-setup)
 - **Remote Windows server**
    - [Requirements](#remote-windows-requirements)
+   - [Create the Windows SSH user](#create-the-windows-ssh-user)
    - [Direct process](#remote-windows-direct-process)
    - [Service commands with WinSW](#remote-windows-service-commands-with-winsw)
 - [SteamCMD behavior](#steamcmd-behavior)
@@ -333,6 +334,74 @@ Use a **Remote Windows** profile to manage a CS2 server on another Windows compu
 - A Windows SteamCMD path and CS2 installation directory for managed updates.
 
 Remote Windows plugin deployment and Direct-process startup do not require a separate SFTP service. Windows drive paths are required; Unix paths are rejected before SteamCMD starts. Switching a profile from Remote Linux replaces stale auto-generated executable and working-directory defaults with Windows defaults.
+
+### Create The Windows SSH User
+
+Perform this setup on the remote Windows computer from an elevated PowerShell prompt, before configuring the Linux application profile. Windows OpenSSH provides both SSH and SFTP; a separate SFTP server is not required. Use an existing suitable account instead if one is already available.
+
+Create a dedicated local account such as `cs2tool` and initially add it to the standard Users group:
+
+```powershell
+$sshUser = 'cs2tool'
+$sshPassword = Read-Host 'Password for cs2tool' -AsSecureString
+New-LocalUser -Name $sshUser -Password $sshPassword -Description 'CS2 RCON Tool remote management'
+Add-LocalGroupMember -Group 'Users' -Member $sshUser
+```
+
+For this application's Remote Windows Direct process workflow, also add the account to local Administrators. The app uses WMI to launch CS2 and configures Windows Firewall rules; this was required by the tested setup:
+
+```powershell
+Add-LocalGroupMember -Group 'Administrators' -Member $sshUser
+```
+
+Install and enable OpenSSH Server. The capability check avoids reinstalling it when it is already present:
+
+```powershell
+$openssh = Get-WindowsCapability -Online | Where-Object Name -Like 'OpenSSH.Server*'
+if ($openssh.State -ne 'Installed') {
+   Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+}
+Set-Service -Name sshd -StartupType Automatic
+Start-Service sshd
+```
+
+Allow inbound SSH if Windows did not create its firewall rule:
+
+```powershell
+if (-not (Get-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -ErrorAction SilentlyContinue)) {
+   New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+}
+```
+
+Open `C:\ProgramData\ssh\sshd_config` as an administrator and make sure password authentication is enabled:
+
+```text
+PasswordAuthentication yes
+```
+
+Restart SSH after changing the file and verify it is listening:
+
+```powershell
+Restart-Service sshd
+Get-Service sshd
+Get-NetTCPConnection -LocalPort 22 -State Listen
+```
+
+Use a simple writable CS2 path such as `C:\CS2Server`, then grant the SSH account Modify access:
+
+```powershell
+New-Item -ItemType Directory -Path 'C:\CS2Server' -Force
+icacls 'C:\CS2Server' /grant "${sshUser}:(OI)(CI)M" /T
+```
+
+From the Linux computer running the application, test both SSH and SFTP before configuring the profile:
+
+```bash
+ssh cs2tool@<remote-windows-host>
+sftp cs2tool@<remote-windows-host>
+```
+
+Use the account password, confirm SFTP can enter and write to `C:\CS2Server`, then exit both sessions. Use the same username and password in the application profile, and leave separate SFTP fields blank so the app reuses the SSH connection.
 
 ### Remote Windows Direct Process
 
