@@ -95,6 +95,8 @@ Detailed setup:
 - [Local and Remote Linux lifecycle](README-LINUX.md)
 - [Remote management from macOS](README-MACOS.md)
 
+Next: open the guide for the application platform you are using and follow its matching Local or Remote configuration path.
+
 ## Server Installation And Updates
 
 Right-click a configured server and select **Install/Update server...**.
@@ -111,6 +113,8 @@ SteamCMD runs through the application, and its progress and output are captured 
 When a managed local CS2 process is running, the application pauses before SteamCMD and offers to stop the server and continue. Cancelling leaves the server running and aborts the update or validation. After SteamCMD restores core files, **Install/Update Server** reapplies and validates the Metamod/CounterStrikeSharp loader chain before reporting success.
 
 **Install/Update Server + Add-ons** combines a server update with supported framework and tracked-plugin maintenance.
+
+Next: [Main Areas](#main-areas) for server actions, integrations, scheduling, and plugin management.
 
 ## Main Areas
 

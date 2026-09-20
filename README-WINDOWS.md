@@ -95,6 +95,8 @@ The application adds authoritative map, game type, game mode, CFG, port, hostnam
 
 Windows SteamCMD is stored in a sibling `<install-dir>-steamcmd` directory because SteamCMD rejects a game installation inside its own directory. Existing profiles that used `<install-dir>\steamcmd` are migrated without redownloading an already completed app `730` payload. An ordinary Direct-process Start runs SteamCMD validation when both SteamCMD and install-directory settings are configured. Restart does not run SteamCMD validation.
 
+Next: [Finish Local Windows Setup](#finish-local-windows-setup).
+
 ### Local Windows Service Commands
 
 Use this mode when a wrapper such as WinSW already manages CS2. The application does not install or configure the service.
@@ -110,6 +112,8 @@ Restart-Service -Name 'cs2-server'
 The account running the application must have permission to control the service. Put all CS2 launch arguments, including `-tickrate`, `+sv_lan`, and `-secure` or `-insecure`, in the service wrapper configuration. Service Start and Restart do not run SteamCMD validation.
 
 Use the WinSW example below for either a local or remote Windows service. For a local profile, enter the commands above without an outer `powershell -Command` wrapper because the application already invokes local PowerShell.
+
+Next: [Finish Local Windows Setup](#finish-local-windows-setup).
 
 ### Finish Local Windows Setup
 
@@ -136,6 +140,8 @@ Use a **Remote Windows** profile when CS2 runs on another Windows computer.
 Remote Windows lifecycle and plugin deployment do not require WinRM. Direct process startup and plugin transfers do not require a separate SFTP service.
 
 Remote Windows profiles reject Unix paths before SteamCMD starts. When a profile is changed from Remote Linux to Remote Windows, stale auto-generated executable and working-directory defaults are replaced with Windows defaults. Existing overlapping or former global SteamCMD defaults are migrated automatically; an explicitly configured non-overlapping custom path remains unchanged.
+
+Next: [Create The Windows SSH User](#create-the-windows-ssh-user), then choose [Remote Windows Direct Process](#remote-windows-direct-process) or [Remote Windows Service Commands With WinSW](#remote-windows-service-commands-with-winsw).
 
 ### Create The Windows SSH User
 
@@ -222,6 +228,8 @@ Configure the startup map, game type, game mode, additional arguments, and Stop 
 Start transfers a temporary PowerShell launcher over SSH, starts CS2 through WMI independently of the SSH session, creates inbound UDP and TCP firewall rules for the configured port, captures startup output, and monitors the process for 30 seconds. Restart performs the configured Stop command and then launches a new process.
 
 Direct mode refuses to control the configured executable while the `cs2-server` Windows service is actively managing it. It does not automatically start CS2 at operating-system boot or restart it after a crash.
+
+Next: [Finish Remote Windows Setup](#finish-remote-windows-setup).
 
 ### Remote Windows Service Commands With WinSW
 
@@ -315,6 +323,8 @@ For a **Local Windows** profile, use the shorter commands shown under [Local Win
 
 Service mode expects all CS2 launch arguments in the WinSW XML. It monitors the service-owned process and prevents Direct mode from managing the same executable. WinSW writes rolled output and error logs under `C:\cs2server\logs`.
 
+Next: [Finish Remote Windows Setup](#finish-remote-windows-setup).
+
 ### Finish Remote Windows Setup
 
 After the Remote Windows profile and its Direct process or Service commands setup are complete:
@@ -325,6 +335,8 @@ After the Remote Windows profile and its Direct process or Service commands setu
 4. If you also need the supported frameworks and tracked plugins maintained, select **Install/Update Server + Add-ons** instead.
 5. Confirm the remote Windows firewall allows the configured game port over UDP and RCON port over TCP.
 6. Wait for the operation to finish and review **Console Commands**, **Application Log**, or **Debug**, then right-click the server again and select **Start server**.
+
+Next: [Frameworks And Plugins](#frameworks-and-plugins), then [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff) and [ChatRelay](#chatrelay) when those integrations are needed.
 
 ## Remote Linux Server
 
@@ -338,6 +350,8 @@ Use a **Remote Linux** profile to manage a CS2 server on another Linux computer 
 - An account that can run lifecycle commands and read/write the installation.
 
 Remote Linux profiles reject Windows drive paths before SteamCMD starts. Switching from Remote Windows replaces stale auto-generated executable and working-directory defaults with Linux defaults.
+
+Next: [Remote Linux Account And Permissions](#remote-linux-account-and-permissions), then choose [Remote Linux Direct Process](#remote-linux-direct-process) or [Remote Linux Service Commands With systemd](#remote-linux-service-commands-with-systemd).
 
 ### Remote Linux Account And Permissions
 
@@ -397,6 +411,8 @@ executable='/home/cs2/cs2server/game/bin/linuxsteamrt64/cs2'; for process in /pr
 ```
 
 Start refuses to run during an app `730` SteamCMD update, verifies `game/csgo/gameinfo.gi`, supplies required native-library paths, launches detached from SSH, and monitors for 30 seconds. Output is captured in `/tmp/cs2-rcon-tool-startup-<port>.log`. Direct mode refuses to control an executable in the active `cs2-server` systemd cgroup and does not provide boot startup or crash restart.
+
+Next: [Finish Remote Linux Setup](#finish-remote-linux-setup).
 
 ### Remote Linux Service Commands With systemd
 
@@ -473,6 +489,8 @@ Remote install directory: <install-dir>
 ```
 
 All CS2 arguments belong in the launcher. Start and Restart verify SteamCMD is idle, check the core file, and require the service-owned process to remain alive for 30 seconds. Stop verifies that it exits.
+
+Next: [Finish Remote Linux Setup](#finish-remote-linux-setup).
 
 ### Finish Remote Linux Setup
 
