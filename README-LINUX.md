@@ -4,6 +4,10 @@ Version: 1.0.4
 
 This self-contained guide covers the Linux x64 application, Local Linux servers, and Remote Linux or Remote Windows servers. [README.md](README.md) provides the project-wide GitHub overview.
 
+## Issues
+
+Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
+
 - **Linux application**
   - [Install and launch](#install-and-launch)
   - [Update the application](#update-the-application)
@@ -500,8 +504,6 @@ For migration, open the new application once and close it, back up the generated
 - If a scheduled task does not run, confirm it is active and valid. Start monitoring for built-in tasks; inspect the systemd user timer for native tasks.
 - Do not run Direct process and Service commands modes against the same executable and port.
 
-## Issues
-
-Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
+## About
 
 Open **Help > About** to view version `1.0.4`, developer information, and the detected application platform.

@@ -6,6 +6,10 @@ This self-contained guide covers the macOS application packages and Remote Linux
 
 [README.md](README.md) provides the project-wide GitHub overview. This file contains all instructions needed for the macOS package.
 
+## Issues
+
+Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
+
 ## Server Plugin Requirements
 
 The app's Slay and Slap controls send `css_slay #userid` and `css_slap #userid damage`. Install [PlayerPunishments 1.0.0 or newer](https://github.com/ShAgGy2035/PlayerPunishments) on the remote CS2 server when its existing administration package does not provide those commands. PlayerPunishments is a CounterStrikeSharp server plugin and is not installed in the macOS application bundle. Configure Slap damage from `0` to `99` under **Settings > General**.
@@ -299,8 +303,6 @@ Writable data lives under `~/Library/Application Support/CS2RconTool` and includ
 - If a scheduled task does not run, confirm it is active and valid; start built-in monitoring or inspect the launchd user agent.
 - For Linux, verify parent-directory traversal, installation access, `tar`, and `curl`, `wget`, or `python3`. For Windows, verify Administrator membership and firewall rules.
 
-## Issues
-
-Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
+## About
 
 Open **Help > About** to view version `1.0.4`, developer information, and the detected application platform.
