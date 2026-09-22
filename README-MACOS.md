@@ -147,7 +147,7 @@ For `/home/cs2/cs2server`, blank fields derive:
 
 ```text
 Executable:        /home/cs2/cs2server/game/bin/linuxsteamrt64/cs2
-Working directory: /home/cs2/cs2server/game
+Working directory: /home/cs2/cs2server/game (But not required)
 ```
 
 Set map, game type, game mode, and optional additional arguments. The application supplies `-dedicated`, `-console`, port, hostname, map, CFG, RCON password, tickrate, LAN mode, and VAC state. Use a path-specific Stop command:
@@ -337,7 +337,7 @@ For `C:\cs2server`, blank fields derive:
 
 ```text
 Executable:        C:\cs2server\game\bin\win64\cs2.exe
-Working directory: C:\cs2server\game
+Working directory: C:\cs2server\game (But not required)
 SteamCMD path:     C:\cs2server-steamcmd\steamcmd.exe
 ```
 

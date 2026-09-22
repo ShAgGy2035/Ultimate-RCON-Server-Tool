@@ -84,7 +84,9 @@ Saved secrets use AES-256-GCM. Keep `credential.key` with the JSON files when ba
 
 Use a **Local Linux** profile only when the application and CS2 server run on the same Linux computer.
 
-Configure the CS2 install directory, executable, working directory, SteamCMD path, App ID `730`, startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Startup can use a local map, Workshop collection, or single Workshop map. The editable map field suggests Valve maps, including Premier maps, while accepting custom names. Public internet servers can also use a Steam Web API key and game-server login token. These credentials are not required or prompted for when **LAN server** is enabled.
+**Quick start:** the Edit server window requires an **RCON password** before it will save any profile. To then run **Install/Update server...** and download CS2 for the first time, the only other required field is an **install directory**. Leave **SteamCMD path**, **executable**, and **working directory** blank and the application derives and installs all three automatically: SteamCMD downloads into a sibling folder the first time it is needed, and the executable/working directory default to the standard `game/bin/linuxsteamrt64/cs2` paths under the install directory. App ID defaults to `730` with an anonymous SteamCMD login.
+
+Before you actually start the server for players, also configure the startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Startup can use a local map, Workshop collection, or single Workshop map. The editable map field suggests Valve maps, including Premier maps, while accepting custom names. Public internet servers can also use a Steam Web API key and game-server login token; these are not required or prompted for when **LAN server** is enabled.
 
 Before the first Local Linux **Install/Update server...** operation, review [SteamCMD Linux Prerequisites](#steamcmd-linux-prerequisites). SteamCMD needs Linux 32-bit runtime packages even on a 64-bit Ubuntu or Debian system. If packages are missing, the application may open the desktop administrator authorization dialog to install them; this is expected prerequisite setup, not a server-plugin installation prompt.
 
@@ -103,7 +105,7 @@ Typical values:
 
 ```text
 Executable:        <install-dir>/game/bin/linuxsteamrt64/cs2
-Working directory: <install-dir>/game
+Working directory: <install-dir>/game (But not required)
 Arguments:         -dedicated +ip 0.0.0.0
 ```
 
@@ -233,7 +235,7 @@ Direct process mode runs CS2 without a systemd service. It is appropriate when t
 
    ```text
    Executable:  /home/cs2/cs2server/game/bin/linuxsteamrt64/cs2
-   Working dir: /home/cs2/cs2server/game
+   Working dir: /home/cs2/cs2server/game (But not required)
    ```
 
 3. Set the startup map, game type, and game mode. Put only optional switches in **Additional arguments**. The application supplies `-dedicated`, `-console`, port, hostname, `+map`, `+game_type`, `+game_mode`, `+exec`, `-usercon`, RCON password, tickrate, LAN mode, and VAC state. The default `+ip 0.0.0.0` permits remote connections.
@@ -464,7 +466,7 @@ Use this mode when the application should launch CS2 over SSH without a Windows 
 
 ```text
 Executable:        C:\cs2server\game\bin\win64\cs2.exe
-Working directory: C:\cs2server\game
+Working directory: C:\cs2server\game (But not required)
 SteamCMD path:     C:\cs2server-steamcmd\steamcmd.exe
 ```
 
@@ -710,7 +712,7 @@ For migration, open the new application once and close it, back up the generated
 
 ## Troubleshooting
 
-- Verify the executable, working directory, SteamCMD path, install directory, and profile OS.
+- Verify the executable, SteamCMD path, install directory, and profile OS. Working directory can be left blank; it is derived from the install directory.
 - For a bridged virtual machine, use the guest's LAN address rather than the host address or `127.0.0.1`.
 - Keep `+ip 0.0.0.0` in Direct-process arguments for remote access. Put it in the systemd launcher for Service commands mode.
 - Verify listening sockets with `ss -lntup | grep 27015`, replacing the port as needed.
@@ -721,7 +723,7 @@ For migration, open the new application once and close it, back up the generated
 - Remote archive operations require `tar` and either `unzip` or `python3` for ZIP files.
 - Framework and SteamCMD downloads require `curl`, `wget`, or `python3`; the application uses the first available option. Remote SteamCMD bootstrap supports installation paths containing spaces.
 - Remote SteamCMD validation opens **Console Commands** and streams output while it runs. Remote Stop and service-mode Restart also stream command output and retain explicit sent/completed milestones when a command produces no output.
-- If a local server exits immediately, check Application Log and Debug for its exit code and stderr, verify executable, working directory, and launch arguments, and confirm required Linux runtime libraries and Steam client files are available.
+- If a local server exits immediately, check Application Log and Debug for its exit code and stderr, verify the executable and launch arguments (working directory can be left blank), and confirm required Linux runtime libraries and Steam client files are available.
 - Linux framework installation handles the known executable-stack requirement on affected CounterStrikeSharp ELF libraries.
 - The installer deploys Metamod's CS2 bridge as `addons/metamod/bin/linuxsteamrt64/libserver_valve.so`. If `Source2ServerConfig001` still fails, stop CS2, validate it with **Install/Update Server**, reinstall Metamod, and then start the server.
 - If Chat does not appear, verify ChatRelay is running, match the destination IP, adapter, UDP port, and token, check firewall rules, and use the Chat tab's **Test** action.

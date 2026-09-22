@@ -65,7 +65,9 @@ Saved secrets use AES-256-GCM. Keep `credential.key` with the JSON files when ba
 
 Use a **Local Windows** profile only when the application and CS2 server run on the same Windows computer.
 
-Configure the RCON password, CS2 install directory, SteamCMD path, App ID `730`, startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Startup can use a local map, Workshop collection, or single Workshop map. The editable map field suggests Valve maps, including Premier maps, while accepting custom names. Public internet servers can also use a Steam Web API key and game-server login token. These credentials are not required or prompted for when **LAN server** is enabled.
+**Quick start:** the Edit server window requires an **RCON password** before it will save any profile. To then run **Install/Update server...** and download CS2 for the first time, the only other required field is an **install directory**. Leave **SteamCMD path** blank and the application downloads and installs SteamCMD into a sibling folder automatically the first time it is needed; App ID defaults to `730` with an anonymous SteamCMD login.
+
+Before you actually start the server for players, also configure the startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Startup can use a local map, Workshop collection, or single Workshop map. The editable map field suggests Valve maps, including Premier maps, while accepting custom names. Public internet servers can also use a Steam Web API key and game-server login token; these are not required or prompted for when **LAN server** is enabled.
 
 ### Choose A Local Lifecycle Mode
 
@@ -82,7 +84,7 @@ Typical values:
 
 ```text
 Executable:        <install-dir>\game\bin\win64\cs2.exe
-Working directory: <install-dir>\game
+Working directory: <install-dir>\game (But not required)
 Arguments:         -dedicated +ip 0.0.0.0
 ```
 
@@ -234,7 +236,7 @@ For an install directory of `C:\cs2server`, the application derives:
 
 ```text
 Executable:        C:\cs2server\game\bin\win64\cs2.exe
-Working directory: C:\cs2server\game
+Working directory: C:\cs2server\game (But not required)
 SteamCMD path:     C:\cs2server-steamcmd\steamcmd.exe
 ```
 
@@ -430,7 +432,7 @@ Use Direct process when the SSH account owns the installation and the applicatio
 
 ```text
 Executable:        /home/cs2/cs2server/game/bin/linuxsteamrt64/cs2
-Working directory: /home/cs2/cs2server/game
+Working directory: /home/cs2/cs2server/game (But not required)
 ```
 
 Set map, game type, game mode, and optional additional arguments. The application supplies `-dedicated`, `-console`, port, hostname, `+map`, `+game_type`, `+game_mode`, `+exec`, `-usercon`, RCON password, tickrate, LAN mode, and VAC state. The default `+ip 0.0.0.0` permits remote connections.
@@ -686,7 +688,7 @@ For migration, open the new application once and close it, back up the generated
 - Remote Windows SteamCMD retries one incomplete update pass for `0x602`, `0x202`, or exit code `8`.
 - Direct-process startup is monitored for 30 seconds and reports captured output on failure.
 - Stop operations verify that the configured executable exited.
-- If a local server exits immediately, check Application Log and Debug for its exit code and stderr, then verify the executable, working directory, launch arguments, and profile OS.
+- If a local server exits immediately, check Application Log and Debug for its exit code and stderr, then verify the executable, launch arguments, and profile OS (working directory can be left blank).
 - If Chat does not appear, verify ChatRelay is running, match the destination IP, adapter, UDP port, and token, check firewall rules, and use the Chat tab's **Test** action.
 - If country or flag data is missing, run **Settings > General > Update GeoLite + flags**, confirm the configured URLs are direct downloads, and verify the per-user data directory is writable.
 - If a scheduled task does not run, confirm it is active and valid. Start monitoring for built-in tasks; inspect Windows Task Scheduler for native tasks.
