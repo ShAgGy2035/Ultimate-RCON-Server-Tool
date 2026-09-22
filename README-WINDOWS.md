@@ -74,9 +74,9 @@ You also need to pick a **Startup mode** before Install/Update or Install/Update
 - **Direct process**: the application builds the CS2 launch command and owns the process.
 - **Service commands**: an existing Windows service wrapper owns CS2 and the application runs configured PowerShell Start, Stop, and Restart commands.
 
-If you later change Startup mode on an already-running server, stop the current owner first; a Windows service cannot adopt a CS2 process that was already launched directly.
-
 Before you actually start the server for players, also configure the startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Startup can use a local map, Workshop collection, or single Workshop map. The editable map field suggests Valve maps, including Premier maps, while accepting custom names. Public internet servers can also use a Steam Web API key and game-server login token; these are not required or prompted for when **LAN server** is enabled.
+
+If you later change Startup mode on an already-running server, stop the current owner first; a Windows service cannot adopt a CS2 process that was already launched directly.
 
 ### Local Windows Direct Process
 
