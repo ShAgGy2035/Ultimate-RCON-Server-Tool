@@ -69,12 +69,12 @@ Use a **Local Windows** profile only when the application and CS2 server run on 
 
 The Edit server window requires an **RCON password** before it will save any profile. To then run **Install/Update server...** and download CS2 for the first time, the only other required field is an **install directory**. Leave **SteamCMD path** blank and the application downloads and installs SteamCMD into a sibling folder automatically the first time it is needed; App ID defaults to `730` with an anonymous SteamCMD login.
 
-You also need to pick a **lifecycle mode** before Install/Update or Install/Update + Add-ons, since it controls how the application later starts and stops CS2:
+You also need to pick a **Startup mode** before Install/Update or Install/Update + Add-ons, since it controls how the application later starts and stops CS2:
 
 - **Direct process**: the application builds the CS2 launch command and owns the process.
 - **Service commands**: an existing Windows service wrapper owns CS2 and the application runs configured PowerShell Start, Stop, and Restart commands.
 
-Stop the current owner before switching modes. A Windows service cannot adopt a CS2 process that was already launched directly.
+If you later change Startup mode on an already-running server, stop the current owner first; a Windows service cannot adopt a CS2 process that was already launched directly.
 
 Before you actually start the server for players, also configure the startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Startup can use a local map, Workshop collection, or single Workshop map. The editable map field suggests Valve maps, including Premier maps, while accepting custom names. Public internet servers can also use a Steam Web API key and game-server login token; these are not required or prompted for when **LAN server** is enabled.
 
