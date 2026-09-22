@@ -14,7 +14,7 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
   - [Update the application](#update-the-application)
   - [Configuration and data](#configuration-and-data)
 - **Local Linux server**
-  - [Choose a lifecycle mode](#choose-a-local-lifecycle-mode)
+  - [Quick start](#quick-start)
   - [Direct process](#local-linux-direct-process)
   - [Service commands](#local-linux-service-commands)
    - [Finish Local Linux setup](#finish-local-linux-setup)
@@ -84,18 +84,20 @@ Saved secrets use AES-256-GCM. Keep `credential.key` with the JSON files when ba
 
 Use a **Local Linux** profile only when the application and CS2 server run on the same Linux computer.
 
-**Quick start:** the Edit server window requires an **RCON password** before it will save any profile. To then run **Install/Update server...** and download CS2 for the first time, the only other required field is an **install directory**. Leave **SteamCMD path**, **executable**, and **working directory** blank and the application derives and installs all three automatically: SteamCMD downloads into a sibling folder the first time it is needed, and the executable/working directory default to the standard `game/bin/linuxsteamrt64/cs2` paths under the install directory. App ID defaults to `730` with an anonymous SteamCMD login.
+### Quick Start
 
-Before you actually start the server for players, also configure the startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Startup can use a local map, Workshop collection, or single Workshop map. The editable map field suggests Valve maps, including Premier maps, while accepting custom names. Public internet servers can also use a Steam Web API key and game-server login token; these are not required or prompted for when **LAN server** is enabled.
+The Edit server window requires an **RCON password** before it will save any profile. To then run **Install/Update server...** and download CS2 for the first time, the only other required field is an **install directory**. Leave **SteamCMD path**, **executable**, and **working directory** blank and the application derives and installs all three automatically: SteamCMD downloads into a sibling folder the first time it is needed, and the executable/working directory default to the standard `game/bin/linuxsteamrt64/cs2` paths under the install directory. App ID defaults to `730` with an anonymous SteamCMD login.
 
-Before the first Local Linux **Install/Update server...** operation, review [SteamCMD Linux Prerequisites](#steamcmd-linux-prerequisites). SteamCMD needs Linux 32-bit runtime packages even on a 64-bit Ubuntu or Debian system. If packages are missing, the application may open the desktop administrator authorization dialog to install them; this is expected prerequisite setup, not a server-plugin installation prompt.
-
-### Choose A Local Lifecycle Mode
+You also need to pick a **lifecycle mode** before Install/Update or Install/Update + Add-ons, since it controls how the application later starts and stops CS2:
 
 - **Direct process**: the application builds the CS2 launch command and owns the process.
 - **Service commands**: an existing systemd service owns CS2 and the application runs configured shell commands.
 
 Stop the current owner before switching modes. systemd cannot adopt a CS2 process that was already launched directly.
+
+Before you actually start the server for players, also configure the startup map, game type, game mode, maximum players, tickrate, VAC state, LAN mode, Startup CFG, and optional player password. Startup can use a local map, Workshop collection, or single Workshop map. The editable map field suggests Valve maps, including Premier maps, while accepting custom names. Public internet servers can also use a Steam Web API key and game-server login token; these are not required or prompted for when **LAN server** is enabled.
+
+Before the first Local Linux **Install/Update server...** operation, review [SteamCMD Linux Prerequisites](#steamcmd-linux-prerequisites). SteamCMD needs Linux 32-bit runtime packages even on a 64-bit Ubuntu or Debian system. If packages are missing, the application may open the desktop administrator authorization dialog to install them; this is expected prerequisite setup, not a server-plugin installation prompt.
 
 ### Local Linux Direct Process
 
