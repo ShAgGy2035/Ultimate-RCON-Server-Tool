@@ -46,7 +46,7 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 
 Extract the matching package and open `CS2 RCON Tool.app`.
 
-Use `cs2-rcon-tool-universal-v1.0.5-macos-x64.tar.gz` for Intel or `cs2-rcon-tool-universal-v1.0.5-macos-arm64.tar.gz` for Apple Silicon. These recommended tarballs preserve executable permissions; ZIP alternatives are also available.
+Use `cs2-rcon-tool-universal-v1.0.5-macos-x64.tar.gz` for Intel or `cs2-rcon-tool-universal-v1.0.5-macos-arm64.tar.gz` for Apple Silicon. These tarballs preserve executable permissions. The v1.0.5 release also includes ZIP alternatives; future macOS releases will provide tarballs only.
 
 The packages are self-contained and do not require a separate .NET installation. They are currently unsigned and not notarized. If Gatekeeper quarantines a test build, open Terminal in the extracted directory and run:
 
