@@ -47,9 +47,13 @@ macOS 12.0 or later is required. Remote Linux and Remote Windows management use 
 
 - `cs2-rcon-tool-universal-v1.0.5-windows-x64.zip`
 - `cs2-rcon-tool-universal-v1.0.5-linux-x64.tar.gz`
+- `cs2-rcon-tool-universal-v1.0.5-macos-x64.tar.gz`
+- `cs2-rcon-tool-universal-v1.0.5-macos-arm64.tar.gz`
 - `cs2-rcon-tool-universal-v1.0.5-macos-x64.zip`
 - `cs2-rcon-tool-universal-v1.0.5-macos-arm64.zip`
 - `cs2-rcon-tool-universal-v1.0.5-all-platforms.zip`
+
+The macOS tarballs preserve executable permissions and are the recommended macOS packages. ZIP alternatives remain available. The all-platforms bundle includes all six platform archives.
 
 Each platform build contains a self-contained, single-file native application. A separate .NET installation is not required. GeoLite data and flag images remain external runtime assets by design.
 
