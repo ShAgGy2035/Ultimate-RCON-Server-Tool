@@ -1,14 +1,12 @@
 # Ultimate CS2 RCON and Server Management Tool - macOS Guide
 
-Development version: 1.0.7 (unreleased). This guide describes the finalized 1.0.6 package.
-
-Finalized locally on 2026-11-06. GitHub publication is pending.
+Version: 1.0.6
 
 This self-contained guide covers the macOS application packages and Remote Linux or Remote Windows server management. Valve does not publish a native macOS CS2 dedicated-server runtime, so macOS cannot use Local Linux or Local Windows profiles.
 
 [README.md](README.md) provides the project-wide GitHub overview. This file contains all instructions needed for the macOS package.
 
-Version 1.0.6 is not yet published. Its macOS packages are `cs2-rcon-tool-universal-v1.0.6-macos-x64.tar.gz` (Intel) and `cs2-rcon-tool-universal-v1.0.6-macos-arm64.tar.gz` (Apple Silicon). Published downloads are on [GitHub Releases](https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/releases).
+Download `cs2-rcon-tool-universal-v1.0.6-macos-x64.tar.gz` (Intel) or `cs2-rcon-tool-universal-v1.0.6-macos-arm64.tar.gz` (Apple Silicon) from [GitHub Releases](https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/releases/tag/v1.0.6).
 
 ## Table of Contents
 

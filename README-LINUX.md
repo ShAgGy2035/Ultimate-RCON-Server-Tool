@@ -1,12 +1,10 @@
 # Ultimate CS2 RCON and Server Management Tool - Linux Guide
 
-Development version: 1.0.7 (unreleased). This guide describes the finalized 1.0.6 package.
-
-Finalized locally on 2026-11-06. GitHub publication is pending.
+Version: 1.0.6
 
 This guide covers installing Universal, configuring Local Linux or Remote Linux/Windows servers, using optional plugins, and troubleshooting. [README.md](README.md) provides the project overview.
 
-Version 1.0.6 has been packaged locally. Use its package names below; public downloads will be on [GitHub Releases](https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/releases) after publication.
+Download version 1.0.6 from [GitHub Releases](https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/releases/tag/v1.0.6) using the package names below.
 
 ## Table of Contents
 

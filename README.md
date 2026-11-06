@@ -1,14 +1,12 @@
 # Ultimate CS2 RCON and Server Management Tool
 
-Development version: 1.0.7 (unreleased).
-
-Latest finalized local release: 1.0.6, prepared on 2026-11-06. GitHub publication is pending. New changes belong in [1.0.7 release notes](Release%20Notes-1.0.7.md); finalized 1.0.6 notes are read-only and hash-protected.
+Version: 1.0.6
 
 Developer: ShAgGy
 
 Manage Counter-Strike 2 dedicated servers from one Windows, Linux, or macOS desktop application. Use RCON commands, monitor players, manage server processes, install updates and plugins, schedule tasks, and make backups without switching between separate administration tools.
 
-**New here?** Start with [Getting Started](#getting-started), then follow your [platform guide](#choose-your-platform). Already using Universal? Read the [1.0.6 release notes](Release%20Notes-1.0.6.md) and [upgrade guidance](#updating-or-migrating-data). To see the interface first, browse the [screenshots](#application-screenshots).
+**New here?** Start with [Getting Started](#getting-started), then follow your [platform guide](#choose-your-platform). Already using Universal? Read the [1.0.6 release notes](https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/releases/tag/v1.0.6) and [upgrade guidance](#updating-or-migrating-data). To see the interface first, browse the [screenshots](#application-screenshots).
 
 ## Table of Contents
 
@@ -41,7 +39,6 @@ Manage Counter-Strike 2 dedicated servers from one Windows, Linux, or macOS desk
 - [Data Storage And Security](#data-storage-and-security)
 - [Updating Or Migrating Data](#updating-or-migrating-data)
 - [Troubleshooting](#troubleshooting)
-- [Building Release Packages](#building-release-packages)
 - [Issues](#issues)
 - [About](#about)
 - [Application Screenshots](#application-screenshots)
@@ -95,7 +92,7 @@ macOS 12.0 or later is required; native local CS2 hosting is not supported on ma
 - `cs2-rcon-tool-universal-v1.0.6-macos-arm64.tar.gz`
 - `cs2-rcon-tool-universal-v1.0.6-all-platforms.zip`
 
-These are the package names for the upcoming 1.0.6 release, not a claim that it has been published. Download published builds from [GitHub Releases](https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/releases). macOS packages use `.tar.gz` only.
+Download version 1.0.6 from [GitHub Releases](https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/releases/tag/v1.0.6) using the package names below. macOS packages use `.tar.gz` only.
 
 Each platform build contains a self-contained application. GeoLite data and flag images remain separate runtime assets.
 
@@ -529,24 +526,6 @@ Platform-specific diagnostics:
 - [Windows troubleshooting](README-WINDOWS.md#troubleshooting)
 - [Linux troubleshooting](README-LINUX.md#troubleshooting)
 - [macOS troubleshooting](README-MACOS.md#troubleshooting)
-
-## Building Release Packages
-
-For all four Universal platforms, use `.\packaging\Prepare-LocalRelease.ps1 -OutputDirectory '<empty release directory>'`. It reads the project version, publishes from the current source, includes the documentation/screenshots, builds macOS tar.gz bundles with executable permissions, verifies every archived payload hash, and writes checksums. It refuses nonempty output directories and never publishes to GitHub or deploys servers.
-
-After finalizing **all** archives in a release/test-bundle directory, generate the checksum files locally:
-
-```powershell
-.\packaging\Write-PackageChecksums.ps1 -Directory 'artifacts\<bundle-directory>'
-```
-
-This writes `<archive>.sha256` for every ZIP/tar.gz and a sorted `SHA256SUMS.txt` for that directory. Run it again after changing any archive, including an all-platform bundle. The Linux packaging script already writes its archive's sidecar; use this final step to refresh the complete bundle manifest. macOS packages remain tar.gz only. Add `-Verbose` for packaging diagnostics; no credentials or package contents are logged.
-
-RCT, ChatRelay, and PlayerPunishments generate their sidecars with their own packaging scripts in their separate workspaces. When publishing is explicitly approved, include the matching checksum files and confirm GitHub's release-asset `digest` matches each final archive's SHA-256. Universal's plugin installer uses that API digest automatically; it does not discover `.sha256` files. A sidecar is useful for independent/manual verification but does not bypass missing-digest approval or prove publisher identity.
-
-These commands only create local files; they do not upload, publish, or deploy. For a local regression check, run `.\testing\Tools\PackageChecksumCheck.ps1`.
-
-Finalized notes are read-only locally and registered in `testing/historical-release-notes.json`; plugin baselines live in each plugin's `tests/historical-release-notes.json`. The TestLab release-note suites read current project versions and verify historical notes before accepting new notes. Do not modify finalized notes, remove baselines, or regenerate their hashes to bypass a failure.
 
 ## Issues
 
