@@ -1,8 +1,6 @@
 # Ultimate CS2 RCON and Server Management Tool
 
-Development version: 1.0.7 (unreleased).
-
-Latest finalized local release: 1.0.6, prepared on 2026-11-06. GitHub publication is pending. New changes belong in [1.0.7 release notes](Release%20Notes-1.0.7.md); finalized 1.0.6 notes are read-only and hash-protected.
+Development version: 1.0.6
 
 Developer: ShAgGy
 
