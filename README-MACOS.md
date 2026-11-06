@@ -1,14 +1,14 @@
 # Ultimate CS2 RCON and Server Management Tool - macOS Guide
 
-Version: 1.0.5
+Development version: 1.0.7 (unreleased). This guide describes the finalized 1.0.6 package.
+
+Finalized locally on 2026-11-06. GitHub publication is pending.
 
 This self-contained guide covers the macOS application packages and Remote Linux or Remote Windows server management. Valve does not publish a native macOS CS2 dedicated-server runtime, so macOS cannot use Local Linux or Local Windows profiles.
 
 [README.md](README.md) provides the project-wide GitHub overview. This file contains all instructions needed for the macOS package.
 
-## Issues
-
-Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
+Version 1.0.6 is not yet published. Its macOS packages are `cs2-rcon-tool-universal-v1.0.6-macos-x64.tar.gz` (Intel) and `cs2-rcon-tool-universal-v1.0.6-macos-arm64.tar.gz` (Apple Silicon). Published downloads are on [GitHub Releases](https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/releases).
 
 ## Table of Contents
 
@@ -18,20 +18,15 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 - [Create A Remote Profile](#create-a-remote-profile)
 - [Choose A Lifecycle Mode](#choose-a-lifecycle-mode)
 - [Remote Linux Setup](#remote-linux-setup)
-- [Remote Linux Hosting Panel](#remote-linux-hosting-panel)
-- [Remote Linux Account And Permissions](#remote-linux-account-and-permissions)
-- [Finish Remote Linux Setup](#finish-remote-linux-setup)
 - [Remote Windows Setup](#remote-windows-setup)
-- [Create The Windows SSH User](#create-the-windows-ssh-user)
-- [Finish Remote Windows Setup](#finish-remote-windows-setup)
-- [Using The Application](#using-the-application)
+- [Frameworks, Plugins, And Backups](#frameworks-plugins-and-backups)
 - [RCON Tool Companion And Fun Stuff](#rcon-tool-companion-and-fun-stuff)
 - [PlayerPunishments](#playerpunishments)
 - [ChatRelay](#chatrelay)
-- [Frameworks, Plugins, And Backups](#frameworks-plugins-and-backups)
-	- [Install Frameworks And Plugins](#install-frameworks-and-plugins)
+- [Using The Application](#using-the-application)
 - [macOS Integration](#macos-integration)
 - [Troubleshooting](#troubleshooting)
+- [Issues](#issues)
 - [About](#about)
 - [Application Screenshots](#application-screenshots)
 
@@ -39,16 +34,14 @@ Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-
 
 - macOS 12.0 or later.
 - The x64 package for an Intel Mac or the arm64 package for Apple Silicon.
-- Network access from the Mac to the CS2 server's RCON TCP port.
-- SSH access to the target computer for remote lifecycle, installation, and file operations.
+- Network access to the configured SSH or hosting-panel endpoint. The game RCON port need not be exposed when using a tunnel or panel console.
+- SSH access for remote lifecycle/installation operations, or a compatible Linux hosting panel for power and console access. File operations need SFTP access and a verified server fingerprint.
 
 ## Install And Launch
 
 Extract the matching package and open `CS2 RCON Tool.app`.
 
-Use `cs2-rcon-tool-universal-v1.0.5-macos-x64.tar.gz` for Intel or `cs2-rcon-tool-universal-v1.0.5-macos-arm64.tar.gz` for Apple Silicon. These tarballs preserve executable permissions. The v1.0.5 release also includes ZIP alternatives; future macOS releases will provide tarballs only.
-
-The packages are self-contained and do not require a separate .NET installation. They are currently unsigned and not notarized. If Gatekeeper quarantines a test build, open Terminal in the extracted directory and run:
+The packages are self-contained and do not require a separate .NET installation. They are currently unsigned and not notarized. Only if you trust the downloaded package and Gatekeeper quarantines it, open Terminal in the extracted directory and run:
 
 ```bash
 xattr -dr com.apple.quarantine "CS2 RCON Tool.app"
@@ -69,6 +62,8 @@ Writable settings are typically stored under:
 Back up that entire directory, including `credential.key`, before updating. Saved secrets use AES-256-GCM, so keep the key with the profile and settings JSON files during migration.
 
 ## Create A Remote Profile
+
+Before testing a connection, configure a [protected connection and verified server fingerprint](#remote-rcon-transport-and-host-pins). A hosting-panel console does not need SSH credentials, but file access still needs verified SFTP.
 
 1. Open **Servers > Manage servers**.
 2. Add either **Remote Linux (SSH)** or **Remote Windows (SSH)** according to the target server's operating system.
@@ -111,7 +106,24 @@ Configure SSH host, port, username, password, optional SFTP details, SteamCMD pa
 
 ### Remote Linux Hosting Panel
 
-For a hosting provider that exposes a Pterodactyl-compatible panel but does not provide SSH, use **Hosting panel API** for the remote lifecycle mode. Enter the panel URL, server identifier/UUID, and a client API key with power-control permission. Keep SFTP credentials configured for plugin deployment, browsing, and file operations. Start, Stop, and Restart use the panel API and wait for `offline` or `running`; SteamCMD validation and remote shell operations are unavailable. Debug Mode records panel requests and state polling without logging the API key.
+For a hosting provider that exposes a Pterodactyl-compatible panel but does not provide SSH, use **Hosting panel API** for the Remote Linux lifecycle mode. Enter the HTTPS panel URL, server identifier/UUID, and a client API key with power and console permissions. Console commands and lifecycle actions use the panel's short-lived-token WSS console/API; normal certificate validation is retained and redirects are rejected. The game RCON password is optional and never sent to the panel. Keep SFTP credentials and their independently verified host pins for file operations. SteamCMD validation and remote shell operations are unavailable. Debug Mode excludes API keys, JWTs, and configured endpoints. Console output is bounded and marker-delimited with a short window for asynchronous replies; unrelated logs may interleave and later output may be missed because the protocol does not correlate command replies.
+
+### Remote RCON Transport And Host Pins
+
+Remote RCON is blocked unless one of these is configured, listed from most to least secure:
+
+1. **Verified SSH tunnel (recommended).** In **Edit server > Transport security**, tick **Enable verified SSH tunnel**, save the SSH username and password, and enter the pin host, port, and fingerprint below. RCON is then sent through the tunnel to the server's own `127.0.0.1`.
+2. **Hosting panel console** (Remote Linux, Hosting panel API). The panel's shared console can drop lines and echo `rct_..._begin/_end` markers, so the player table may occasionally miss rows; Universal reuses the last complete roster to compensate.
+3. **Unencrypted direct RCON (explicit exception).** Tick **Allow UNENCRYPTED direct RCON to this remote server** only when the provider offers neither SSH nor a reliable console. The RCON password and every command then cross the network in clear text. It is off by default, applies per server, requires the RCON TCP port to be reachable and the RCON password saved in the profile, and is never enabled automatically. Use a unique RCON password and restrict the port to your address where the provider allows it. Use this exception only if you accept that exposure.
+
+**Getting the host fingerprint.** The pin is the SHA256 of the server's SSH host key as `SHA256:` followed by 43 unpadded base64 characters, the same format `ssh-keygen -lf` prints. Read it on the server itself or from the provider's trusted console, never from the connection you are about to trust:
+
+- Linux: `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`
+- Windows (OpenSSH): `ssh-keygen -lf C:\ProgramData\ssh\ssh_host_ed25519_key.pub`
+
+Enter the exact host and port the profile connects to, plus the fingerprint, in the SSH pin fields. A different key type, host, or port needs its own explicit pin. A mismatch is refused without fallback.
+
+**Symptom: players appear as "Bot 1", "Bot 2".** The app could not run RCON `status` and fell back to the A2S query, which has no names. Check that the profile uses one of the transports above (for a lab or remote server on a private address, normally the verified SSH tunnel) and that the SSH password and pin are saved.
 
 ### Remote Linux Account And Permissions
 
@@ -266,7 +278,6 @@ Once installation is complete, continue to the corresponding sections for config
 - [ChatRelay](#chatrelay)
 - [Install Frameworks And Plugins](#install-frameworks-and-plugins) for Metamod, CounterStrikeSharp, and optional CSS plugin details.
 
-
 ## Remote Windows Setup
 
 Configure OpenSSH access, optional SFTP details, Windows SteamCMD path, and CS2 installation directory. The SSH account must belong to the remote computer's local Administrators group for WMI process creation and firewall configuration. Remote Windows management does not require WinRM or a separate SFTP service for Direct startup and plugin deployment.
@@ -356,8 +367,6 @@ The application supplies `-dedicated`, `-console`, `-ip 0.0.0.0`, port, hostname
 
 Windows service mode requires a wrapper because `cs2.exe` does not implement the Service Control Manager protocol. From Administrator PowerShell on the Windows server:
 
-Keep the desktop app unelevated. During service setup, the Windows administrator must authorize the remote account to control the service and write to the installation. Universal does not elevate itself or change service permissions. See the [service-specific permission setup](README-WINDOWS.md#service-control-without-elevation); perform it on the Windows target, not the Mac.
-
 ```powershell
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
@@ -365,7 +374,7 @@ New-Item -ItemType Directory -Force -Path C:\Services\cs2-server | Out-Null
 Invoke-WebRequest -Uri 'https://github.com/winsw/winsw/releases/download/v2.12.0/WinSW-x64.exe' -OutFile 'C:\Services\cs2-server\cs2-server.exe'
 ```
 
-Create `C:\Services\cs2-server\cs2-server.xml` beside the matching `cs2-server.exe`. `<id>` and `<executable>` are required; `<name>` is the display name in Services. Replace the password after `+rcon_password` in `<arguments>` with the RCON password in Universal. Steam API key (`-authkey`) and GSLT (`+sv_setsteamaccount`) are optional: remove those switches if unused, or supply valid values. Replace paths, hostname, and map; XML-escape `&`, `<`, and `>` in values.
+Create `C:\Services\cs2-server\cs2-server.xml`, replacing and XML-escaping credentials:
 
 ```xml
 <service>
@@ -385,25 +394,7 @@ Create `C:\Services\cs2-server\cs2-server.xml` beside the matching `cs2-server.e
 </service>
 ```
 
-Before first start, prepare Valve's Steamworks SDK Redist app `1007` on the Windows computer. A LocalSystem service cannot rely on your desktop Steam installation. Missing runtime files can cause **Could not determine Steam client install directory** and a repeated crash/restart loop. In Administrator PowerShell, with the service and any Direct-process instance stopped, adjust these sample paths:
-
-```powershell
-$ErrorActionPreference = 'Stop'
-$installDir = 'C:\cs2server'
-$steamCmdPath = 'C:\cs2server-steamcmd\steamcmd.exe'
-$runtimeDir = Join-Path (Split-Path -Parent $steamCmdPath) 'steamworks-sdk-redist'
-$destination = Join-Path $installDir 'game\bin\win64'
-& $steamCmdPath +force_install_dir $runtimeDir +login anonymous +app_update 1007 validate +quit
-if ($LASTEXITCODE -ne 0) { throw 'SteamCMD runtime installation failed.' }
-foreach ($file in @('steamclient64.dll', 'tier0_s64.dll', 'vstdlib_s64.dll')) {
-	$source = Get-ChildItem -LiteralPath $runtimeDir -Recurse -File -Filter $file |
-		Select-Object -First 1
-	if (-not $source) { throw "Missing Steamworks runtime file: $file" }
-	Copy-Item -LiteralPath $source.FullName -Destination (Join-Path $destination $file) -Force
-}
-```
-
-Install only if the service ID is not already registered, and configure the profile:
+Install and configure the profile:
 
 ```powershell
 New-Item -ItemType Directory -Force -Path C:\cs2server\logs | Out-Null
@@ -420,12 +411,6 @@ Restart: powershell -NoProfile -NonInteractive -Command "Restart-Service -Name '
 ```
 
 Put all CS2 launch arguments in the WinSW XML. Configure inbound UDP and TCP firewall rules for the game/RCON port. WinSW writes rolled logs under `C:\cs2server\logs` and restarts CS2 after unexpected exits.
-
-`<startmode>Automatic</startmode>` starts the service at Windows boot without Universal; installation alone does not start it. Windows boot and Services commands do not run Universal's SteamCMD validation; normal Start in Universal validates when configured, while Restart skips validation. Confirm CS2 stays running, not just that the wrapper briefly reports Running.
-
-If the service is not visible, press F5 in `services.msc` and look for its display name, or run `Get-Service -Name 'cs2-server'`. To locate the installed wrapper, run `Get-CimInstance Win32_Service -Filter "Name='cs2-server'" | Select-Object Name, DisplayName, State, PathName`. For Error 1053, check XML syntax, closed tags, and paths; inspect `cs2-server.wrapper.log` and CS2 output under `<logpath>`. Wrapper logs contain launch credentials: redact them before sharing.
-
-To reuse a service with a different CS2 directory, stop it and update `<executable>`, `<workingdirectory>`, `<logpath>`, launch arguments, and firewall paths. Keep the registered wrapper path and `<id>` unchanged. Moving the wrapper itself requires uninstalling from the old location and installing from the new one; changing only the CS2 directory does not.
 
 
 ### Finish Remote Windows Setup
@@ -462,77 +447,11 @@ Once installation is complete, continue to the corresponding sections for config
 - [ChatRelay](#chatrelay)
 - [Install Frameworks And Plugins](#install-frameworks-and-plugins) for Metamod, CounterStrikeSharp, and optional CSS plugin details.
 
-
-## Using The Application
-
-Add server provisioning can reuse an existing remote installation. Before changing files, it stops the target through its configured remote lifecycle and verifies stop completion. A failed stop aborts provisioning. Keep other applications from starting the target during provisioning. Start-after-install starts the newly created profile only after all selected stages succeed; if unchecked, or if provisioning fails, the target stays stopped. The remote account needs permission to execute the configured lifecycle commands.
-Click **Add server** in the top toolbar, choose Remote Linux or Remote Windows and a supported startup method, then enter the host/IP, RCON port, and RCON password. Enable **LAN server** when appropriate; Steam API keys and GSLTs are optional and are not required for LAN servers. For install actions, the wizard collects the remote install folder and SSH credentials; SteamCMD is installed or discovered automatically. At the end, finish setup or choose an install/update action and optionally start the server after successful installation; Hosting panel API profiles ask who manages frameworks and leave CS2 core updates with the provider. Advanced details remain available through Edit server. RCON uses TCP; opening only the UDP game port is insufficient.
-
-Use **Help > Sample server profile** for a complete read-only example of the available fields. It uses placeholder values and is not added to the server list.
-
-Use **Help > Sample server profile** for a complete read-only example of the available fields. It uses placeholder values and is not added to the server list.
-
-Server Actions controls hostname, bots, teams, passwords, friendly fire, cheats, pause, maps, maximum rounds, timed restarts, and player punishments. These are runtime commands and never edit server CFG files. Deleting a server requires confirmation; optional cleanup removes app state and schedules but never deletes the managed installation, plugins, or backups.
-
-The map selector lists playable maps and configured Workshop maps.
-
-Open **Settings > Settings** for GeoLite/flag URLs, Slap damage, automatic refresh, noisy-output filtering, startup update checks, **Minimize to tray**, and separate backup destinations. Server-specific lifecycle, SteamCMD, Workshop, RCON, database, ChatRelay, and Steam credentials remain under **Servers > Manage servers > Edit server**. **Help > Check for Updates** only notifies and links to GitHub; it never downloads or installs the app.
-
-Console Commands provides free-form RCON and suggestions with separate per-server history. Application Log and Debug retain operation details while redacting credentials. When closing with Debug Mode enabled, choose **Stop debugging** to return to the app or **Exit program** to close.
-
-Scheduled task types include RCON, framework/plugin maintenance, server/database backups, GeoLite/flags, and Fun Stuff rotation (timed steps that start Companion modes in order, then stay, roll back, or repeat; built-in scheduler only), with Day, Hour, and Startup triggers. Built-in tasks need the app open and monitoring active. Native macOS tasks use launchd user agents and the headless runner, so the GUI can remain closed.
-
-## RCON Tool Companion And Fun Stuff
-
-The GUI allows one instance per user/settings directory. Relaunching the shortcut restores the existing window, including from the tray; it does not create another GUI. Headless task/asset commands bypass this guard. Before switching from an older build, use the tray's **Exit** to stop it once, then start the updated app. IPC/startup/relaunch tests passed; actual desktop focus/restoration still needs testing.
-
-With **Minimize to tray** enabled, hiding the window shows an eight-second **Still running in the tray** reminder with Show/Exit actions and a clearer tooltip. It does not take keyboard focus or add a taskbar item; unsupported-tray fallback remains unchanged. Console feedback now identifies expected-silent operations such as `css_plugins reload 9`, distinguishes failed sends, leaves unclassified empty replies unconfirmed, and preserves actual reply/error text. Headless reminder/position and formatter checks passed; desktop tray interactions still need testing.
-
-Long-running monitoring updates player health/status on existing rows rather than rebuilding the player table. Read-only output panes keep bounded text without undo history. These reduce allocation churn; an overnight memory retest of the updated build is still pending.
-
-All Fun Stuff modes require [RCON Tool Companion 1.0.2](https://github.com/ShAgGy2035/RconCompanionTool), built against CounterStrikeSharp API 1.0.376. Validate older or KHS fork runtimes against this Companion build before deployment. Companion includes its own WASD `!fun` menu (**W/S** move, **E** select, **A** back, **R** exit), so no separate menu plugin is required. Administrators with `@css/fun` can use `!fun` or `/fun` without an RCON password, including each mode's `!fun` submenu for bot enablement, quota, and quota mode. By default, Companion rolls back the active mode when the last human player leaves. Upgrading Companion does not add new options to an existing `RCT.json`; missing options use their defaults. See the Companion README's **Upgrading an existing `RCT.json`** section to add them manually or regenerate the file.
-
-Modes include No Bots, AWP/Sniper Wars, Bhop, Deathmatch, Grenade Wars, Molotov/Incendiary Wars, Headshot Only, Knife Arena, Pistols Only, ScoutzKnives, Super Hero, Surf, and Zeus Wars. Super Hero keeps normal weapons and buying and gives every player one enabled power each spawn: Speedster, Moon Jumper, Tank, Ghost, Vampire, Regenerator, Juggernaut, Second Wind, Ammo Recycler, Berserker, Medic, Blink, Double Jump, or Gunslinger. Universal exposes all fourteen toggles and strength controls in its Options panel. The in-game `!fun` mode uses Companion defaults from `RCT.json`. Universal also has a standalone **Bot Control** option, mirrored under `!fun` > Bot control, for bot enablement, quota, quota mode, and team. The `!fun` Bot Control panel stages edits until **Apply now**, which saves preferences to `RCT.json` and applies them to the server. **Bot team** can put every bot on CT or T for lopsided training such as 20 bots against one player. Returning to **Any** restores the original team cvars without kicking bots. No Bots only removes bots, and rollback restores the previous bot quota. All bot quota controls default to `fill`; `normal` and `match` remain selectable. Existing saved quota modes are preserved.
-
-**One in the Chamber** uses the native Deathmatch ruleset with individual FFA scoring, random spawns, a stock Deagle, knife, and exactly one starting bullet. Every non-self kill earns another bullet; missing requires a knife kill to recover ammo. Default Deagle and knife hits are lethal; optional **Deagle headshots only** suppresses Deagle body damage but keeps knife kills lethal. Companion controls respawning with a default one-second delay and the usual bot options. It is available in Universal, `!fun`, and scheduled rotations. Chamber owns its rules and reload handling independently of Deathmatch: entry and rollback each reload the current map, and its guarded five-second map reapply does not restart the round. Buying and C4 objectives are disabled; rollback restores captured settings after map configs load. CT/T assignments may remain internally, but team Deathmatch scoring is disabled. Requires refreshed Companion 1.0.2 (`one-in-the-chamber`, `chamber-native-ffa`). Roll back an active older Chamber session before upgrading. Focused rule, reload-order, restoration, and isolation checks passed; the native HUD/scoring and gameplay still require a live retest.
-
-Active modes are intended to survive map changes. Universal's cvar reapply requires the app to stay open; `!fun` and scheduled modes use Companion's saved-command reapply. Updated Companion 1.0.2 (`mode-map-reapply`) explicitly resets Super Hero's map-specific power state and reassigns powers about five seconds after map start. Existing Deathmatch, No Bots, and Chamber handlers retain their dedicated behavior. The default empty-server rollback still intentionally ends modes when the last human leaves; recovery does not revive a rolled-back mode. Live map-change validation is pending.
-
-Super Hero shows the assigned power name and description in a center-screen popup for five seconds by default, with chat retained as a fallback. **Power popup (seconds)** sets the duration from 0 to 30 (`0` disables); `!fun` uses `SuperHero.PowerNoticeSeconds` in `RCT.json`. Spectators see the power of the living player or bot they watch, and switching targets starts a fresh popup. The notice is informational: it does not freeze movement or replace the `!fun` menu, which pauses its timer. Requires updated Companion 1.0.2 (`superhero-notice`); live HUD/spectator testing is pending.
-
-Updated Companion's `empty-server-grace` keeps the active mode for five minutes after the last human leaves. `EmptyServerRollbackDelaySeconds` in `RCT.json` defaults to `300` (`0`-`3600` allowed). A human returning cancels the pending rollback; the deadline survives map changes and repeated empty checks do not extend it. The roster and transition state are checked again at expiry. Explicit **Rollback** still takes effect immediately. Status reports **Empty-server grace**, **Map transition**, and **Last mode end**. Live transition behavior still needs verification.
-
-Super Hero notices now maintain cached HTML at the same per-tick cadence as `!fun`, with the configured server-side clock controlling when to clear it. This replaces the single-event revision, which was reported to disappear after about one second. Spectator switching and activation instructions such as Blink's Use key are retained; menu pause/resume preserves remaining time. Five-second upkeep checks passed, but visible duration and pulsing still need an in-game retest.
-
-**Fun Stuff > Empty-server rollback (server-wide)** now exposes the automatic rollback toggle and grace period in minutes (default five, range 0-60). The panel reads the selected server's current RCT policy; **Apply settings** saves only that policy in the server's `RCT.json`, without starting or replacing a mode. It applies to all modes, including `!fun` and scheduled rotations. Changes are not sent merely by opening the tab. Requires updated Companion 1.0.2 (`empty-server-settings`); live UI/RCON saving still needs testing.
-
-The refreshed Companion corrects settings saves to `configs/plugins/RCT/RCT.json`, rather than the incorrectly assembly-derived `RconToolCompanion/RconToolCompanion.json` path. Its ZIP now begins at `addons/`; manual extraction belongs in the server's `game/csgo/` directory. Universal's plugin installer recognizes that layout. Do not loosen file permissions to work around the old path mismatch; hosted save access still requires a live retest.
-
-Super Hero spreads enabled powers among living teammates before repeating one. With at least five enabled, a five-player team gets five different powers; larger teams or fewer enabled powers use balanced repeats. CT and T are assigned independently, including bots. Respawns prefer a different power when an equally suitable choice exists.
-
-The eight additional powers provide damage reduction, one-hit survival, magazine refill on enemy kills, low-health bonuses, teammate healing, safe Blink with the Use key, one extra airborne jump, and faster reload completion. They default to enabled, with configurable strengths. Expanded powers require the updated Companion 1.0.2 (`superhero-expanded`) and the full CounterStrikeSharp 1.0.376 runtime, not only its API DLL. Live gameplay still needs testing; see the Companion guide for defaults and input details.
-
-Moon Jumper combines a high launch velocity with reduced gravity. Defaults are **Jump velocity** `1200` units/s (range `300`-`1500`) and **Gravity multiplier** `0.275` (`1` is normal gravity; `0.275` approximates ScoutzKnives' default `sv_gravity 220` on a standard 800-gravity server). Hold Jump as you take off; the boost applies once the pawn is airborne. Enable only Moon Jumper when testing because each spawn otherwise receives a random enabled power. Existing `RCT.json` values are preserved; update `SuperHero.MoonJumperJumpVelocity` manually if `!fun` should use the new default.
-
-The application captures affected values before apply; switching restores the previous mode first, and **None (rollback)** restores the exact snapshot without editing a CFG. Isolated Companion profiles prevent stale cleanup from affecting another mode, and a server-side lock rejects overlapping changes. Managed inventories survive spawns and bot takeovers while preserving the Terrorist bomb carrier's C4. Managed modes clean ground weapons; Headshot Only leaves weapons and buying unchanged.
-
-ScoutzKnives, AWP, Pistols, Knife, Zeus, HE-grenade, and fire-grenade modes use dedicated loadouts. ScoutzKnives and Surf expose their physics controls, also available in `RCT.json`. Deathmatch stages duration and spawn rules before map initialization and reloads the current map when leaving because CS2 only fully exits built-in Deathmatch on a map load. Companion stores its authoritative snapshot under `configs/plugins/RCT`.
-
-## ChatRelay
-
-ChatRelay is a separate [CounterStrikeSharp plugin](https://github.com/ShAgGy2035/ChatRelay); it is not bundled with the macOS app. Install it on the CS2 server, then select the receiving adapter and UDP port in the Chat tab, set a unique token under **Edit server > Integrations**, and use **Copy ChatRelay target JSON** for `TargetIp`, `TargetPort`, and `SharedToken`. The authenticated **Test** action verifies the listener, and admin chat can be sent through RCON.
-
-The listener accepts authenticated JSON only, limits datagrams to 8 KiB, and drops rejected packets. UDP is unencrypted, so restrict firewall access to the server or trusted LAN, or use a VPN.
-
-## PlayerPunishments
-
-The app's Slay and Slap controls send `css_slay #userid` and `css_slap #userid damage`. Install [PlayerPunishments 1.0.0 or newer](https://github.com/ShAgGy2035/PlayerPunishments) on the remote CS2 server when its existing administration package does not provide those commands. PlayerPunishments is a CounterStrikeSharp server plugin and is not installed in the macOS application bundle. Configure Slap damage from `0` to `99` under **Settings > General**.
-
-Alive and Health display **Unknown** when the required server-side player-information command is unavailable.
-
 ## Frameworks, Plugins, And Backups
 
-Install Metamod before CounterStrikeSharp. Interactive installation shows the latest 20 compatible releases and accepts a selected release or direct package URL. **Settings > Metamod Settings** manages plugin lifecycle; **Settings > CStrikeSharp Settings** reloads admins and manages plugins; **Test Metamod/CSS command availability** safely probes supported command forms.
+Remote SteamCMD bootstrap requires an independently obtained publisher SHA-256 in the manual integrity dialog before extraction/startup. There is no unverified-approval option or unattended bootstrap; existing configured installations still update/validate normally. Automatic trusted Valve checksum discovery is unavailable, so cancel if an independent publisher hash cannot be obtained. This does not add native local CS2 dedicated-server support to macOS.
+
+Install Metamod before CounterStrikeSharp. Interactive installation shows the latest 20 compatible releases and accepts a selected release or direct package URL. Framework and optional-plugin packages with a valid publisher SHA-256 are verified before extraction; mismatches block installation. Missing hashes show **Integrity unverified** and need an independently obtained publisher hash or one-time manual approval; unattended tasks cannot approve. Remote framework downloads are verified on the target before extraction. **Settings > Metamod Settings** manages plugin lifecycle; **Settings > CStrikeSharp Settings** reloads admins and manages plugins; **Test Metamod/CSS command availability** safely probes supported command forms.
 
 ### Install Frameworks And Plugins
 
@@ -548,9 +467,68 @@ Optional plugins can come from GitHub, nested public GitLab.com projects, or sup
 
 Use the **Manage Metamod plugins** window only for packages containing an `addons/metamod` payload. Use the **Manage CounterStrikeSharp plugins** window for CounterStrikeSharp plugin packages. The application rejects packages submitted through the wrong manager before deployment.
 
-Server backup includes configuration, add-ons, maps, `gameinfo.gi`, and plugin tracking rather than stock binaries or Workshop downloads. Database backup uses `mysqldump`. Restore accepts ZIP, TAR.GZ, or TGZ; combined update/restore refreshes core files first. Remote operations require suitable SSH permissions and archive tools.
+Server backup includes configuration, add-ons, maps, `gameinfo.gi`, and plugin tracking rather than stock binaries or Workshop downloads. Database backup uses `mysqldump`. Database restore requires a MySQL/MariaDB client with `--binary-mode` to disable local shell and file-source commands, including on loopback; unsupported clients fail before credentials are sent. SQL and `DELIMITER` routines remain supported, but only restore trusted SQL because database permissions and server-side effects are unchanged. Server restore accepts ZIP, TAR.GZ, or TGZ; combined update/restore refreshes core files first. Remote operations require suitable SSH permissions and archive tools.
 
 Writable data lives under `~/Library/Application Support/CS2RconTool` and includes profile/settings JSON, Fun Stuff state, `app_state.json`, `credential.key`, GeoLite data, and flags. Startup validates the JSON files and moves invalid files into timestamped `migration-backups` folders. Secrets use AES-256-GCM. Back up the entire directory and preserve `credential.key`; release archives exclude settings, credentials, caches, PDBs, ChatRelay, and Companion binaries.
+
+## RCON Tool Companion And Fun Stuff
+
+Select **Fun Stuff**, choose a mode, customize its settings, and start it. Use [RCON Tool Companion 1.0.3](https://github.com/ShAgGy2035/RconCompanionTool) with the full CounterStrikeSharp 1.0.376 runtime. Install it on the CS2 server, not beside Universal.
+
+Modes include No Bots, AWP / Sniper Wars, Bhop, Deathmatch, Flying Dutchman, Grenade Wars, Molotov / Incendiary Wars, Headshot Only, Knife Arena, One in the Chamber, Pistols Only, ScoutzKnives, Super Hero, Surf, Weapon Rotation, and Zeus Wars. Super Hero offers fourteen configurable powers; each mode has its own gameplay, bot, and supported map settings.
+
+New mode configurations have bots disabled. Enable them per mode if wanted; saved choices are preserved. Bot counting can use `normal` (fixed count), `fill` (maintain the total as humans join), or `match`. A blank enabled quota keeps the current value.
+
+Modes temporarily change running-server settings, not CFG files. **None (rollback)** restores captured values. Some modes reload the map when starting or ending; expect connected players to see a map transition.
+
+In game, trusted administrators with `@css/fun` can type `!fun` or `/fun`: **W/S** moves, **E** selects, **A** goes back, and **R** exits. No separate menu plugin is needed. All configurable modes use the quick-start wizard with Start, optional Customize gameplay, and Bots. Start applies choices only to that run, without saving to `RCT.json`; cancellation discards them. Temporary choices survive maps, but plugin reload/server restart uses configured defaults. The old editable menu is removed and `UseFunSetupWizard` is ignored. Separate Bot Control preferences still save when applied; Universal and scheduled-start behavior is unchanged.
+
+Companion runs the active mode on the server and, by default, restores normal settings after five minutes without human players. Configure this under **Empty-server rollback**. Closing Universal does not stop a Companion-owned mode.
+
+### Weapon Rotation
+
+1. Open **Fun Stuff > Weapon Rotation**. Its tabs are Gameplay, Weapons, Rotation, Bots, and Maps.
+2. Select categories and weapons; at least one selected weapon must belong to an enabled category.
+3. Choose team rounds, team respawn, or free-for-all; give everyone the same weapon or use independent assignments.
+4. Set the rotation interval (5-3600 seconds, default five minutes). **Duration minutes** limits the whole mode, not each weapon: `0` is unlimited; 1-1440 ends with Rollback ALL, including Bot Control.
+5. Choose Popup, Chat, or both for announcements. Chat reminders default to 30 seconds; `0` disables periodic reminders.
+6. Configure an optional Workshop map or collection, review, and start. Map settings are configured here or in `RCT.json`, not through `!fun`.
+
+New settings use category rotation, shuffled weapons, infinite ammunition, no bots, and category voting. Players select the next category in a popup showing all six choices; `!wrvote` reopens it. Chat announces invitations/results but does not accept votes. Voting normally opens 30 seconds before a change and closes five seconds before it; very short intervals shorten or skip voting.
+
+Weapons change while players are alive, and respawning keeps the current assignment. Team rounds preserve bomb objectives. Map voting and other menus take priority over weapon notices.
+
+Use the editors rather than guessing JSON values. If editing by hand, follow the Companion README's **Settings with fixed values** reference. An active run keeps its starting settings; roll back and restart to apply changed defaults.
+
+### Bot Control
+
+The separate **Bot Control** tab adjusts count, difficulty, teams, and halftime over compatible modes. **Restore bots ONLY (keep mode)** restores bot changes; **Rollback ALL (mode + bots)** restores the pre-mode setup. Free-for-all modes reject incompatible team/halftime choices, and No Bots blocks conflicting bot edits.
+
+## PlayerPunishments
+
+The app's Slay and Slap controls send `css_slay #userid` and `css_slap #userid damage`. Install [PlayerPunishments 1.0.1](https://github.com/ShAgGy2035/PlayerPunishments) on the remote CS2 server when its existing administration package does not provide those commands. PlayerPunishments is a CounterStrikeSharp server plugin and is not installed in the macOS application bundle. Configure Slap damage from `0` to `99` under **Settings > General**.
+
+Alive and Health display **Unknown** when the required server-side player-information command is unavailable.
+
+## ChatRelay
+
+ChatRelay is a separate [CounterStrikeSharp plugin](https://github.com/ShAgGy2035/ChatRelay); it is not bundled with the macOS app. Install it on the CS2 server, then select the receiving adapter and UDP port in the Chat tab, generate a unique 32-byte secure key under **Edit server > Integrations**, and use **Copy ChatRelay target JSON** for `TargetIp`, `TargetPort`, and `KeyBase64`. The authenticated **Test** action verifies the listener, and admin chat can be sent through RCON.
+
+ChatRelay v1 encrypts chat with AES-256-GCM; its 12-byte nonce, version, algorithm, and timestamp are authenticated, and the shared key is not sent over UDP. The listener limits datagrams to 8 KiB, accepts timestamps within ±120 seconds, and persists a bounded replay journal across listener restarts. Legacy plaintext sender and receiver paths are removed. Existing saved tokens and legacy flags are retained only for migration diagnostics and are never used; a legacy-only profile cannot start the listener or send until a matching secure key is configured. Keep the existing firewall/router policy restrictive; UDP peer identity is not provided by encryption.
+
+## Using The Application
+
+Open **Servers > Manage servers**, add a Remote Linux or Remote Windows profile, enter its RCON and lifecycle details, save it, select it, and click **Refresh server list**. RCON uses TCP; opening only the UDP game port is insufficient. **Reload server list** reads saved profiles without contacting servers, while **Refresh server list** queries live A2S data.
+
+Server Actions controls hostname, bots, teams, passwords, friendly fire, cheats, pause, maps, maximum rounds, timed restarts, and player punishments. These are runtime commands and never edit server CFG files. Deleting a server requires confirmation; optional cleanup removes app state and schedules but never deletes the managed installation, plugins, or backups.
+
+The map selector lists playable maps and configured Workshop maps.
+
+Open **Settings > Settings** for GeoLite/flag URLs, Slap damage, automatic refresh, noisy-output filtering, and separate backup destinations. Server-specific lifecycle, SteamCMD, Workshop, RCON, database, ChatRelay, and Steam credentials remain under **Servers > Manage servers > Edit server**.
+
+Console Commands provides free-form RCON and suggestions with separate per-server history. Application Log and Debug retain operation details while redacting credentials. When closing with Debug Mode enabled, choose **Stop debugging** to return to the app or **Exit program** to close.
+
+Scheduled task types include RCON, framework/plugin maintenance, server/database backups, GeoLite/flags, and Fun Stuff rotation (timed steps that start Companion modes in order, then stay, roll back, or repeat; built-in scheduler only), with Day, Hour, and Startup triggers. Built-in tasks need the app open and monitoring active. Native macOS tasks use launchd user agents and the headless runner, so the GUI can remain closed.
 
 ## macOS Integration
 
@@ -563,22 +541,22 @@ Writable data lives under `~/Library/Application Support/CS2RconTool` and includ
 
 ### RCON commands fail
 
-- Verify that the target server's RCON TCP port is reachable from the Mac.
-- Re-enter SSH and RCON credentials after migration when protected values cannot be decrypted.
+- Check the configured SSH or hosting-panel connection and its saved credentials/fingerprint. A tunnel or panel console does not require exposing the game RCON port.
+- Keep the matching original encryption key with migrated files; an unreadable encrypted store blocks loading until the original key/files are restored.
 
 ### A Linux server in a bridged VirtualBox VM is unreachable
 
 - When managing a Linux VM remotely, use the guest's LAN address rather than the Mac host address or `127.0.0.1`.
 - If the guest hostname is used, ensure `/etc/hosts` maps `127.0.1.1` to the VM hostname.
 - For Direct process mode, keep `-ip 0.0.0.0` in the remote launch arguments for access from the network, or replace it with the guest's specific LAN address. For Service commands mode, put the chosen `-ip` value in the systemd launcher.
-- Confirm the VirtualBox adapter is Bridged Adapter mode and that the guest firewall permits the configured game UDP and RCON TCP ports.
+- Confirm the VirtualBox adapter is Bridged Adapter mode and that the guest firewall permits the game port and your chosen management connection. A tunnel or panel console does not require exposing RCON externally.
 
 ### A Windows server in a bridged VirtualBox VM is unreachable
 
 - Use the Windows guest's LAN address rather than the Mac host address or `127.0.0.1`.
 - If the guest hostname is used, add its LAN address and hostname to `C:\Windows\System32\drivers\etc\hosts` in the Windows guest. Edit the file as Administrator.
 - For Direct process mode, keep `-ip 0.0.0.0` in the remote launch arguments for access from the network, or replace it with the guest's specific LAN address. For Service commands mode, put the chosen `-ip` value in the WinSW XML.
-- Confirm the VirtualBox adapter is Bridged Adapter mode and that the Windows guest firewall permits the configured game UDP and RCON TCP ports.
+- Confirm the VirtualBox adapter is Bridged Adapter mode and that the Windows guest firewall permits the game port and your chosen management connection. A tunnel or panel console does not require exposing RCON externally.
 - If VirtualBox created a Host-Only adapter such as `Ethernet 2` and it interferes with routing, disable it on the Mac host while keeping the physical network adapter enabled.
 
 ### Local server exits immediately
@@ -602,7 +580,7 @@ Writable data lives under `~/Library/Application Support/CS2RconTool` and includ
 
 ### Chat does not appear
 
-- Verify ChatRelay is running, match the IP, adapter, UDP port, and token, check firewall rules, and use **Test**.
+- Verify ChatRelay is running, match the IP, adapter, UDP port, and secure key, check firewall rules, and use **Test**.
 
 ### Scheduled tasks do not run
 
@@ -614,18 +592,54 @@ Writable data lives under `~/Library/Application Support/CS2RconTool` and includ
 - Update it under **Settings > General**.
 - Confirm direct-download URLs and verify the data directory is writable.
 
+## Issues
+
+Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
+
 ## About
 
-Open **Help > About** to view version `1.0.5`, developer information, and the detected application platform.
+Open **Help > About** to view version `1.0.6`, developer information, and the detected application platform.
 
 ## Application Screenshots
 
-| Server management | Integrations |
+### 1. Add a server
+
+| Hosting and startup | Connection details |
 | --- | --- |
-| ![Manage servers](docs/images/manage-servers.png) | ![Edit server integrations](docs/images/edit-server-integrations.png) |
-| Fun Stuff | Console commands |
-| ![Fun Stuff modes](docs/images/fun-stuff-modes.png) | ![Console command suggestions](docs/images/console-commands.png) |
-| Scheduled tasks | Chat |
-| ![Scheduled tasks](docs/images/scheduled-tasks.png) | ![Chat](docs/images/chat-tab.png) |
-| Debug output | General settings |
-| ![Debug output](docs/images/debug-tab.png) | ![General settings](docs/images/settings-general.png) |
+| ![Add server wizard hosting and startup](docs/images/add-server-wizard-type.png) | ![Add server wizard connection details](docs/images/add-server-wizard-connection.png) |
+| Review and installation | Saved servers |
+| ![Add server wizard review and installation choices](docs/images/add-server-wizard-review.png) | ![Manage servers](docs/images/manage-servers.png) |
+
+### 2. Configure the remote server
+
+| Remote transport security | Integrations |
+| --- | --- |
+| ![SSH tunnel and trusted host fingerprint configuration](docs/images/transport-security.png) | ![Edit server integrations](docs/images/edit-server-integrations.png) |
+
+**Plugin management**
+
+![CounterStrikeSharp plugin management](docs/images/plugin-management.png)
+
+### 3. Server commands and gameplay
+
+| Console commands | Bot Control |
+| --- | --- |
+| ![Console command suggestions](docs/images/console-commands.png) | ![Bot Control](docs/images/bot-control.png) |
+
+**Fun Stuff modes**
+
+![Fun Stuff modes](docs/images/fun-stuff-modes.png)
+
+### 4. Schedule tasks
+
+![Scheduled tasks](docs/images/scheduled-tasks.png)
+
+### 5. Chat and troubleshooting
+
+| Chat | Debug output |
+| --- | --- |
+| ![Chat](docs/images/chat-tab.png) | ![Debug output](docs/images/debug-tab.png) |
+
+### 6. Application preferences
+
+![General settings](docs/images/settings-general.png)
