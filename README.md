@@ -528,24 +528,6 @@ Platform-specific diagnostics:
 - [Linux troubleshooting](README-LINUX.md#troubleshooting)
 - [macOS troubleshooting](README-MACOS.md#troubleshooting)
 
-## Building Release Packages
-
-For all four Universal platforms, use `.\packaging\Prepare-LocalRelease.ps1 -OutputDirectory '<empty release directory>'`. It reads the project version, publishes from the current source, includes the documentation/screenshots, builds macOS tar.gz bundles with executable permissions, verifies every archived payload hash, and writes checksums. It refuses nonempty output directories and never publishes to GitHub or deploys servers.
-
-After finalizing **all** archives in a release/test-bundle directory, generate the checksum files locally:
-
-```powershell
-.\packaging\Write-PackageChecksums.ps1 -Directory 'artifacts\<bundle-directory>'
-```
-
-This writes `<archive>.sha256` for every ZIP/tar.gz and a sorted `SHA256SUMS.txt` for that directory. Run it again after changing any archive, including an all-platform bundle. The Linux packaging script already writes its archive's sidecar; use this final step to refresh the complete bundle manifest. macOS packages remain tar.gz only. Add `-Verbose` for packaging diagnostics; no credentials or package contents are logged.
-
-RCT, ChatRelay, and PlayerPunishments generate their sidecars with their own packaging scripts in their separate workspaces. When publishing is explicitly approved, include the matching checksum files and confirm GitHub's release-asset `digest` matches each final archive's SHA-256. Universal's plugin installer uses that API digest automatically; it does not discover `.sha256` files. A sidecar is useful for independent/manual verification but does not bypass missing-digest approval or prove publisher identity.
-
-These commands only create local files; they do not upload, publish, or deploy. For a local regression check, run `.\testing\Tools\PackageChecksumCheck.ps1`.
-
-Finalized notes are read-only locally and registered in `testing/historical-release-notes.json`; plugin baselines live in each plugin's `tests/historical-release-notes.json`. The TestLab release-note suites read current project versions and verify historical notes before accepting new notes. Do not modify finalized notes, remove baselines, or regenerate their hashes to bypass a failure.
-
 ## Issues
 
 Report application issues at https://github.com/ShAgGy2035/Ultimate-RCON-Server-Tool/issues/new.
